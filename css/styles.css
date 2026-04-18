@@ -918,8 +918,8 @@ section { padding: clamp(4rem, 8vw, 8rem) 0; }
     min-height: unset;
     aspect-ratio: 4/3;
   }
-  /* Page hero background images: shift focal point to top so subjects aren't cropped off */
-  .page-hero {
+  /* Hero & page-hero background images: shift focal point up on portrait mobile */
+  .page-hero, .hero-bg {
     background-position: center top !important;
   }
 }
@@ -941,7 +941,7 @@ body.nav-open { overflow: hidden; }
   top: var(--nav-h);
   left: 0; right: 0; bottom: 0;
   background: rgba(14,12,9,0.99);
-  backdrop-filter: blur(20px);
+  /* No backdrop-filter — 99% opacity doesn't need blur, and blur causes mobile first-frame glitch */
   padding: 2rem 2rem 4rem;
   gap: 0;
   overflow-y: auto;
