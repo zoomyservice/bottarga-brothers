@@ -6,6 +6,266 @@
   <title>Recipes — Bottarga Brothers</title>
   <meta name="description" content="Real bottarga recipes from the Bottarga Brothers kitchen. Pasta, toast, eggs, couscous — discover how to use bottarga at home.">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── Recipe Card Gallery ── */
+    .recipe-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .recipe-thumb {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .recipe-thumb:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+    .recipe-thumb img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .recipe-thumb:hover img {
+      transform: scale(1.04);
+    }
+    .recipe-thumb-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(14,12,9,0.92) 30%, rgba(14,12,9,0.25) 70%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+    }
+    .recipe-thumb-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+    .recipe-thumb-name {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .recipe-thumb-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+    .recipe-thumb-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 0.45rem 1rem;
+      width: fit-content;
+      transition: background 0.2s, color 0.2s;
+    }
+    .recipe-thumb:hover .recipe-thumb-btn {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    /* ── Recipe Modal ── */
+    .recipe-modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+    .recipe-modal-bg.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .recipe-modal {
+      background: var(--dark-mid);
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.25s;
+    }
+    .recipe-modal-bg.open .recipe-modal {
+      transform: translateY(0);
+    }
+    .recipe-modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--dark);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      z-index: 10;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .recipe-modal-close:hover {
+      color: var(--cream);
+      border-color: var(--cream);
+    }
+    .recipe-modal-img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      display: block;
+    }
+    .recipe-modal-body {
+      padding: 2rem 2.5rem;
+    }
+    .recipe-modal-cat {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .recipe-modal-title {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      color: var(--white);
+      margin-bottom: 0.7rem;
+    }
+    .recipe-modal-desc {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+    .recipe-modal-stats {
+      display: flex;
+      gap: 2rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .recipe-modal-stat label {
+      display: block;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.2rem;
+    }
+    .recipe-modal-stat span {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--cream);
+    }
+    .recipe-modal-cols {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 2.5rem;
+    }
+    @media (max-width: 600px) {
+      .recipe-modal-cols { grid-template-columns: 1fr; gap: 1.5rem; }
+      .recipe-modal-body { padding: 1.5rem 1.2rem; }
+    }
+    .recipe-modal-section-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-ingredients {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .modal-ingredients li {
+      font-size: 0.84rem;
+      color: var(--muted);
+      padding: 0.45rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+    .modal-ingredients li::before {
+      content: '—';
+      color: var(--gold);
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      margin-top: 0.1rem;
+    }
+    .modal-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      counter-reset: step-counter;
+    }
+    .modal-steps li {
+      counter-increment: step-counter;
+      font-size: 0.84rem;
+      color: var(--muted);
+      padding: 0.8rem 0 0.8rem 2.2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      line-height: 1.6;
+    }
+    .modal-steps li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 1.4rem;
+      height: 1.4rem;
+      background: var(--dark);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 0.65rem;
+      font-family: var(--sans);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .recipe-modal-tip {
+      margin-top: 1.5rem;
+      padding: 1rem 1.2rem;
+      background: var(--dark);
+      border-left: 2px solid var(--gold);
+      font-size: 0.8rem;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+  </style>
 </head>
 <body>
 
@@ -25,7 +285,7 @@
       <li><a href="about.html">About</a></li>
       <li><a href="recipes.html" class="active">Recipes</a></li>
       <li><a href="contact.html">Contact</a></li>
-      <li><a href="shop.html" class="nav-cta">Shop Now</a></li>
+      <li><a href="shop-usa.html" class="nav-cta">Shop Now</a></li>
     </ul>
     <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
   </div>
@@ -37,197 +297,76 @@
     <span class="label">From Our Kitchen</span>
     <h1>Bottarga <em style="font-style:italic; color:var(--gold-light);">Recipes</em></h1>
     <div class="divider"></div>
-    <p class="large">Impress your guests. Savour bottarga sliced thin with your favourite aperitif, or grate it like a truffle over pasta, eggs, and toast. Turn ordinary dishes into culinary delights.</p>
+    <p class="large">Click any recipe to open the full step-by-step instructions and ingredients. Impress your guests in minutes.</p>
   </div>
 </div>
 
-<!-- ── Intro ── -->
-<div style="background:var(--dark-mid); border-bottom:1px solid var(--border); padding:2rem 0;">
+<!-- ── Celebrity strip ── -->
+<div style="background:var(--dark-mid); border-bottom:1px solid var(--border); padding:1.5rem 0;">
   <div class="container">
-    <p style="text-align:center; font-size:0.85rem; color:var(--muted); max-width:620px; margin:0 auto;">Bottarga featured on <strong style="color:var(--cream);">CNN's Anthony Bourdain: Parts Unknown</strong> and used by chefs including <strong style="color:var(--cream);">Martha Stewart</strong>, <strong style="color:var(--cream);">Frankie Celenza</strong>, and <strong style="color:var(--cream);">Jamie Oliver</strong>. Now it's your turn.</p>
+    <p style="text-align:center; font-size:0.82rem; color:var(--muted); max-width:620px; margin:0 auto;">Featured on <strong style="color:var(--cream);">CNN's Anthony Bourdain: Parts Unknown</strong>. Used by <strong style="color:var(--cream);">Martha Stewart</strong>, <strong style="color:var(--cream);">Frankie Celenza</strong>, and <strong style="color:var(--cream);">Jamie Oliver</strong>. Now it's your turn.</p>
   </div>
 </div>
 
-<!-- ── Recipes ── -->
+<!-- ── Recipe Gallery ── -->
 <section style="background:var(--black); padding:clamp(4rem,7vw,7rem) 0;">
   <div class="container">
-    <!-- Hero recipe image -->
-    <div style="margin-bottom:3rem; position:relative; overflow:hidden;">
-      <img src="img/bottarga_pasta.jpg" alt="Pasta Bottarga — the classic Italian way" style="width:100%; height:380px; object-fit:cover; display:block;">
-      <div style="position:absolute; inset:0; background:linear-gradient(to right, rgba(14,12,9,0.8) 30%, transparent 70%); display:flex; align-items:center; padding:3rem;">
-        <div>
-          <span class="label" style="display:block; margin-bottom:0.5rem;">The Classic</span>
-          <h3 style="color:var(--white); font-size:clamp(1.5rem,3vw,2.5rem); margin-bottom:0.5rem;">Pasta Bottarga</h3>
-          <p style="font-size:0.85rem; max-width:300px;">Spaghetti, olive oil, garlic, and grated Sardinian Gold. Five ingredients, zero effort, extraordinary result.</p>
-        </div>
-      </div>
-    </div>
-    <div class="recipe-grid">
 
-      <!-- Pasta Bottarga -->
-      <div class="recipe-card fade-up">
-        <div class="recipe-header">
-          <span class="label">Classic Italian</span>
-          <h3>Pasta Bottarga</h3>
-          <p>One of the most popular Italian dishes featuring bottarga. A briny, oceanic pasta that comes together in minutes with barely any ingredients. Recipe courtesy of Herbert Madar.</p>
-        </div>
-        <div class="recipe-body">
-          <div class="recipe-meta">
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Serves</span>
-              <span class="recipe-meta-value">1</span>
-            </div>
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Time</span>
-              <span class="recipe-meta-value">15 min</span>
-            </div>
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Bottarga</span>
-              <span class="recipe-meta-value">Sardinian Gold</span>
-            </div>
+    <div class="recipe-gallery">
+
+      <!-- Card 1: Pasta Bottarga -->
+      <div class="recipe-thumb fade-up" onclick="openRecipe('pasta')">
+        <img src="img/bottarga_pasta.jpg" alt="Pasta Bottarga">
+        <div class="recipe-thumb-overlay">
+          <div class="recipe-thumb-label">Classic Italian</div>
+          <div class="recipe-thumb-name">Pasta Bottarga</div>
+          <div class="recipe-thumb-meta">
+            <span>⏱ 15 min</span>
+            <span>👤 1 serving</span>
           </div>
-          <div style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem;">Ingredients</div>
-          <ul class="ingredients-list">
-            <li>3 oz spaghetti</li>
-            <li>2 tbsp extra virgin olive oil</li>
-            <li>2 cloves garlic, finely chopped</li>
-            <li>Handful of fresh arugula (optional)</li>
-            <li>2 tbsp grated Sardinian Gold Bottarga</li>
-            <li>Salt and pepper to taste</li>
-          </ul>
-          <div style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem; margin-top:1.2rem;">Method</div>
-          <ol class="steps-list">
-            <li>Cook pasta to al dente. Rinse with cold water and set aside.</li>
-            <li>In a medium frying pan on medium-high heat, fry minced garlic in hot olive oil briefly — before it browns. Add arugula and cook until wilted.</li>
-            <li>Add the cooked spaghetti to the pan. Toss gently until the pasta is hot and completely coated in the olive oil and garlic.</li>
-            <li>Season with salt and pepper. Transfer to a plate.</li>
-            <li>Sprinkle a generous amount of grated Sardinian Gold Bottarga over the top. Serve immediately.</li>
-          </ol>
+          <div class="recipe-thumb-btn">View Recipe →</div>
         </div>
       </div>
 
-      <!-- Bottarga Toast -->
-      <div class="recipe-card fade-up fade-up-delay-1">
-        <div class="recipe-header">
-          <span class="label">Aperitif</span>
-          <h3>Bottarga Toast</h3>
-          <p>Can be served as an aperitif or just a tasty snack. Also very simple and fast to make — three ingredients, zero effort, maximum impression.</p>
-        </div>
-        <div class="recipe-body">
-          <div class="recipe-meta">
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Serves</span>
-              <span class="recipe-meta-value">2–4</span>
-            </div>
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Time</span>
-              <span class="recipe-meta-value">5 min</span>
-            </div>
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Bottarga</span>
-              <span class="recipe-meta-value">Boutargue Impériale</span>
-            </div>
+      <!-- Card 2: Bottarga Toast -->
+      <div class="recipe-thumb fade-up fade-up-delay-1" onclick="openRecipe('toast')">
+        <img src="img/sardinian_40off.jpg" alt="Bottarga Toast">
+        <div class="recipe-thumb-overlay">
+          <div class="recipe-thumb-label">Aperitif</div>
+          <div class="recipe-thumb-name">Bottarga Toast</div>
+          <div class="recipe-thumb-meta">
+            <span>⏱ 5 min</span>
+            <span>👤 2–4 servings</span>
           </div>
-          <div style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem;">Ingredients</div>
-          <ul class="ingredients-list">
-            <li>French baguette or ciabatta</li>
-            <li>Butter</li>
-            <li>Grated Boutargue Impériale</li>
-          </ul>
-          <div style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem; margin-top:1.2rem;">Method</div>
-          <ol class="steps-list">
-            <li>Cut bread into slices approximately ¾ inch thick.</li>
-            <li>Toast lightly and allow to cool completely — never butter warm toast.</li>
-            <li>Apply a light layer of butter to the cooled toast.</li>
-            <li>Sprinkle grated bottarga generously on top. That's it. Enjoy.</li>
-          </ol>
-          <div style="margin-top:1.2rem; padding:1rem; background:var(--dark); border-left:2px solid var(--gold);">
-            <p style="font-size:0.78rem; font-style:italic; color:var(--muted); margin:0;">Pair with Arak, a dry sparkling wine, or prosecco. Serve at room temperature for the fullest flavor.</p>
-          </div>
+          <div class="recipe-thumb-btn">View Recipe →</div>
         </div>
       </div>
 
-      <!-- Couscous Bottarga -->
-      <div class="recipe-card fade-up">
-        <div class="recipe-header">
-          <span class="label">Mediterranean</span>
-          <h3>Couscous Bottarga</h3>
-          <p>An easy Mediterranean recipe made in heaven. Very easy to make and so delicious — a perfect weeknight dish that feels like something special.</p>
-        </div>
-        <div class="recipe-body">
-          <div class="recipe-meta">
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Serves</span>
-              <span class="recipe-meta-value">1</span>
-            </div>
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Time</span>
-              <span class="recipe-meta-value">15 min</span>
-            </div>
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Bottarga</span>
-              <span class="recipe-meta-value">Grated Gold</span>
-            </div>
+      <!-- Card 3: Couscous Bottarga -->
+      <div class="recipe-thumb fade-up fade-up-delay-2" onclick="openRecipe('couscous')">
+        <img src="img/cropped-whole_grated_bottarga-scaled-2.jpg" alt="Couscous Bottarga">
+        <div class="recipe-thumb-overlay">
+          <div class="recipe-thumb-label">Mediterranean</div>
+          <div class="recipe-thumb-name">Couscous Bottarga</div>
+          <div class="recipe-thumb-meta">
+            <span>⏱ 15 min</span>
+            <span>👤 1 serving</span>
           </div>
-          <div style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem;">Ingredients</div>
-          <ul class="ingredients-list">
-            <li>1 cup prepared couscous (cooked)</li>
-            <li>2 tbsp extra virgin olive oil</li>
-            <li>2 cloves garlic</li>
-            <li>¼ cup green onion</li>
-            <li>2 tbsp grated bottarga</li>
-            <li>Sea salt &amp; freshly ground black pepper</li>
-          </ul>
-          <div style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem; margin-top:1.2rem;">Method</div>
-          <ol class="steps-list">
-            <li>Prepare couscous according to package instructions. Set aside.</li>
-            <li>In a pan, warm olive oil over medium heat. Sauté garlic until fragrant. Add green onion and cook briefly.</li>
-            <li>Fold in the cooked couscous. Season with salt and pepper.</li>
-            <li>Plate and finish with a generous sprinkle of grated bottarga over the top.</li>
-          </ol>
+          <div class="recipe-thumb-btn">View Recipe →</div>
         </div>
       </div>
 
-      <!-- Sunny Side Bottarga -->
-      <div class="recipe-card fade-up fade-up-delay-1">
-        <div class="recipe-header">
-          <span class="label">Breakfast</span>
-          <h3>Sunny Side Bottarga</h3>
-          <p>The simplest luxury breakfast imaginable. The richness of a perfectly fried egg meets the briny depth of grated bottarga — extraordinary in under five minutes.</p>
-        </div>
-        <div class="recipe-body">
-          <div class="recipe-meta">
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Serves</span>
-              <span class="recipe-meta-value">1</span>
-            </div>
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Time</span>
-              <span class="recipe-meta-value">5 min</span>
-            </div>
-            <div class="recipe-meta-item">
-              <span class="recipe-meta-label">Bottarga</span>
-              <span class="recipe-meta-value">Any variety</span>
-            </div>
+      <!-- Card 4: Sunny Side Bottarga -->
+      <div class="recipe-thumb fade-up" onclick="openRecipe('eggs')">
+        <img src="img/ouro_10.jpg" alt="Sunny Side Bottarga Eggs">
+        <div class="recipe-thumb-overlay">
+          <div class="recipe-thumb-label">Breakfast</div>
+          <div class="recipe-thumb-name">Sunny Side Bottarga</div>
+          <div class="recipe-thumb-meta">
+            <span>⏱ 5 min</span>
+            <span>👤 1 serving</span>
           </div>
-          <div style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem;">Ingredients</div>
-          <ul class="ingredients-list">
-            <li>1–2 fresh eggs</li>
-            <li>1 tbsp butter or olive oil</li>
-            <li>Grated bottarga, to taste</li>
-            <li>Pinch of sea salt</li>
-            <li>Fresh toast or crusty bread, to serve</li>
-          </ul>
-          <div style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem; margin-top:1.2rem;">Method</div>
-          <ol class="steps-list">
-            <li>Heat butter or olive oil in a small pan over medium-low heat.</li>
-            <li>Crack eggs into the pan. Cook gently until whites are just set and yolks remain runny.</li>
-            <li>Slide onto a plate. Immediately grate bottarga generously over the top.</li>
-            <li>Season with a pinch of sea salt. Serve with toast.</li>
-          </ol>
-          <div style="margin-top:1.2rem; padding:1rem; background:var(--dark); border-left:2px solid var(--gold);">
-            <p style="font-size:0.78rem; font-style:italic; color:var(--muted); margin:0;">Try with the Greek Avgotaraho for a more delicate flavor, or Sardinian Gold for something bolder.</p>
-          </div>
+          <div class="recipe-thumb-btn">View Recipe →</div>
         </div>
       </div>
 
@@ -238,12 +377,13 @@
       <span class="label" style="margin-bottom:0.8rem; display:block;">Share Your Creation</span>
       <h3 style="color:var(--cream); margin-bottom:0.8rem;">Have a Bottarga Recipe?</h3>
       <p style="max-width:480px; margin:0 auto 1.5rem; font-size:0.9rem;">We love hearing from our community. If you've discovered a new way to enjoy bottarga, we'd love to feature it here.</p>
-      <a href="contact.html" class="btn btn-outline">Contact Us About Your Recipe</a>
+      <a href="contact.html" class="btn btn-outline">Send Us Your Recipe</a>
     </div>
+
   </div>
 </section>
 
-<!-- ── How to Use Callout ── -->
+<!-- ── Pro Tips ── -->
 <section style="background:var(--dark-mid); padding:clamp(3rem,5vw,5rem) 0; border-top:1px solid var(--border);">
   <div class="container">
     <div class="grid-2" style="gap:clamp(2rem,4vw,4rem); align-items:center;">
@@ -268,7 +408,7 @@
         </div>
         <div style="background:var(--dark); border:1px solid var(--border); padding:1.2rem 1.5rem; display:flex; gap:1rem; align-items:center;">
           <span style="color:var(--gold); font-size:1rem; flex-shrink:0;">✦</span>
-          <p style="margin:0; font-size:0.85rem;">Try it with Arak, dry white wine, or prosecco as an aperitif</p>
+          <p style="margin:0; font-size:0.85rem;">Pair with Arak, dry white wine, or prosecco as an aperitif</p>
         </div>
         <div style="background:var(--dark); border:1px solid var(--border); padding:1.2rem 1.5rem; display:flex; gap:1rem; align-items:center;">
           <span style="color:var(--gold); font-size:1rem; flex-shrink:0;">✦</span>
@@ -301,7 +441,7 @@
           <a href="https://www.instagram.com/bottarga_brothers/" target="_blank" class="social-link">ig</a>
         </div>
       </div>
-      <div class="footer-col"><h5>Shop</h5><ul><li><a href="shop.html">All Products</a></li><li><a href="shop.html#sardinia">Sardinian Gold</a></li><li><a href="shop.html#france">French Boutargue</a></li><li><a href="shop.html#greece">Greek Avgotaraho</a></li></ul></div>
+      <div class="footer-col"><h5>Shop</h5><ul><li><a href="shop-usa.html">🇺🇸 USA Orders</a></li><li><a href="shop-canada.html">🇨🇦 Canada Orders</a></li><li><a href="shop-usa.html#sardinia">Sardinian Gold</a></li><li><a href="shop-usa.html#greece">Greek Avgotaraho</a></li></ul></div>
       <div class="footer-col"><h5>Learn</h5><ul><li><a href="what-is.html">What Is Bottarga?</a></li><li><a href="recipes.html">Recipes</a></li><li><a href="about.html">Our Story</a></li></ul></div>
       <div class="footer-col"><h5>Contact</h5><ul><li><a href="tel:18446232767">1-844-MAD-BROS</a></li><li><a>Stamford, CT</a></li><li><a>Montreal, QC</a></li></ul></div>
     </div>
@@ -312,13 +452,187 @@
   </div>
 </footer>
 
+<!-- ── Recipe Modal ── -->
+<div class="recipe-modal-bg" id="recipeModal" onclick="closeOnBg(event)">
+  <div class="recipe-modal" id="recipeModalInner">
+    <button class="recipe-modal-close" onclick="closeRecipe()" aria-label="Close">✕</button>
+    <img class="recipe-modal-img" id="modalImg" src="" alt="">
+    <div class="recipe-modal-body">
+      <div class="recipe-modal-cat" id="modalCat"></div>
+      <div class="recipe-modal-title" id="modalTitle"></div>
+      <div class="recipe-modal-desc" id="modalDesc"></div>
+      <div class="recipe-modal-stats" id="modalStats"></div>
+      <div class="recipe-modal-cols">
+        <div>
+          <div class="recipe-modal-section-title">Ingredients</div>
+          <ul class="modal-ingredients" id="modalIngredients"></ul>
+        </div>
+        <div>
+          <div class="recipe-modal-section-title">Method</div>
+          <ol class="modal-steps" id="modalSteps"></ol>
+          <div class="recipe-modal-tip" id="modalTip" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+  // ── Nav ──
   document.getElementById('navToggle').addEventListener('click', () => document.body.classList.toggle('nav-open'));
   document.querySelectorAll('.has-dropdown > a').forEach(a => { a.addEventListener('click', function(e) { if (window.innerWidth < 900) { e.preventDefault(); this.closest('.has-dropdown').classList.toggle('open'); } }); });
   document.addEventListener('click', function(e) { if (!e.target.closest('.has-dropdown')) document.querySelectorAll('.has-dropdown').forEach(d => d.classList.remove('open')); });
+
+  // ── Fade-up ──
   const obs = new IntersectionObserver((e) => e.forEach(el => { if(el.isIntersecting){ el.target.classList.add('visible'); obs.unobserve(el.target); }}), {threshold:0.08});
   document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+  // ── Recipe Data ──
+  const RECIPES = {
+    pasta: {
+      cat: 'Classic Italian',
+      title: 'Pasta Bottarga',
+      img: 'img/bottarga_pasta.jpg',
+      desc: 'One of the most beloved Italian dishes featuring bottarga. A briny, oceanic pasta that comes together in minutes with barely any ingredients. Recipe courtesy of Herbert Madar.',
+      serves: '1',
+      time: '15 min',
+      bottarga: 'Sardinian Gold',
+      ingredients: [
+        '3 oz spaghetti',
+        '2 tbsp extra virgin olive oil',
+        '2 cloves garlic, finely chopped',
+        'Handful of fresh arugula (optional)',
+        '2 tbsp grated Sardinian Gold Bottarga',
+        'Salt and pepper to taste'
+      ],
+      steps: [
+        'Cook pasta to al dente. Rinse with cold water and set aside.',
+        'In a medium frying pan on medium-high heat, fry minced garlic in hot olive oil briefly — before it browns. Add arugula and cook until wilted.',
+        'Add the cooked spaghetti to the pan. Toss gently until the pasta is hot and completely coated in the olive oil and garlic.',
+        'Season with salt and pepper. Transfer to a plate.',
+        'Sprinkle a generous amount of grated Sardinian Gold Bottarga over the top. Serve immediately.'
+      ],
+      tip: null
+    },
+    toast: {
+      cat: 'Aperitif',
+      title: 'Bottarga Toast',
+      img: 'img/sardinian_40off.jpg',
+      desc: 'Can be served as an aperitif or just a tasty snack. Three ingredients, zero effort, maximum impression. The simplest way to introduce guests to bottarga.',
+      serves: '2–4',
+      time: '5 min',
+      bottarga: 'Boutargue Impériale',
+      ingredients: [
+        'French baguette or ciabatta',
+        'Unsalted butter (room temperature)',
+        'Grated Boutargue Impériale, to taste'
+      ],
+      steps: [
+        'Cut bread into slices approximately ¾ inch thick.',
+        'Toast lightly and allow to cool completely — never butter warm toast.',
+        'Apply a light, even layer of butter to the cooled toast.',
+        'Sprinkle grated bottarga generously over the top. Serve immediately.'
+      ],
+      tip: 'Pair with Arak, a dry sparkling wine, or prosecco. Serve at room temperature for the fullest flavor.'
+    },
+    couscous: {
+      cat: 'Mediterranean',
+      title: 'Couscous Bottarga',
+      img: 'img/cropped-whole_grated_bottarga-scaled-2.jpg',
+      desc: 'An easy Mediterranean recipe made in heaven. Very simple and very delicious — a perfect weeknight dish that feels like something special. The grated bottarga finishes the dish like a truffle.',
+      serves: '1',
+      time: '15 min',
+      bottarga: 'Grated Gold',
+      ingredients: [
+        '1 cup prepared couscous (cooked)',
+        '2 tbsp extra virgin olive oil',
+        '2 cloves garlic, minced',
+        '¼ cup green onion, sliced',
+        '2 tbsp grated bottarga',
+        'Sea salt and freshly ground black pepper'
+      ],
+      steps: [
+        'Prepare couscous according to package instructions. Fluff with a fork and set aside.',
+        'In a pan, warm olive oil over medium heat. Add garlic and sauté until fragrant, about 1 minute.',
+        'Add the green onion and cook briefly, about 30 seconds.',
+        'Fold in the cooked couscous. Toss to combine. Season with salt and pepper.',
+        'Plate and finish with a generous sprinkle of grated bottarga over the top. Serve warm.'
+      ],
+      tip: null
+    },
+    eggs: {
+      cat: 'Breakfast',
+      title: 'Sunny Side Bottarga',
+      img: 'img/ouro_10.jpg',
+      desc: 'The simplest luxury breakfast imaginable. The richness of a perfectly fried egg meets the briny depth of grated bottarga — extraordinary in under five minutes.',
+      serves: '1',
+      time: '5 min',
+      bottarga: 'Any variety',
+      ingredients: [
+        '1–2 fresh eggs',
+        '1 tbsp unsalted butter or extra virgin olive oil',
+        'Grated bottarga, to taste',
+        'Pinch of sea salt',
+        'Fresh toast or crusty bread, to serve'
+      ],
+      steps: [
+        'Heat butter or olive oil in a small non-stick pan over medium-low heat.',
+        'Crack eggs gently into the pan. Cook low and slow until whites are just set and the yolks remain runny.',
+        'Slide onto a warm plate. Immediately grate bottarga generously over the top.',
+        'Season with a pinch of sea salt. Serve with toast on the side.'
+      ],
+      tip: 'Try with Greek Avgotaraho for a delicate, sweet flavor — or Sardinian Gold for something bolder and saltier.'
+    }
+  };
+
+  // ── Modal Logic ──
+  function openRecipe(id) {
+    const r = RECIPES[id];
+    if (!r) return;
+
+    document.getElementById('modalImg').src = r.img;
+    document.getElementById('modalImg').alt = r.title;
+    document.getElementById('modalCat').textContent = r.cat;
+    document.getElementById('modalTitle').textContent = r.title;
+    document.getElementById('modalDesc').textContent = r.desc;
+
+    document.getElementById('modalStats').innerHTML =
+      `<div class="recipe-modal-stat"><label>Serves</label><span>${r.serves}</span></div>` +
+      `<div class="recipe-modal-stat"><label>Time</label><span>${r.time}</span></div>` +
+      `<div class="recipe-modal-stat"><label>Bottarga</label><span>${r.bottarga}</span></div>`;
+
+    document.getElementById('modalIngredients').innerHTML =
+      r.ingredients.map(i => `<li>${i}</li>`).join('');
+
+    document.getElementById('modalSteps').innerHTML =
+      r.steps.map(s => `<li>${s}</li>`).join('');
+
+    const tipEl = document.getElementById('modalTip');
+    if (r.tip) {
+      tipEl.textContent = r.tip;
+      tipEl.style.display = 'block';
+    } else {
+      tipEl.style.display = 'none';
+    }
+
+    document.getElementById('recipeModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('recipeModalInner').scrollTop = 0;
+  }
+
+  function closeRecipe() {
+    document.getElementById('recipeModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeOnBg(e) {
+    if (e.target === document.getElementById('recipeModal')) closeRecipe();
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeRecipe();
+  });
 </script>
-  <script src="js/chatbot.js"></script>
+<script src="js/chatbot.js"></script>
 </body>
 </html>
