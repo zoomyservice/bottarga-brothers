@@ -1,0 +1,10 @@
+name = "bottarga-admin"
+main = "index.js"
+compatibility_date = "2024-09-02"
+
+[[kv_namespaces]]
+binding = "CONTENT"
+id = "ac2774a4b9b349548bffacbc6cfa74c3"
+
+[vars]
+ALLOWED_ORIGIN = "https://bottargabrothers.com"

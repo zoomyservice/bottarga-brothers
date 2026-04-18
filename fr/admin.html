@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>Bottarga Brothers — Admin</title>
+<title>Poutargue Brothers — Administrateur</title>
 <style>
 :root{--dark:#0a0a0a;--card:#141414;--border:#2a2a2a;--gold:#c9a84c;--gold-dim:rgba(201,168,76,0.15);--text:#e8e0d0;--muted:#888;--green:#4ade80;--red:#f87171;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -53,57 +51,57 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 .tab-content.active{display:block;}
 .change-pwd-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;max-width:400px;}
 </style>
-</head>
+<script>localStorage.setItem('zmy_lang','fr');</script></head>
 <body>
 <!-- LOGIN -->
 <div id="login-screen">
 <div class="login-box">
 <h1>Bottarga Brothers</h1>
-<p>Admin Panel — enter your password to continue</p>
-<input autocomplete="current-password" id="pwd-input" placeholder="Password" type="password"/>
-<button class="btn-gold" onclick="doLogin()">Sign In</button>
-<div class="login-error" id="login-error">Incorrect password. Please try again.</div>
+<p>Panneau d'administration — entrez votre mot de passe pour continuer</p>
+<input autocomplete="current-password" id="pwd-input" placeholder="Mot de passe" type="password"/>
+<button class="btn-gold" onclick="doLogin()">Connectez-vous</button>
+<div class="login-error" id="login-error">Mot de passe incorrect. Veuillez réessayer.</div>
 </div>
 </div>
 <!-- ADMIN PANEL -->
 <div id="admin-panel">
 <div class="top-bar">
-<div class="top-bar-logo">⚙ Admin Panel</div>
+<div class="top-bar-logo">⚙ Panneau d'administration</div>
 <div class="top-bar-actions">
-<span class="save-status" id="save-status">✓ Saved</span>
-<button class="btn-save" id="save-btn" onclick="saveAll()">Save All Changes</button>
-<button class="btn-logout" onclick="doLogout()">Log out</button>
+<span class="save-status" id="save-status">✓ Enregistré</span>
+<button class="btn-save" id="save-btn" onclick="saveAll()">Enregistrer toutes les modifications</button>
+<button class="btn-logout" onclick="doLogout()">Déconnexion</button>
 </div>
 </div>
 <div class="admin-content">
 <div class="tabs">
-<button class="tab active" onclick="switchTab('products',this)">Products</button>
-<button class="tab" onclick="switchTab('pages',this)">Page Text</button>
-<button class="tab" onclick="switchTab('settings',this)">Settings</button>
+<button class="tab active" onclick="switchTab('products',this)">Produits</button>
+<button class="tab" onclick="switchTab('pages',this)">Texte de la page</button>
+<button class="tab" onclick="switchTab('settings',this)">Paramètres</button>
 </div>
 <!-- PRODUCTS TAB -->
 <div class="tab-content active" id="tab-products">
-<div class="section-heading">USA Shop — Products</div>
+<div class="section-heading">Boutique USA — Produits</div>
 <div class="product-grid" id="product-grid"></div>
 </div>
 <!-- PAGE TEXT TAB -->
 <div class="tab-content" id="tab-pages">
-<div class="section-heading">Homepage</div>
-<div class="field"><label>Hero Headline</label><input data-key="hero_headline" placeholder="The World's Finest Bottarga" type="text"/></div>
-<div class="field"><label>Hero Subheadline</label><input data-key="hero_sub" placeholder="Wild-caught mullet roe..." type="text"/></div>
-<div class="section-heading">About Page</div>
-<div class="field"><label>About Intro Paragraph</label><textarea data-key="about_intro" placeholder="Our story..."></textarea></div>
-<div class="section-heading">Contact Info</div>
-<div class="field"><label>Email Address</label><input data-key="contact_email" placeholder="contact@bottargabrothers.com" type="text"/></div>
-<div class="field"><label>Phone / WhatsApp</label><input data-key="contact_phone" placeholder="+1 (203) ..." type="text"/></div>
+<div class="section-heading">Page d'accueil</div>
+<div class="field"><label>Titre du héros</label><input data-key="hero_headline" placeholder="La meilleure poutargue du monde" type="text"/></div>
+<div class="field"><label>Sous-titre du héros</label><input data-key="hero_sub" placeholder="Œufs de mulet sauvages..." type="text"/></div>
+<div class="section-heading">À propos de la page</div>
+<div class="field"><label>À propos du paragraphe d'introduction</label><textarea data-key="about_intro" placeholder="Notre histoire..."></textarea></div>
+<div class="section-heading">Informations de contact</div>
+<div class="field"><label>Adresse e-mail</label><input data-key="contact_email" placeholder="contact@bottargabrothers.com" type="text"/></div>
+<div class="field"><label>Téléphone / WhatsApp</label><input data-key="contact_phone" placeholder="+1 (203) ..." type="text"/></div>
 </div>
 <!-- SETTINGS TAB -->
 <div class="tab-content" id="tab-settings">
-<div class="section-heading">Change Password</div>
+<div class="section-heading">Changer le mot de passe</div>
 <div class="change-pwd-section">
-<div class="field"><label>New Password</label><input id="new-pwd" placeholder="At least 8 characters" type="password"/></div>
-<div class="field"><label>Confirm Password</label><input id="confirm-pwd" placeholder="Repeat password" type="password"/></div>
-<button class="btn-gold" onclick="changePassword()" style="width:auto;padding:10px 24px;">Update Password</button>
+<div class="field"><label>Nouveau mot de passe</label><input id="new-pwd" placeholder="Au moins 8 caractères" type="password"/></div>
+<div class="field"><label>Confirmer le mot de passe</label><input id="confirm-pwd" placeholder="Répéter le mot de passe" type="password"/></div>
+<button class="btn-gold" onclick="changePassword()" style="width:auto;padding:10px 24px;">Mettre à jour le mot de passe</button>
 <div id="pwd-change-msg" style="margin-top:.75rem;font-size:.85rem;display:none;"></div>
 </div>
 </div>
