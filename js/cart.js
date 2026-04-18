@@ -171,7 +171,9 @@
       if (data.url) { cart = []; saveCart(); window.location.href = data.url; }
       else throw new Error('No URL returned');
     } catch(e) {
-      if (btn) { btn.textContent = 'Error \u2014 try again'; btn.disabled = false; setTimeout(() => { if(btn) btn.textContent = 'Proceed to Checkout'; }, 3000); }
+      console.error('[BB Cart] Checkout error:', e);
+      const msg = e && e.message ? e.message : String(e);
+      if (btn) { btn.textContent = msg.slice(0,40) || 'Error \u2014 try again'; btn.disabled = false; setTimeout(() => { if(btn) btn.textContent = 'Proceed to Checkout'; }, 6000); }
     }
   }
 
