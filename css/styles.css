@@ -86,10 +86,12 @@ p.large { font-size: clamp(1rem, 1.5vw, 1.2rem); color: var(--cream); }
   display: flex;
   align-items: center;
   background: rgba(14,12,9,0.65);
-  backdrop-filter: blur(6px);
+  /* NO backdrop-filter here — it creates a containing block that traps fixed children (mobile overlay) */
   border-bottom: 1px solid rgba(255,255,255,0.06);
   transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s;
 }
+/* When menu is open, also disable backdrop-filter on scrolled state */
+body.nav-open .nav { backdrop-filter: none; }
 .nav.scrolled {
   background: rgba(14,12,9,0.95);
   backdrop-filter: blur(12px);
