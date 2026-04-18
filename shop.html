@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Bottarga — Bottarga Brothers</title>
+  <meta name="description" content="Shop Supreme Bottarga™ from Sardinia, France, Greece, Brazil and Egypt. Free USPS shipping on all US orders.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="nav scrolled" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      Bottarga Brothers
+      <span>Supreme Bottarga™</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="what-is.html">What Is Bottarga?</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="recipes.html">Recipes</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="shop.html" class="nav-cta">Shop Now</a></li>
+    </ul>
+    <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- ── Page Hero ── -->
+<div class="page-hero" style="background: linear-gradient(135deg, rgba(14,12,9,0.9) 0%, rgba(14,12,9,0.65) 60%, rgba(14,12,9,0.9) 100%), url('img/supreme_2021_black.jpg') center/cover no-repeat;">
+  <div class="container">
+    <span class="label">Supreme Bottarga™</span>
+    <h1>Shop <em style="font-style:italic; color:var(--gold-light);">Bottarga</em></h1>
+    <div class="divider"></div>
+    <p class="large">Every product is sourced from world-class producers across 5 countries. Free USPS shipping on all US orders. 100% satisfaction guaranteed.</p>
+  </div>
+</div>
+
+<!-- ── Shop Content ── -->
+<section style="background: var(--black); padding: clamp(3rem,6vw,6rem) 0;">
+  <div class="container">
+
+    <!-- Region Notice -->
+    <div style="background: var(--dark-mid); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 1.2rem 1.5rem; margin-bottom: 3rem; display:flex; gap:1rem; align-items:center;">
+      <span style="color:var(--gold); font-size:1.2rem;">ℹ</span>
+      <p style="font-size:0.85rem; margin:0; color:var(--muted);">Prices shown are for <strong style="color:var(--cream);">US orders</strong> with free USPS shipping. We also ship to Canada — see the Canada section below. International shipping available. <a href="contact.html" style="color:var(--gold); text-decoration:underline;">Contact us</a> for wholesale &amp; chef program inquiries.</p>
+    </div>
+
+    <!-- Shop Header -->
+    <div class="shop-header">
+      <h2 style="color:var(--white); font-size:clamp(1.5rem,3vw,2.2rem);">All Products</h2>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterProducts('all', this)">All</button>
+        <button class="filter-tab" onclick="filterProducts('whole', this)">Whole Lobe</button>
+        <button class="filter-tab" onclick="filterProducts('grated', this)">Grated</button>
+        <button class="filter-tab" onclick="filterProducts('waxed', this)">Waxed</button>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="productGrid">
+
+      <!-- Sardinian Gold -->
+      <div class="product-card fade-up" data-type="whole" id="sardinia">
+        <div class="product-badge" style="background:var(--gold-dim); color:var(--cream);">On Sale</div>
+        <img class="product-img" src="img/sardinian_40off.jpg" alt="Sardinian Gold Bottarga">
+        <div class="product-info">
+          <div class="product-origin">🇮🇹 Sardinia, Italy</div>
+          <div class="product-name">Sardinian Gold</div>
+          <p class="product-desc">Wild Grey Mullet roe from the waters of Sardinia. The origin of Italian bottarga culture — rich, complex, and deeply satisfying. Shrink-wrapped for freshness. Can be sliced or grated.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
+            <div class="product-price" style="font-size:1.6rem;">$24.99</div>
+            <a href="contact.html" class="btn btn-gold" style="padding:0.5rem 1.2rem; font-size:0.65rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boutargue Classique -->
+      <div class="product-card fade-up fade-up-delay-1" data-type="waxed whole" id="france">
+        <img class="product-img" src="img/bout_class_square.jpg" alt="Boutargue Classique — Traditional Waxed French Bottarga">
+        <div class="product-info">
+          <div class="product-origin">🇫🇷 France — Traditional Waxed</div>
+          <div class="product-name">Boutargue Classique</div>
+          <p class="product-desc">Imported from France. Paraffin-sealed using a centuries-old method. Firm amber lobes with a clean, briny depth and rich amber hue. Kosher for Passover — certified by Grand-Rabbinat de Paris.</p>
+          <div style="background:var(--dark); border:1px solid var(--border); padding:1rem; margin:1rem 0; border-radius:2px;">
+            <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem;">Available Sizes</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; font-size:0.8rem;">
+              <span style="color:var(--muted);">S — 3.7 oz</span><span style="color:var(--cream); text-align:right;">$33.99</span>
+              <span style="color:var(--muted);">M — 4.4 oz</span><span style="color:var(--cream); text-align:right;">$45.99</span>
+              <span style="color:var(--muted);">L — 6.0 oz</span><span style="color:var(--cream); text-align:right;">$47.99</span>
+              <span style="color:var(--muted);">XL — 6.2 oz</span><span style="color:var(--cream); text-align:right;">$49.99</span>
+              <span style="color:var(--muted);">Jumbo — 7.7 oz</span><span style="color:var(--cream); text-align:right;">$58.99</span>
+              <span style="color:var(--muted);">Mega — 8.5 oz</span><span style="color:var(--cream); text-align:right;">$62.99</span>
+              <span style="color:var(--muted);">Giant — 13.0 oz</span><span style="color:var(--cream); text-align:right;">$91.99</span>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+            <div class="product-price"><span class="from">From</span>$33.99</div>
+            <a href="contact.html" class="btn btn-gold" style="padding:0.5rem 1.2rem; font-size:0.65rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boutargue Impériale -->
+      <div class="product-card fade-up fade-up-delay-2" data-type="whole waxed" id="imperiale">
+        <img class="product-img" src="img/imperiale_square.jpg" alt="Boutargue Impériale — Premium French Bottarga">
+        <div class="product-info">
+          <div class="product-origin">🇫🇷 France — Premium Grade</div>
+          <div class="product-name">Boutargue Impériale</div>
+          <p class="product-desc">The top selection from France's finest boutargue producers. Exceptional depth of flavor — whether sliced as an aperitif or grated over pasta. Available in multiple sizes.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
+            <div class="product-price"><span class="from">From</span>$22.99</div>
+            <a href="contact.html" class="btn btn-gold" style="padding:0.5rem 1.2rem; font-size:0.65rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boutargue Impériale Aged -->
+      <div class="product-card fade-up" data-type="whole waxed">
+        <div class="product-badge" style="background:var(--dark-mid); border:1px solid var(--gold); color:var(--gold);">Limited</div>
+        <img class="product-img" src="img/boutargue_kasher_front-copy.jpg" alt="Boutargue Impériale Aged — Reserve French Bottarga">
+        <div class="product-info">
+          <div class="product-origin">🇫🇷 France — Aged Reserve</div>
+          <div class="product-name">Boutargue Impériale Aged</div>
+          <p class="product-desc">Extended cure time produces a sharper, more intense flavor and deeper color. For the serious bottarga enthusiast who wants the full experience. Limited availability.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
+            <div class="product-price"><span class="from">From</span>$22.99</div>
+            <a href="contact.html" class="btn btn-gold" style="padding:0.5rem 1.2rem; font-size:0.65rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Greek Avgotaraho -->
+      <div class="product-card fade-up fade-up-delay-1" data-type="whole" id="greece">
+        <img class="product-img" src="img/greek_avgotaraho.jpg" alt="Greek Avgotaraho — Caviar of the Mediterranean">
+        <div class="product-info">
+          <div class="product-origin">🇬🇷 Greece</div>
+          <div class="product-name">Greek Avgotaraho</div>
+          <p class="product-desc">Greece's prized "Caviar of the Mediterranean." Delicate, slightly nutty, with a long oceanic finish. A refined alternative to Italian and French bottarga.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
+            <div class="product-price"><span class="from">$28.50 – $34.99</span></div>
+            <a href="contact.html" class="btn btn-gold" style="padding:0.5rem 1.2rem; font-size:0.65rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ouro do Brasil -->
+      <div class="product-card fade-up fade-up-delay-2" data-type="whole" id="brazil">
+        <img class="product-img" src="img/1_brazilian_bottarga-copy-1.jpg" alt="Ouro do Brasil — Brazilian Bottarga">
+        <div class="product-info">
+          <div class="product-origin">🇧🇷 Brazil</div>
+          <div class="product-name">Ouro do Brasil</div>
+          <p class="product-desc">Brazilian mullet roe with a milder, sweeter character. A beautiful entry point to the world of bottarga. Mild enough for first-timers, complex enough for connoisseurs.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
+            <div class="product-price"><span class="from">$22.99 – $33.99</span></div>
+            <a href="contact.html" class="btn btn-gold" style="padding:0.5rem 1.2rem; font-size:0.65rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ouro do Brasil Half Lobe -->
+      <div class="product-card fade-up" data-type="whole">
+        <img class="product-img" src="img/brazil_square.jpg" alt="Ouro do Brasil Half Lobe — Brazilian Bottarga">
+        <div class="product-info">
+          <div class="product-origin">🇧🇷 Brazil — Half Lobe</div>
+          <div class="product-name">Ouro do Brasil — Half Lobe</div>
+          <p class="product-desc">Same premium Brazilian mullet roe, now in a smaller half-lobe format. Perfect if you'd like to try before committing to a full lobe, or to sample alongside other varieties.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
+            <div class="product-price"><span class="from">$22.99 – $33.99</span></div>
+            <a href="contact.html" class="btn btn-gold" style="padding:0.5rem 1.2rem; font-size:0.65rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Egyptian Royale (Sold Out) -->
+      <div class="product-card fade-up fade-up-delay-1 sold-out" data-type="whole" id="egypt">
+        <div class="product-badge" style="background:var(--dark); border:1px solid var(--muted); color:var(--muted);">Sold Out</div>
+        <img class="product-img" src="img/1b_egyptian-bottarga.jpg" alt="Egyptian Royale — Batarekh from Port Said">
+        <div class="product-info">
+          <div class="product-origin">🇪🇬 Egypt — Port Said</div>
+          <div class="product-name">Egyptian Royale <span style="font-size:0.75rem; font-family:var(--sans); color:var(--muted);">البوري المصري</span></div>
+          <p class="product-desc">Whole shrink-wrapped Egyptian Batarekh from Port Said. Soft, moist texture with a sublime ocean taste. Sliced thin with garlic, olive oil, and flatbread. Currently unavailable — check back soon.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
+            <div class="product-price">$24.00 – $39.99</div>
+            <span style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); border:1px solid var(--border); padding:0.5rem 1rem;">Notify Me</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grated Bottarga -->
+      <div class="product-card fade-up fade-up-delay-2" data-type="grated" id="grated">
+        <img class="product-img" src="img/cropped-whole_grated_bottarga-scaled-2.jpg" alt="Grated Gold — Sardinian Grated Bottarga">
+        <div class="product-info">
+          <div class="product-origin">🇮🇹 Sardinia — Grated</div>
+          <div class="product-name">Grated Gold</div>
+          <p class="product-desc">Finely grated Sardinian bottarga — the fastest way to bring the flavor of the sea to any dish. Ready to use straight from the package. Sprinkle over pasta, eggs, toast, or salad.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
+            <div class="product-price"><span class="from">$20.00 – $54.00</span></div>
+            <a href="contact.html" class="btn btn-gold" style="padding:0.5rem 1.2rem; font-size:0.65rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grated Gold Pouch -->
+      <div class="product-card fade-up" data-type="grated">
+        <img class="product-img" src="img/50_gr_grated_sardinian.jpg" alt="Grated Bottarga Pouch — 50g Sardinian Grated Bottarga">
+        <div class="product-info">
+          <div class="product-origin">🇮🇹 Sardinia — 50g Pouch</div>
+          <div class="product-name">Grated Bottarga Pouch</div>
+          <p class="product-desc">The same premium grated Sardinian bottarga in a convenient 50-gram resealable pouch. The easiest way to keep bottarga in your kitchen, always ready when you need it.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
+            <div class="product-price">50g Pouch</div>
+            <a href="contact.html" class="btn btn-gold" style="padding:0.5rem 1.2rem; font-size:0.65rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Aged Ouro do Brasil Limited -->
+    <div style="margin-top: 2rem; background:var(--dark-mid); border:1px solid var(--gold); padding:2rem; display:flex; gap:2rem; align-items:center; flex-wrap:wrap;">
+      <div style="flex:1; min-width:220px;">
+        <span class="label" style="margin-bottom:0.5rem; display:block;">Limited Time Offer</span>
+        <h3 style="color:var(--cream); margin-bottom:0.5rem;">Aged Ouro do Brasil</h3>
+        <p style="font-size:0.85rem;">Extended aging gives this Brazilian bottarga a more pronounced, complex character. Limited availability — once it's gone, it's gone.</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap;">
+        <div class="product-price"><span class="from">From</span>$22.99</div>
+        <a href="contact.html" class="btn btn-gold">Order Now</a>
+      </div>
+    </div>
+
+    <!-- Canada Section -->
+    <div style="margin-top: 5rem; padding-top:3rem; border-top:1px solid var(--border);" id="canada">
+      <span class="label" style="margin-bottom:1rem; display:block;">🇨🇦 Canada Orders</span>
+      <h2 style="color:var(--white); margin-bottom:1rem;">Shipping to Canada</h2>
+      <div class="divider"></div>
+      <p style="margin-bottom:2rem; max-width:600px;">We ship to Canada from our Montreal office. The same Supreme Bottarga™ selection is available — contact us directly for Canada pricing and shipping details.</p>
+      <div style="background:var(--dark-mid); border:1px solid var(--border); padding:2rem; max-width:500px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <span class="label" style="margin-bottom:0.4rem; display:block;">Address</span>
+            <p style="font-size:0.85rem; color:var(--cream);">Montreal, Canada H4C 2P4</p>
+          </div>
+          <div>
+            <span class="label" style="margin-bottom:0.4rem; display:block;">Phone</span>
+            <p style="font-size:0.85rem; color:var(--cream);"><a href="tel:18446232767" style="color:var(--gold);">1-844-MAD-BROS</a></p>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <a href="contact.html" class="btn btn-outline" style="font-size:0.68rem;">Contact for Canada Orders</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wholesale / Chef -->
+    <div style="margin-top:4rem; background: linear-gradient(135deg, var(--dark-mid) 0%, var(--dark) 100%); border:1px solid var(--border); padding:2.5rem; text-align:center;">
+      <span class="label" style="margin-bottom:0.8rem; display:block;">For Professionals</span>
+      <h3 style="color:var(--cream); margin-bottom:0.8rem;">Wholesale &amp; Chef Program</h3>
+      <p style="max-width:500px; margin:0 auto 1.5rem; font-size:0.9rem;">We work directly with chefs, restaurants, and specialty retailers. Contact us to learn about our professional program and wholesale pricing.</p>
+      <a href="contact.html" class="btn btn-outline">Get in Touch</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Guarantee Strip ── -->
+<div style="background:var(--dark-mid); border-top:1px solid var(--border); padding:2.5rem 0;">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:2rem; text-align:center;">
+      <div>
+        <div style="font-size:1.8rem; margin-bottom:0.6rem;">📦</div>
+        <div style="font-family:var(--serif); font-size:1rem; color:var(--cream); margin-bottom:0.3rem;">Free US Shipping</div>
+        <p style="font-size:0.78rem;">USPS on every order</p>
+      </div>
+      <div>
+        <div style="font-size:1.8rem; margin-bottom:0.6rem;">⭐</div>
+        <div style="font-family:var(--serif); font-size:1rem; color:var(--cream); margin-bottom:0.3rem;">100% Feedback</div>
+        <p style="font-size:0.78rem;">Amazon &amp; eBay verified</p>
+      </div>
+      <div>
+        <div style="font-size:1.8rem; margin-bottom:0.6rem;">🌍</div>
+        <div style="font-family:var(--serif); font-size:1rem; color:var(--cream); margin-bottom:0.3rem;">Ships Internationally</div>
+        <p style="font-size:0.78rem;">USA, Canada &amp; worldwide</p>
+      </div>
+      <div>
+        <div style="font-size:1.8rem; margin-bottom:0.6rem;">✓</div>
+        <div style="font-family:var(--serif); font-size:1rem; color:var(--cream); margin-bottom:0.3rem;">Satisfaction Guaranteed</div>
+        <p style="font-size:0.78rem;">100% natural. No additives.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:1rem; font-size:1.4rem;">Bottarga Brothers<span>Supreme Bottarga™</span></div>
+        <p>The only destination in North America dedicated exclusively to bottarga.</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/bottargabrothers/" target="_blank" class="social-link">f</a>
+          <a href="https://www.instagram.com/bottarga_brothers/" target="_blank" class="social-link">ig</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Shop</h5>
+        <ul>
+          <li><a href="shop.html">All Bottarga</a></li>
+          <li><a href="shop.html#sardinia">Sardinian Gold</a></li>
+          <li><a href="shop.html#france">Boutargue Classique</a></li>
+          <li><a href="shop.html#greece">Greek Avgotaraho</a></li>
+          <li><a href="shop.html#brazil">Ouro do Brasil</a></li>
+          <li><a href="shop.html#grated">Grated Bottarga</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Learn</h5>
+        <ul>
+          <li><a href="what-is.html">What Is Bottarga?</a></li>
+          <li><a href="recipes.html">Recipes</a></li>
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="tel:18446232767">1-844-MAD-BROS</a></li>
+          <li><a>Stamford, CT — USA</a></li>
+          <li><a>Montreal, QC — Canada</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Bottarga Brothers LLC. All rights reserved.</p>
+      <p class="footer-phone">1-844-MAD-BROS</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', () => document.body.classList.toggle('nav-open'));
+  const obs = new IntersectionObserver((e) => e.forEach(el => { if(el.isIntersecting){ el.target.classList.add('visible'); obs.unobserve(el.target); }}), {threshold:0.08});
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+  function filterProducts(type, btn) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#productGrid .product-card').forEach(card => {
+      const types = card.dataset.type || '';
+      card.style.display = (type === 'all' || types.includes(type)) ? '' : 'none';
+    });
+  }
+</script>
+  <script src="js/chatbot.js"></script>
+</body>
+</html>
