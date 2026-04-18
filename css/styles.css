@@ -146,40 +146,38 @@ p.large { font-size: clamp(1rem, 1.5vw, 1.2rem); color: var(--cream); }
 
 /* ── Nav Dropdown ── */
 .has-dropdown { position: relative; }
-.has-dropdown > a { display: flex; align-items: center; gap: 0.3rem; }
+.has-dropdown > a { display: flex; align-items: center; gap: 0.3rem; cursor: pointer; }
 .nav-dropdown {
+  display: none;
   position: absolute;
-  top: calc(100% + 0.8rem);
+  top: calc(100% + 0.6rem);
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(14,12,9,0.98);
+  background: rgba(14,12,9,0.99);
   border: 1px solid var(--border);
-  min-width: 180px;
-  padding: 0.5rem 0;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.2s, visibility 0.2s;
-  z-index: 200;
+  min-width: 190px;
+  padding: 0.4rem 0;
+  z-index: 9000;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
-.has-dropdown:hover .nav-dropdown,
-.has-dropdown.open .nav-dropdown {
-  opacity: 1; visibility: visible; pointer-events: auto;
+.has-dropdown:hover .nav-dropdown {
+  display: block;
 }
 .nav-dropdown li { list-style: none; }
 .nav-dropdown a {
-  display: block;
-  padding: 0.65rem 1.2rem;
-  font-size: 0.75rem !important;
-  letter-spacing: 0.1em;
+  display: block !important;
+  padding: 0.7rem 1.4rem !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.12em !important;
   color: var(--muted) !important;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: color 0.2s, background 0.2s;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  transition: color 0.2s, background 0.2s !important;
+  font-family: var(--sans) !important;
 }
 .nav-dropdown a:hover {
   color: var(--cream) !important;
-  background: rgba(201,168,76,0.08);
+  background: rgba(201,168,76,0.1) !important;
 }
 
 .nav-toggle {
@@ -917,26 +915,24 @@ section { padding: clamp(4rem, 8vw, 8rem) 0; }
 }
 .nav-open .nav-links a { font-size: 1rem; }
 
-/* Mobile nav dropdown — inline sub-items, no absolute positioning */
+/* Mobile nav dropdown — always visible inline, no absolute positioning */
 .nav-open .has-dropdown { position: static; }
 .nav-open .nav-dropdown {
+  display: block !important;
   position: static !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
   transform: none !important;
   background: transparent !important;
   border: none !important;
   border-left: 2px solid rgba(201,168,76,0.3) !important;
-  padding: 0.5rem 0 0.2rem 1.2rem !important;
-  margin-top: 0.2rem !important;
+  padding: 0.4rem 0 0.2rem 1.2rem !important;
+  margin-top: 0.1rem !important;
   min-width: auto !important;
   box-shadow: none !important;
 }
 .nav-open .nav-dropdown li { margin: 0; }
 .nav-open .nav-dropdown a {
-  font-size: 0.85rem !important;
-  padding: 0.35rem 0 !important;
+  font-size: 0.88rem !important;
+  padding: 0.3rem 0 !important;
   letter-spacing: 0.08em !important;
   color: var(--muted) !important;
 }
