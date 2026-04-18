@@ -163,6 +163,16 @@ p.large { font-size: clamp(1rem, 1.5vw, 1.2rem); color: var(--cream); }
 .has-dropdown:hover .nav-dropdown {
   display: block;
 }
+/* Bridge the gap so mouse can travel from trigger to panel without dropdown closing */
+.nav-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: transparent;
+}
 .nav-dropdown li { list-style: none; }
 .nav-dropdown a {
   display: block !important;
