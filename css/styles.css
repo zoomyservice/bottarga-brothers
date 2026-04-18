@@ -18,7 +18,7 @@ body {
   color: #f0e8d8;
   overflow-x: hidden;
 }
-img { max-width: 100%; display: block; }
+img { max-width: 100%; display: block; height: auto; }
 a { color: inherit; text-decoration: none; }
 ul { list-style: none; }
 
@@ -386,6 +386,8 @@ section { padding: clamp(4rem, 8vw, 8rem) 0; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 30%; /* keep subject above dead-centre */
+  min-width: 0;
 }
 .feature-img-placeholder {
   width: 100%;
@@ -461,7 +463,9 @@ section { padding: clamp(4rem, 8vw, 8rem) 0; }
   width: 100%;
   aspect-ratio: 4/3;
   object-fit: cover;
+  object-position: center 25%; /* food/product shots: keep subject above dead-center */
   display: block;
+  min-width: 0; /* prevent grid blowout */
 }
 .product-img-placeholder {
   width: 100%;
@@ -907,6 +911,17 @@ section { padding: clamp(4rem, 8vw, 8rem) 0; }
   .origin-item:nth-child(2) { border-right: none; }
   .hero-ctas { flex-direction: column; align-items: flex-start; }
   .diagonal-section { clip-path: none; margin: 0; }
+
+  /* ── Image fixes on mobile ── */
+  /* Feature image side: swap fixed min-height for aspect-ratio so image is proportional */
+  .feature-img-side {
+    min-height: unset;
+    aspect-ratio: 4/3;
+  }
+  /* Page hero background images: shift focal point to top so subjects aren't cropped off */
+  .page-hero {
+    background-position: center top !important;
+  }
 }
 @media (max-width: 480px) {
   .stats-inner { grid-template-columns: 1fr 1fr; }
