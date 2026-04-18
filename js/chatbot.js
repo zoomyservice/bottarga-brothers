@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  // ─── Cloudflare Worker — Gemini fallback ──────────────────────────────────
+  const WORKER_URL = 'https://bottarga-brothers-chat.zoozoomfast.workers.dev';
+
   // ─── Business Facts ────────────────────────────────────────────────────────
   const BIZ = {
     name:    'Bottarga Brothers',
@@ -387,9 +390,12 @@
       return `To continue where we left off — could you tell me a bit more about what you're looking for? Or feel free to ask anything specific about our products, pricing, or ordering.\n\n📞 **${BIZ.phone}** · [Contact →](${BIZ.contact})`;
     }
 
-    // Fallback
-    return KB[KB.length - 1].r();
+    // KB missed — signal the UI to call Gemini via Cloudflare Worker
+    return '__WORKER__';
   }
+
+  // ─── Conversation history for Gemini context ──────────────────────────────
+  const geminiHistory = [];
 
   // ─── UI ───────────────────────────────────────────────────────────────────
   function render() {
@@ -593,20 +599,46 @@
       return { remove: () => t.remove() };
     }
 
-    function send() {
+    async function send() {
       const raw = input.value.trim();
       if (!raw) return;
       addMsg(raw, 'user');
       input.value = '';
       input.style.height = '40px';
 
+      // Track user message for Gemini context
+      geminiHistory.push({ role: 'user', content: raw });
+      if (geminiHistory.length > 12) geminiHistory.splice(0, 2); // keep last 6 turns
+
       const typing = addTyping();
-      const delay = 480 + Math.random() * 400;
-      setTimeout(() => {
-        typing.remove();
-        const reply = getResponse(raw);
-        addMsg(reply, 'bot');
-      }, delay);
+      const result = getResponse(raw);
+
+      if (result === '__WORKER__') {
+        // KB didn't match — ask Gemini via Cloudflare Worker
+        try {
+          const res = await fetch(`${WORKER_URL}/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: geminiHistory }),
+          });
+          const data = await res.json();
+          const reply = data.reply || `I didn't catch that — try asking about a specific product, or call us at **${BIZ.phone}**.`;
+          typing.remove();
+          addMsg(reply, 'bot');
+          geminiHistory.push({ role: 'assistant', content: reply });
+        } catch {
+          typing.remove();
+          addMsg(`I'm having trouble connecting right now. Please call us directly: **${BIZ.phone}**`, 'bot');
+        }
+      } else {
+        // KB matched — respond locally
+        const delay = 480 + Math.random() * 400;
+        setTimeout(() => {
+          typing.remove();
+          addMsg(result, 'bot');
+          geminiHistory.push({ role: 'assistant', content: result });
+        }, delay);
+      }
     }
 
     function open() {
