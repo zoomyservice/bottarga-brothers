@@ -386,7 +386,6 @@ section { padding: clamp(4rem, 8vw, 8rem) 0; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%; /* keep subject above dead-centre */
   min-width: 0;
 }
 .feature-img-placeholder {
@@ -463,7 +462,6 @@ section { padding: clamp(4rem, 8vw, 8rem) 0; }
   width: 100%;
   aspect-ratio: 4/3;
   object-fit: cover;
-  object-position: center 25%; /* food/product shots: keep subject above dead-center */
   display: block;
   min-width: 0; /* prevent grid blowout */
 }
@@ -922,6 +920,9 @@ section { padding: clamp(4rem, 8vw, 8rem) 0; }
   .page-hero, .hero-bg {
     background-position: center top !important;
   }
+  /* Product & feature images: shift focus upward on mobile to avoid bad crops */
+  .product-img { object-position: center 25%; }
+  .feature-img-side img { object-position: center 30%; }
 }
 @media (max-width: 480px) {
   .stats-inner { grid-template-columns: 1fr 1fr; }
