@@ -2,8 +2,7 @@
   'use strict';
 
   // ── Worker URL — fill in after deploying checkout-worker.js to Cloudflare ──
-  // Set this to your deployed worker URL + /checkout after running: wrangler deploy
-  const WORKER_URL = 'https://bottarga-brothers-chat.ACCOUNT.workers.dev/checkout';
+  const WORKER_URL = 'https://bottarga-brothers-chat.zoozoomfast.workers.dev/checkout';
 
   // ── Stripe price catalog ──
   const CATALOG = {
