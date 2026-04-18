@@ -462,6 +462,7 @@ section { padding: clamp(4rem, 8vw, 8rem) 0; }
   width: 100%;
   aspect-ratio: 4/3;
   object-fit: cover;
+  object-position: center 25%; /* shift focal point up — shows product label at top of square images */
   display: block;
   min-width: 0; /* prevent grid blowout */
 }
@@ -920,8 +921,7 @@ section { padding: clamp(4rem, 8vw, 8rem) 0; }
   .page-hero, .hero-bg {
     background-position: center top !important;
   }
-  /* Product & feature images: shift focus upward on mobile to avoid bad crops */
-  .product-img { object-position: center 25%; }
+  /* Feature images: shift focus upward on mobile to avoid bad crops */
   .feature-img-side img { object-position: center 30%; }
 }
 @media (max-width: 480px) {
