@@ -684,8 +684,8 @@
     setTimeout(() => {
       if (isOpen) return;
       if (document.body.classList.contains('nav-open')) return;
-      if (sessionStorage.getItem('bb_bubble_shown')) return;
-      sessionStorage.setItem('bb_bubble_shown', '1');
+      if (localStorage.getItem('bb_bubble_shown')) return;
+      localStorage.setItem('bb_bubble_shown', '1');
       const bubble = document.createElement('div');
       bubble.id = 'bb-chat-bubble';
       bubble.textContent = 'Questions about bottarga? Ask me! 🐟';
