@@ -1379,6 +1379,148 @@ function buildSectionPreview(section) {
       <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:5px;">${escHtml(lv('philosophy_p2','We curate premium bottarga selections...'))}</div>
       <div style="color:${c.muted};font-size:10px;line-height:1.6;">${escHtml(lv('philosophy_p3','We\'re not generalists. We\'re obsessives...'))}</div>
     </div>`;
+  // ── Shop Hub (shop.html) ──────────────────────────────────────────────
+  if (section === 'shophub') return `
+    <div style="${base}background:linear-gradient(135deg,${c.dm},${c.dark});padding:20px 16px;border-radius:8px;text-align:center;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:18px;font-weight:700;margin-bottom:8px;">${escHtml(lv('shop_hub_h1','Shop Bottarga'))}</div>
+      <div style="color:${c.muted};font-size:11px;line-height:1.6;margin-bottom:8px;">${escHtml(lv('shop_hub_intro','Bottarga Brothers ships to the USA and Canada.'))}</div>
+      <div style="color:${c.muted};font-size:9px;font-style:italic;">${escHtml(lv('shop_hub_note','Prices, shipping costs, and product availability differ by market.'))}</div>
+    </div>`;
+  if (section === 'shopusa_sec') return `
+    <div style="${base}background:${c.dm};padding:16px;border-radius:8px;border-left:3px solid ${c.gold};">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:16px;">🇺🇸</span><div style="color:${c.cream};font-family:${f.serif};font-size:16px;font-weight:700;">${escHtml(lv('shop_usa_sec_h2','USA Orders'))}</div></div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;">${escHtml(lv('shop_usa_sec_desc','Prices in USD · Free USPS shipping on every order'))}</div>
+      <span style="display:inline-block;margin-top:10px;background:${c.gold};color:${c.dark};padding:5px 14px;font-size:9px;font-weight:700;border-radius:3px;">Shop USA →</span>
+    </div>`;
+  if (section === 'shopca_sec') return `
+    <div style="${base}background:${c.dm};padding:16px;border-radius:8px;border-left:3px solid ${c.gold};">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:16px;">🇨🇦</span><div style="color:${c.cream};font-family:${f.serif};font-size:16px;font-weight:700;">${escHtml(lv('shop_ca_sec_h2','Canada Orders'))}</div></div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;">${escHtml(lv('shop_ca_sec_desc','Prices in CAD · Canada Post from Montreal'))}</div>
+      <span style="display:inline-block;margin-top:10px;background:${c.gold};color:${c.dark};padding:5px 14px;font-size:9px;font-weight:700;border-radius:3px;">Shop Canada →</span>
+    </div>`;
+  if (section === 'shopintl') return `
+    <div style="${base}background:${c.dark};border:1px solid ${c.dm};padding:14px;border-radius:8px;text-align:center;">
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;">${escHtml(lv('shop_intl_p','Ordering internationally or inquiring about wholesale?'))}</div>
+    </div>`;
+  // ── Shop USA (shop-usa.html) ──────────────────────────────────────────
+  if (section === 'shopusa') return `
+    <div style="${base}background:linear-gradient(135deg,${c.dm},${c.dark});padding:20px 16px;border-radius:8px;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:18px;font-weight:700;margin-bottom:8px;">${escHtml(lv('shopusa_h1','Shop USA'))}</div>
+      <div style="color:${c.muted};font-size:11px;line-height:1.6;margin-bottom:8px;">${escHtml(lv('shopusa_intro','All products priced in USD. Free USPS shipping on every US order.'))}</div>
+      <div style="background:${c.dm};border-left:3px solid ${c.gold};padding:8px 12px;border-radius:4px;font-size:9px;color:${c.muted};line-height:1.7;">${escHtml(lv('shopusa_shipping','All prices in USD. Free USPS shipping on all US orders.'))}</div>
+      <div style="color:${c.cream};font-family:${f.serif};font-size:14px;font-weight:700;margin-top:10px;">${escHtml(lv('shopusa_grid_h2','All US Products'))}</div>
+    </div>`;
+  // ── Shop Canada (shop-canada.html) ───────────────────────────────────
+  if (section === 'shopca') return `
+    <div style="${base}background:linear-gradient(135deg,${c.dm},${c.dark});padding:20px 16px;border-radius:8px;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:18px;font-weight:700;margin-bottom:8px;">${escHtml(lv('shopca_h1','Shop Canada'))}</div>
+      <div style="color:${c.muted};font-size:11px;line-height:1.6;margin-bottom:8px;">${escHtml(lv('shopca_intro','All prices in CAD. Shipped via Canada Post from our Montreal office.'))}</div>
+      <div style="background:${c.dm};border-left:3px solid ${c.gold};padding:8px 12px;border-radius:4px;font-size:9px;color:${c.muted};line-height:1.7;">${escHtml(lv('shopca_shipping','All prices in Canadian dollars (CAD). Ships via Canada Post from Montreal.'))}</div>
+    </div>`;
+  // ── What Is Bottarga (what-is.html) ──────────────────────────────────
+  if (section === 'whatis_page') return `
+    <div style="${base}background:linear-gradient(135deg,${c.dm},${c.dark});padding:20px 16px;border-radius:8px;text-align:center;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:19px;font-weight:700;margin-bottom:8px;">${escHtml(lv('whatis_h1','What Is Bottarga?'))}</div>
+      <div style="color:${c.muted};font-size:11px;line-height:1.6;font-style:italic;">${escHtml(lv('whatis_intro','The ancient cured roe of wild-caught Grey Mullet. Two ingredients — fish roe and salt.'))}</div>
+    </div>`;
+  if (section === 'whatis_main') return `
+    <div style="${base}background:${c.dark};padding:18px;border-radius:8px;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:15px;font-weight:700;margin-bottom:10px;">${escHtml(lv('whatis_s1_h2','A Centuries-Old Briny Delicacy'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:5px;">${escHtml(lv('whatis_p1','Bottarga is made from the roe or eggs of wild-caught Grey Mullet...'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:5px;">${escHtml(lv('whatis_p2','The sacs are carefully removed whole, thoroughly cleaned...'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:5px;">${escHtml(lv('whatis_p3','Once cured, they are immediately preserved...'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:8px;">${escHtml(lv('whatis_p4','The longer the cure, the sharper the flavor...'))}</div>
+      <div style="color:${c.gold};font-size:9px;font-style:italic;text-align:center;">${escHtml(lv('whatis_ingredients_note','No additives. No preservatives. No shortcuts.'))}</div>
+    </div>`;
+  if (section === 'whatis_history') return `
+    <div style="${base}background:${c.dm};padding:18px;border-radius:8px;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:15px;font-weight:700;margin-bottom:12px;">${escHtml(lv('whatis_history_h2','Nearly 3,000 Years of History'))}</div>
+      ${[['whatis_phoen_h3','The Phoenicians — 1550 BC'],['whatis_egypt_h3','Ancient Egypt'],['whatis_lit_h3','Written Into Literature — 1465'],['whatis_global_h3','A Truly Global Delicacy']].map(([k,d])=>`<div style="color:${c.gold};font-family:${f.serif};font-size:11px;font-weight:700;margin-bottom:4px;">${escHtml(lv(k,d))}</div>`).join('')}
+    </div>`;
+  if (section === 'whatis_howto') return `
+    <div style="${base}background:${c.dark};padding:18px;border-radius:8px;text-align:center;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:16px;font-weight:700;margin-bottom:8px;">${escHtml(lv('whatis_howto_h2','Serving & Care'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;">${escHtml(lv('whatis_howto_intro','Bottarga is best enjoyed at room temperature, like a fine cheese.'))}</div>
+    </div>`;
+  // ── Recipes (recipes.html) ────────────────────────────────────────────
+  if (section === 'recipes_page') return `
+    <div style="${base}background:linear-gradient(135deg,${c.dm},${c.dark});padding:20px 16px;border-radius:8px;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:18px;font-weight:700;margin-bottom:8px;">${escHtml(lv('recipes_h1','Bottarga Recipes'))}</div>
+      <div style="color:${c.muted};font-size:11px;line-height:1.6;margin-bottom:8px;">${escHtml(lv('recipes_intro','Click any recipe to open the full step-by-step instructions.'))}</div>
+      <div style="color:${c.muted};font-size:9px;font-style:italic;border-top:1px solid ${c.dm};padding-top:8px;">${escHtml(lv('recipes_feature','Featured on CNN\'s Anthony Bourdain: Parts Unknown.'))}</div>
+    </div>`;
+  if (section === 'recipes_submit') return `
+    <div style="${base}background:${c.dm};padding:16px;border-radius:8px;text-align:center;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:14px;font-weight:700;margin-bottom:6px;">${escHtml(lv('recipes_submit_h3','Have a Bottarga Recipe?'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:10px;">${escHtml(lv('recipes_submit_p','We love hearing from our community. If you\'ve discovered a new way...'))}</div>
+      <span style="border:1px solid ${c.gold};color:${c.gold};padding:5px 12px;font-size:9px;border-radius:3px;">Submit Your Recipe</span>
+    </div>`;
+  if (section === 'recipes_tips') return `
+    <div style="${base}background:${c.dark};padding:16px;border-radius:8px;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:15px;font-weight:700;margin-bottom:10px;">${escHtml(lv('recipes_tips_h2','Getting the Most From Your Bottarga'))}</div>
+      ${['Always bring to room temperature before serving','Grate directly over hot food — the heat blooms the flavor','Less is more — the flavor is intense'].map(t=>`<div style="color:${c.muted};font-size:9px;padding:4px 0;border-top:1px solid ${c.dm};">${t}</div>`).join('')}
+    </div>`;
+  // ── Kosher (kosher.html) ──────────────────────────────────────────────
+  if (section === 'kosher_page') return `
+    <div style="${base}background:linear-gradient(135deg,${c.dm},${c.dark});padding:20px 16px;border-radius:8px;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:18px;font-weight:700;margin-bottom:8px;">${escHtml(lv('kosher_h1','Kosher Bottarga'))}</div>
+      <div style="color:${c.muted};font-size:11px;line-height:1.6;margin-bottom:8px;">${escHtml(lv('kosher_intro','Three of our bottargas carry full kosher certification.'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;">${escHtml(lv('kosher_body','Bottarga is a cured fish roe — a product that requires particular attention...'))}</div>
+    </div>`;
+  if (section === 'kosher_certs') return `
+    <div style="${base}background:${c.dark};padding:14px;border-radius:8px;text-align:center;">
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;font-style:italic;">${escHtml(lv('kosher_certs_intro','Each certification is product-specific and independently verified.'))}</div>
+    </div>`;
+  if (section === 'kosher_sg') return `
+    <div style="${base}background:${c.dm};padding:14px;border-radius:8px;border-left:2px solid ${c.gold};">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:13px;font-weight:700;margin-bottom:6px;">${escHtml(lv('kosher_sg_h3','Sardinian Gold'))}</div>
+      <div style="color:${c.muted};font-size:9px;line-height:1.6;">${escHtml(lv('kosher_sg_p','Our flagship Sardinian Bottarga di Muggine carries full kosher certification.'))}</div>
+    </div>`;
+  if (section === 'kosher_bc') return `
+    <div style="${base}background:${c.dm};padding:14px;border-radius:8px;border-left:2px solid ${c.gold};">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:13px;font-weight:700;margin-bottom:6px;">${escHtml(lv('kosher_bc_h3','Boutargue Classique'))}</div>
+      <div style="color:${c.muted};font-size:9px;line-height:1.6;">${escHtml(lv('kosher_bc_p','Traditional paraffin-waxed French boutargue, certified Kosher for Passover.'))}</div>
+    </div>`;
+  if (section === 'kosher_bi') return `
+    <div style="${base}background:${c.dm};padding:14px;border-radius:8px;border-left:2px solid ${c.gold};">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:13px;font-weight:700;margin-bottom:6px;">${escHtml(lv('kosher_bi_h3','Boutargue Impériale'))}</div>
+      <div style="color:${c.muted};font-size:9px;line-height:1.6;">${escHtml(lv('kosher_bi_p','Premium unwaxed French boutargue. Certified Kosher for Passover — Pareve.'))}</div>
+    </div>`;
+  if (section === 'kosher_std') return `
+    <div style="${base}background:${c.dark};border:1px solid ${c.dm};padding:14px;border-radius:8px;">
+      <div style="color:${c.gold};font-family:${f.serif};font-size:13px;font-weight:700;margin-bottom:6px;">${escHtml(lv('kosher_std_h3','Kosher Certified'))}</div>
+      <div style="color:${c.muted};font-size:9px;line-height:1.6;">Confirms the product meets all year-round kosher dietary laws.</div>
+    </div>`;
+  if (section === 'kosher_pfp') return `
+    <div style="${base}background:${c.dark};border:1px solid ${c.dm};padding:14px;border-radius:8px;">
+      <div style="color:${c.gold};font-family:${f.serif};font-size:13px;font-weight:700;margin-bottom:6px;">${escHtml(lv('kosher_pfp_h3','Kosher for Passover — Pareve'))}</div>
+      <div style="color:${c.muted};font-size:9px;line-height:1.6;">More stringent certification — suitable during Passover when most fish products cannot be used.</div>
+    </div>`;
+  // ── Contact Page (contact.html) ───────────────────────────────────────
+  if (section === 'contact_page') return `
+    <div style="${base}background:linear-gradient(135deg,${c.dm},${c.dark});padding:20px 16px;border-radius:8px;text-align:center;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:18px;font-weight:700;margin-bottom:8px;">${escHtml(lv('contact_h1','Get in Touch'))}</div>
+      <div style="color:${c.muted};font-size:11px;line-height:1.6;">${escHtml(lv('contact_intro','Questions about products, orders, wholesale inquiries, chef programs?'))}</div>
+    </div>`;
+  if (section === 'contact_newsletter') return `
+    <div style="${base}background:${c.dm};padding:14px;border-radius:8px;">
+      <div style="color:${c.gold};font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Newsletter</div>
+      <div style="color:${c.cream};font-family:${f.serif};font-size:13px;font-weight:700;margin-bottom:6px;">Stay in the Loop</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:10px;">${escHtml(lv('contact_newsletter_p','Sign up to receive emails on sales, discounts, recipes, contests & more.'))}</div>
+      <span style="border:1px solid ${c.gold};color:${c.gold};padding:4px 12px;font-size:8px;border-radius:3px;">Subscribe to Newsletter</span>
+    </div>`;
+  if (section === 'contact_form') return `
+    <div style="${base}background:${c.dark};border:1px solid ${c.dm};padding:16px;border-radius:8px;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:15px;font-weight:700;margin-bottom:6px;">${escHtml(lv('contact_form_h3','We\'d Love to Hear From You'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:12px;">${escHtml(lv('contact_form_p','Whether it\'s a product question, Canada order, wholesale inquiry, or recipe idea — reach out.'))}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">
+        <div style="background:${c.dm};height:28px;border-radius:4px;border:1px solid ${c.dm};"></div>
+        <div style="background:${c.dm};height:28px;border-radius:4px;border:1px solid ${c.dm};"></div>
+      </div>
+      <div style="background:${c.dm};height:28px;border-radius:4px;margin-bottom:6px;"></div>
+      <div style="background:${c.dm};height:56px;border-radius:4px;margin-bottom:8px;"></div>
+      <span style="background:${c.gold};color:${c.dark};padding:6px 14px;font-size:9px;font-weight:700;border-radius:3px;">Send Message</span>
+    </div>`;
   return '';
 }
 
