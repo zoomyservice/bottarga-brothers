@@ -100,12 +100,13 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 .preview-section-label{font-size:.62rem;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:.65rem;}
 /* INLINE PREVIEW — appears below focused field */
 .inline-preview{margin:.4rem 0 1.2rem;border-radius:8px;overflow:hidden;border:1px solid var(--border);animation:previewFadeIn .15s ease;}
-.inline-preview-location{background:#0d0d0d;border-bottom:1px solid var(--border);padding:.6rem .85rem .55rem;}
-.inline-preview-page{font-size:.62rem;font-weight:700;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem;}
-.inline-preview-flowbar{display:flex;align-items:center;gap:3px;flex-wrap:wrap;}
-.flowbar-seg{height:4px;border-radius:2px;background:var(--border);transition:background .15s;}
-.flowbar-seg.active{background:var(--gold);}
-.flowbar-label{font-size:.58rem;color:var(--muted);margin-left:5px;white-space:nowrap;}
+.inline-preview-location{background:#0d0d0d;border-bottom:1px solid var(--border);padding:.7rem .9rem .65rem;}
+.inline-preview-page{font-size:.65rem;font-weight:700;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.45rem;}
+.inline-preview-breadcrumb{display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:4px;}
+.bc-seg{font-size:.6rem;color:var(--muted);padding:2px 7px;border-radius:10px;white-space:nowrap;transition:all .15s;}
+.bc-seg.active{background:rgba(201,168,76,.18);color:var(--gold);font-weight:700;border:1px solid rgba(201,168,76,.35);}
+.bc-arr{color:#444;font-size:.55rem;padding:0 2px;flex-shrink:0;}
+.inline-preview-where{margin-top:.4rem;font-size:.68rem;font-weight:600;color:var(--cream);letter-spacing:.03em;}
 .inline-preview-body{padding:.6rem;}
 @keyframes previewFadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 /* COLORS */
@@ -1148,24 +1149,28 @@ const PAGE_MAPS = {
     label: 'Shop Hub  (shop.html)',
     icon: '🛍',
     flow: [
-      {key:'shophub',    name:'Hero'},
-      {key:'shopusa_sec', name:'USA Section'},
-      {key:'shopca_sec',  name:'Canada Section'},
+      {key:'shophub',     name:'Hero'},
+      {key:'shopusa_sec', name:'🇺🇸 USA Card'},
+      {key:'shopca_sec',  name:'🇨🇦 Canada Card'},
       {key:'shopintl',    name:'International'},
+      {key:'shopfeat',    name:'Guarantee Strip'},
     ],
   },
   shopusa: {
     label: 'Shop USA  (shop-usa.html)',
     icon: '🇺🇸',
     flow: [
-      {key:'shopusa', name:'Page'},
+      {key:'shopusa',      name:'Hero'},
+      {key:'shopusa_ship', name:'Shipping Bar'},
+      {key:'shopusa_grid', name:'Products Grid'},
     ],
   },
   shopca: {
     label: 'Shop Canada  (shop-canada.html)',
     icon: '🇨🇦',
     flow: [
-      {key:'shopca', name:'Page'},
+      {key:'shopca',      name:'Hero'},
+      {key:'shopca_ship', name:'Shipping Bar'},
     ],
   },
   whatispage: {
@@ -1173,35 +1178,48 @@ const PAGE_MAPS = {
     icon: '📚',
     flow: [
       {key:'whatis_page',    name:'Hero'},
-      {key:'whatis_main',    name:'Main'},
+      {key:'whatis_main',    name:'What Is It'},
       {key:'whatis_history', name:'History'},
-      {key:'whatis_howto',   name:'How To Use'},
+      {key:'whatis_howto',   name:'How to Use'},
+      {key:'whatis_names',   name:'Names'},
+      {key:'whatis_health',  name:'Health'},
+      {key:'whatis_cta',     name:'CTA'},
     ],
   },
   recipespage: {
     label: 'Recipes  (recipes.html)',
     icon: '🍝',
     flow: [
-      {key:'recipes_page',   name:'Intro'},
-      {key:'recipes_submit', name:'Submit'},
-      {key:'recipes_tips',   name:'Tips'},
+      {key:'recipes_page',   name:'Hero'},
+      {key:'recipes_submit', name:'Submit Recipe'},
+      {key:'recipes_tips',   name:'Pro Tips'},
+      {key:'recipes_cta',    name:'CTA'},
     ],
   },
   kosherpage: {
     label: 'Kosher  (kosher.html)',
     icon: '✡',
     flow: [
-      {key:'kosher_page',  name:'Intro'},
-      {key:'kosher_certs', name:'Certs'},
+      {key:'kosher_page',  name:'Hero'},
+      {key:'kosher_certs', name:'Cert Intro'},
+      {key:'kosher_sg',    name:'Sardinian Gold'},
+      {key:'kosher_bc',    name:'Classique'},
+      {key:'kosher_bi',    name:'Impériale'},
+      {key:'kosher_std',   name:'Kosher Std'},
+      {key:'kosher_pfp',   name:'Kosher for Passover'},
+      {key:'kosher_doc',   name:'Docs CTA'},
     ],
   },
   contactpage: {
     label: 'Contact  (contact.html)',
-    icon: '✉',
+    icon: '📞',
     flow: [
-      {key:'contact_page',       name:'Intro'},
+      {key:'contact_page',       name:'Hero'},
+      {key:'contact_offices',    name:'Office Info'},
       {key:'contact_newsletter', name:'Newsletter'},
-      {key:'contact_form',       name:'Form'},
+      {key:'contact_form',       name:'Contact Form'},
+      {key:'contact_wholesale',  name:'Wholesale'},
+      {key:'contact_faq',        name:'FAQ'},
     ],
   },
 };
@@ -1216,16 +1234,20 @@ const SECTION_PAGE = {
   philosophy:'about',
   nav:'nav',
   footer:'footer',
-  shophub:'shophub', shopusa_sec:'shophub', shopca_sec:'shophub', shopintl:'shophub',
-  shopusa:'shopusa',
-  shopca:'shopca',
+  shophub:'shophub', shopusa_sec:'shophub', shopca_sec:'shophub', shopintl:'shophub', shopfeat:'shophub',
+  shopusa:'shopusa', shopusa_ship:'shopusa', shopusa_grid:'shopusa',
+  shopca:'shopca', shopca_ship:'shopca',
   whatis_page:'whatispage', whatis_main:'whatispage',
   whatis_history:'whatispage', whatis_howto:'whatispage',
-  recipes_page:'recipespage', recipes_submit:'recipespage', recipes_tips:'recipespage',
+  whatis_names:'whatispage', whatis_health:'whatispage', whatis_cta:'whatispage',
+  recipes_page:'recipespage', recipes_submit:'recipespage',
+  recipes_tips:'recipespage', recipes_cta:'recipespage',
   kosher_page:'kosherpage', kosher_certs:'kosherpage',
   kosher_sg:'kosherpage', kosher_bc:'kosherpage', kosher_bi:'kosherpage',
-  kosher_std:'kosherpage', kosher_pfp:'kosherpage',
-  contact_page:'contactpage', contact_newsletter:'contactpage', contact_form:'contactpage',
+  kosher_std:'kosherpage', kosher_pfp:'kosherpage', kosher_doc:'kosherpage',
+  contact_page:'contactpage', contact_offices:'contactpage',
+  contact_newsletter:'contactpage', contact_form:'contactpage',
+  contact_wholesale:'contactpage', contact_faq:'contactpage',
 };
 
 function buildLocationBadge(section) {
@@ -1235,22 +1257,19 @@ function buildLocationBadge(section) {
   const map = pageName ? PAGE_MAPS[pageName] : null;
   if (!map) return '';
 
-  const flowHTML = map.flow.map(seg => {
+  const chips = map.flow.map((seg, i) => {
     const isActive = seg.key === section || seg.key === baseSection;
-    return `<div class="flowbar-seg${isActive?' active':''}" style="width:${Math.max(28,Math.round(80/map.flow.length)-3)}px;" title="${seg.name}"></div>`;
+    const chip = `<span class="bc-seg${isActive?' active':''}">${seg.name}</span>`;
+    return i < map.flow.length - 1 ? chip + `<span class="bc-arr">›</span>` : chip;
   }).join('');
 
   const activeItem = map.flow.find(s => s.key === section || s.key === baseSection);
   const sectionName = activeItem ? activeItem.name : section;
-  const pos = map.flow.findIndex(s => s.key === section || s.key === baseSection);
-  const posLabel = pos >= 0 ? `${sectionName}  ·  position ${pos+1} of ${map.flow.length}` : sectionName;
 
   return `<div class="inline-preview-location">
     <div class="inline-preview-page">${map.icon}  ${map.label}</div>
-    <div class="inline-preview-flowbar">
-      ${flowHTML}
-      <span class="flowbar-label">${posLabel}</span>
-    </div>
+    <div class="inline-preview-breadcrumb">${chips}</div>
+    <div class="inline-preview-where">📍 You are editing: ${sectionName}</div>
   </div>`;
 }
 
@@ -1303,15 +1322,15 @@ const KEY_SECTION = {
   shop_ca_li1:'shopca_sec', shop_ca_li2:'shopca_sec', shop_ca_li3:'shopca_sec',
   shop_ca_li4:'shopca_sec', shop_ca_li5:'shopca_sec', shop_ca_li6:'shopca_sec',
   shop_intl_p:'shopintl',
-  shop_feat1_title:'shophub', shop_feat1_p:'shophub',
-  shop_feat2_title:'shophub', shop_feat2_p:'shophub',
-  shop_feat3_title:'shophub', shop_feat3_p:'shophub',
-  shop_feat4_title:'shophub', shop_feat4_p:'shophub',
+  shop_feat1_title:'shopfeat', shop_feat1_p:'shopfeat',
+  shop_feat2_title:'shopfeat', shop_feat2_p:'shopfeat',
+  shop_feat3_title:'shopfeat', shop_feat3_p:'shopfeat',
+  shop_feat4_title:'shopfeat', shop_feat4_p:'shopfeat',
   // Shop USA
   shopusa_h1:'shopusa', shopusa_intro:'shopusa',
-  shopusa_shipping:'shopusa', shopusa_grid_h2:'shopusa',
+  shopusa_shipping:'shopusa_ship', shopusa_grid_h2:'shopusa_grid',
   // Shop Canada
-  shopca_h1:'shopca', shopca_intro:'shopca', shopca_shipping:'shopca',
+  shopca_h1:'shopca', shopca_intro:'shopca', shopca_shipping:'shopca_ship',
   // What Is Bottarga page
   whatis_h1:'whatis_page', whatis_intro:'whatis_page',
   whatis_s1_h2:'whatis_main', whatis_p1:'whatis_main', whatis_p2:'whatis_main',
@@ -1329,18 +1348,18 @@ const KEY_SECTION = {
   whatis_tip4_h4:'whatis_howto', whatis_tip4_p:'whatis_howto',
   whatis_tip5_h4:'whatis_howto', whatis_tip5_p:'whatis_howto',
   whatis_tip6_h4:'whatis_howto', whatis_tip6_p:'whatis_howto',
-  whatis_names_h2:'whatis_main', whatis_names_p:'whatis_main',
-  whatis_health_h2:'whatis_main', whatis_health_p:'whatis_main',
-  whatis_ht1:'whatis_main', whatis_ht2:'whatis_main', whatis_ht3:'whatis_main',
-  whatis_ht4:'whatis_main', whatis_ht5:'whatis_main', whatis_ht6:'whatis_main',
-  whatis_cta_h2:'whatis_page', whatis_cta_p:'whatis_page',
+  whatis_names_h2:'whatis_names', whatis_names_p:'whatis_names',
+  whatis_health_h2:'whatis_health', whatis_health_p:'whatis_health',
+  whatis_ht1:'whatis_health', whatis_ht2:'whatis_health', whatis_ht3:'whatis_health',
+  whatis_ht4:'whatis_health', whatis_ht5:'whatis_health', whatis_ht6:'whatis_health',
+  whatis_cta_h2:'whatis_cta', whatis_cta_p:'whatis_cta',
   // Recipes
   recipes_h1:'recipes_page', recipes_intro:'recipes_page', recipes_feature:'recipes_page',
   recipes_submit_h3:'recipes_submit', recipes_submit_p:'recipes_submit',
   recipes_tips_h2:'recipes_tips', recipes_tips_p:'recipes_tips',
   recipes_tip1:'recipes_tips', recipes_tip2:'recipes_tips', recipes_tip3:'recipes_tips',
   recipes_tip4:'recipes_tips', recipes_tip5:'recipes_tips',
-  recipes_cta_h2:'recipes_page', recipes_cta_p:'recipes_page',
+  recipes_cta_h2:'recipes_cta', recipes_cta_p:'recipes_cta',
   // Kosher
   kosher_h1:'kosher_page', kosher_intro:'kosher_page', kosher_body:'kosher_page',
   kosher_certs_intro:'kosher_certs',
@@ -1349,19 +1368,20 @@ const KEY_SECTION = {
   kosher_bi_h3:'kosher_bi', kosher_bi_p:'kosher_bi',
   kosher_std_h3:'kosher_std', kosher_std_p1:'kosher_std', kosher_std_p2:'kosher_std',
   kosher_pfp_h3:'kosher_pfp', kosher_pfp_p1:'kosher_pfp', kosher_pfp_p2:'kosher_pfp',
-  kosher_doc_h2:'kosher_page', kosher_doc_p:'kosher_page',
+  kosher_doc_h2:'kosher_doc', kosher_doc_p:'kosher_doc',
   // Contact page
   contact_h1:'contact_page', contact_intro:'contact_page',
-  contact_usa_h4:'contact_page', contact_usa_p1:'contact_page', contact_usa_p2:'contact_page',
-  contact_canada_h4:'contact_page', contact_canada_p1:'contact_page', contact_canada_p2:'contact_page',
+  contact_usa_h4:'contact_offices', contact_usa_p1:'contact_offices', contact_usa_p2:'contact_offices',
+  contact_canada_h4:'contact_offices', contact_canada_p1:'contact_offices', contact_canada_p2:'contact_offices',
   contact_newsletter_h4:'contact_newsletter', contact_newsletter_p:'contact_newsletter',
-  contact_wholesale_h4:'contact_form', contact_wholesale_p:'contact_form',
+  contact_wholesale_h4:'contact_wholesale', contact_wholesale_p:'contact_wholesale',
   contact_form_h3:'contact_form', contact_form_p:'contact_form',
-  contact_faq_h2:'contact_form', contact_faq1_h4:'contact_form', contact_faq1_p:'contact_form',
-  contact_faq2_h4:'contact_form', contact_faq2_p:'contact_form',
-  contact_faq3_h4:'contact_form', contact_faq3_p:'contact_form',
-  contact_faq4_h4:'contact_form', contact_faq4_p:'contact_form',
-  contact_faq5_h4:'contact_form', contact_faq5_p:'contact_form',
+  contact_faq_h2:'contact_faq',
+  contact_faq1_h4:'contact_faq', contact_faq1_p:'contact_faq',
+  contact_faq2_h4:'contact_faq', contact_faq2_p:'contact_faq',
+  contact_faq3_h4:'contact_faq', contact_faq3_p:'contact_faq',
+  contact_faq4_h4:'contact_faq', contact_faq4_p:'contact_faq',
+  contact_faq5_h4:'contact_faq', contact_faq5_p:'contact_faq',
 };
 
 function getC() {
@@ -1661,6 +1681,105 @@ function buildSectionPreview(section) {
       <div style="background:${c.dm};height:28px;border-radius:4px;margin-bottom:6px;"></div>
       <div style="background:${c.dm};height:56px;border-radius:4px;margin-bottom:8px;"></div>
       <span style="background:${c.gold};color:${c.dark};padding:6px 14px;font-size:9px;font-weight:700;border-radius:3px;">Send Message</span>
+    </div>`;
+  // ── Shop Hub — Guarantee Strip (shop.html) ────────────────────────────
+  if (section === 'shopfeat') return `
+    <div style="${base}background:${c.dark};padding:16px;border-radius:8px;">
+      <div style="color:${c.gold};font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Guarantee Strip — 4 Cards</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        ${[['shop_feat1_title','Freshness Guarantee'],['shop_feat2_title','Free US Shipping'],['shop_feat3_title','Kosher Certified'],['shop_feat4_title','Family Recipe']].map(([k,d])=>`
+          <div style="background:${c.dm};padding:10px;border-radius:6px;border:1px solid ${c.gold}33;text-align:center;">
+            <div style="color:${c.cream};font-size:10px;font-weight:700;margin-bottom:4px;">${escHtml(lv(k,d))}</div>
+            <div style="color:${c.muted};font-size:8px;line-height:1.5;">${escHtml(lv(k.replace('_title','_p'),'Description…'))}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  // ── Shop USA — Shipping Bar & Grid heading ────────────────────────────
+  if (section === 'shopusa_ship') return `
+    <div style="${base}background:${c.dm};border-left:3px solid ${c.gold};padding:12px 14px;border-radius:8px;">
+      <div style="color:${c.gold};font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Shipping Bar</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;">${escHtml(lv('shopusa_shipping','All prices in USD. Free USPS shipping on all US orders.'))}</div>
+    </div>`;
+  if (section === 'shopusa_grid') return `
+    <div style="${base}background:${c.dark};padding:14px;border-radius:8px;">
+      <div style="color:${c.gold};font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Products Grid Heading</div>
+      <div style="color:${c.cream};font-family:${f.serif};font-size:16px;font-weight:700;">${escHtml(lv('shopusa_grid_h2','All US Products'))}</div>
+    </div>`;
+  // ── Shop Canada — Shipping Bar ────────────────────────────────────────
+  if (section === 'shopca_ship') return `
+    <div style="${base}background:${c.dm};border-left:3px solid ${c.gold};padding:12px 14px;border-radius:8px;">
+      <div style="color:${c.gold};font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Shipping Bar</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;">${escHtml(lv('shopca_shipping','All prices in Canadian dollars (CAD). Ships via Canada Post from Montreal.'))}</div>
+    </div>`;
+  // ── What Is Bottarga — Names, Health, CTA ─────────────────────────────
+  if (section === 'whatis_names') return `
+    <div style="${base}background:${c.dm};padding:18px;border-radius:8px;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:15px;font-weight:700;margin-bottom:10px;">${escHtml(lv('whatis_names_h2','What Do They Call It?'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.65;">${escHtml(lv('whatis_names_p','Around the Mediterranean and beyond, bottarga goes by many names…'))}</div>
+    </div>`;
+  if (section === 'whatis_health') return `
+    <div style="${base}background:${c.dark};padding:18px;border-radius:8px;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:15px;font-weight:700;margin-bottom:8px;">${escHtml(lv('whatis_health_h2','Nutritional Power'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:10px;">${escHtml(lv('whatis_health_p','Bottarga is one of the most nutrient-dense foods in the world…'))}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;">
+        ${[1,2,3,4,5,6].map(i=>`<div style="background:${c.dm};padding:6px;border-radius:4px;text-align:center;"><div style="color:${c.gold};font-size:8px;font-weight:700;">${escHtml(lv('whatis_ht'+i,'Fact '+i))}</div></div>`).join('')}
+      </div>
+    </div>`;
+  if (section === 'whatis_cta') return `
+    <div style="${base}background:linear-gradient(135deg,${c.dm},${c.dark});padding:20px 16px;border-radius:8px;text-align:center;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:17px;font-weight:700;margin-bottom:8px;">${escHtml(lv('whatis_cta_h2','Ready to Try the World\'s Finest Bottarga?'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:12px;">${escHtml(lv('whatis_cta_p','Explore our full collection — curated from Italy, France, and beyond.'))}</div>
+      <span style="background:${c.gold};color:${c.dark};padding:7px 18px;font-size:10px;font-weight:700;border-radius:4px;">Shop Now</span>
+    </div>`;
+  // ── Recipes — CTA ────────────────────────────────────────────────────
+  if (section === 'recipes_cta') return `
+    <div style="${base}background:linear-gradient(135deg,${c.dm},${c.dark});padding:20px 16px;border-radius:8px;text-align:center;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:17px;font-weight:700;margin-bottom:8px;">${escHtml(lv('recipes_cta_h2','Start Cooking with Bottarga'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:12px;">${escHtml(lv('recipes_cta_p','Order today and get free USPS shipping on every US order.'))}</div>
+      <span style="background:${c.gold};color:${c.dark};padding:7px 18px;font-size:10px;font-weight:700;border-radius:4px;">Shop Now</span>
+    </div>`;
+  // ── Kosher — Docs CTA ────────────────────────────────────────────────
+  if (section === 'kosher_doc') return `
+    <div style="${base}background:${c.dm};padding:16px;border-radius:8px;text-align:center;">
+      <div style="color:${c.cream};font-family:${f.serif};font-size:14px;font-weight:700;margin-bottom:6px;">${escHtml(lv('kosher_doc_h2','Want to See the Certification Documents?'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;margin-bottom:10px;">${escHtml(lv('kosher_doc_p','Full certification documentation available on request.'))}</div>
+      <span style="border:1px solid ${c.gold};color:${c.gold};padding:5px 14px;font-size:9px;border-radius:3px;">Request Documents</span>
+    </div>`;
+  // ── Contact — Office Info ─────────────────────────────────────────────
+  if (section === 'contact_offices') return `
+    <div style="${base}background:${c.dark};padding:16px;border-radius:8px;">
+      <div style="color:${c.gold};font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Office Locations</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:${c.dm};padding:10px;border-radius:6px;border-left:2px solid ${c.gold};">
+          <div style="font-size:12px;margin-bottom:4px;">🇺🇸</div>
+          <div style="color:${c.cream};font-size:10px;font-weight:700;margin-bottom:4px;">${escHtml(lv('contact_usa_h4','United States'))}</div>
+          <div style="color:${c.muted};font-size:9px;line-height:1.5;">${escHtml(lv('contact_usa_p1','Stamford, CT'))}</div>
+        </div>
+        <div style="background:${c.dm};padding:10px;border-radius:6px;border-left:2px solid ${c.gold};">
+          <div style="font-size:12px;margin-bottom:4px;">🇨🇦</div>
+          <div style="color:${c.cream};font-size:10px;font-weight:700;margin-bottom:4px;">${escHtml(lv('contact_canada_h4','Canada'))}</div>
+          <div style="color:${c.muted};font-size:9px;line-height:1.5;">${escHtml(lv('contact_canada_p1','Montreal, QC'))}</div>
+        </div>
+      </div>
+    </div>`;
+  // ── Contact — Wholesale ───────────────────────────────────────────────
+  if (section === 'contact_wholesale') return `
+    <div style="${base}background:${c.dm};padding:16px;border-radius:8px;border-left:3px solid ${c.gold};">
+      <div style="color:${c.gold};font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Wholesale</div>
+      <div style="color:${c.cream};font-family:${f.serif};font-size:13px;font-weight:700;margin-bottom:6px;">${escHtml(lv('contact_wholesale_h4','Wholesale & Chef Programs'))}</div>
+      <div style="color:${c.muted};font-size:10px;line-height:1.6;">${escHtml(lv('contact_wholesale_p','We work with specialty food retailers, fine dining restaurants, and gourmet shops.'))}</div>
+    </div>`;
+  // ── Contact — FAQ ─────────────────────────────────────────────────────
+  if (section === 'contact_faq') return `
+    <div style="${base}background:${c.dark};padding:16px;border-radius:8px;">
+      <div style="color:${c.gold};font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">FAQ Section</div>
+      <div style="color:${c.cream};font-family:${f.serif};font-size:14px;font-weight:700;margin-bottom:10px;">${escHtml(lv('contact_faq_h2','Frequently Asked Questions'))}</div>
+      ${[1,2,3].map(i=>`
+        <div style="border-top:1px solid ${c.dm};padding:7px 0;">
+          <div style="color:${c.cream};font-size:10px;font-weight:700;margin-bottom:3px;">${escHtml(lv('contact_faq'+i+'_h4','Question '+i))}</div>
+          <div style="color:${c.muted};font-size:9px;line-height:1.5;">${escHtml(lv('contact_faq'+i+'_p','Answer…'))}</div>
+        </div>`).join('')}
+      <div style="color:${c.muted};font-size:8px;text-align:right;padding-top:4px;">+ 2 more FAQs</div>
     </div>`;
   return '';
 }
