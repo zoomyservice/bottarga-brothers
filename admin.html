@@ -521,6 +521,9 @@ async function doLogin() {
     if(!res.ok){err.textContent='Incorrect username or password.';err.style.display='block';return;}
     const me=await res.json();
     SESSION_USER=user; SESSION_PWD=pwd; SESSION_ROLE=me.role;
+    sessionStorage.setItem('bb_au', user);
+    sessionStorage.setItem('bb_ap', pwd);
+    sessionStorage.setItem('bb_ar', me.role);
     document.getElementById('login-screen').style.display='none';
     document.getElementById('admin-panel').style.display='block';
     const roleLabel=SESSION_ROLE==='admin'?'Admin Access':'User';
@@ -533,12 +536,34 @@ document.getElementById('user-input').addEventListener('keydown',e=>{if(e.key===
 document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 function doLogout(){
   SESSION_USER='';SESSION_PWD='';SESSION_ROLE='';
+  sessionStorage.removeItem('bb_au');
+  sessionStorage.removeItem('bb_ap');
+  sessionStorage.removeItem('bb_ar');
   document.getElementById('admin-panel').style.display='none';
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('add-user-section').style.display='none';
   document.getElementById('user-input').value='';
   document.getElementById('pwd-input').value='';
 }
+
+// ── AUTO-LOGIN on page load ───────────────────────────────────────────
+(async function tryAutoLogin() {
+  const u = sessionStorage.getItem('bb_au');
+  const p = sessionStorage.getItem('bb_ap');
+  if (!u || !p) return;
+  try {
+    const res = await fetch(WORKER+'/me', {method:'POST', headers:{'Content-Type':'application/json','X-Admin-User':u,'X-Admin-Password':p,'X-Session-ID':SESSION_ID}, body:'{}'});
+    if (!res.ok) { sessionStorage.removeItem('bb_au'); sessionStorage.removeItem('bb_ap'); sessionStorage.removeItem('bb_ar'); return; }
+    const me = await res.json();
+    SESSION_USER=u; SESSION_PWD=p; SESSION_ROLE=me.role;
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    const roleLabel=SESSION_ROLE==='admin'?'Admin Access':'User';
+    document.getElementById('top-user').innerHTML=`${SESSION_USER}<span class="role-badge">${roleLabel}</span>`;
+    if(SESSION_ROLE==='admin') document.getElementById('add-user-section').style.display='block';
+    await loadContent();
+  } catch(e) { /* network error — show login */ }
+})();
 
 // ── NAVIGATION ────────────────────────────────────────────────────────
 function showPanel(name, btn) {
@@ -1173,7 +1198,7 @@ async function changePassword(){
   if(np.length<8){showMsg(msg,'Password must be at least 8 characters.','red');return;}
   if(np!==cp){showMsg(msg,'Passwords do not match.','red');return;}
   try{const res=await fetch(WORKER+'/change-password',{method:'POST',headers:authH(),body:JSON.stringify({new_password:np})});
-    if(res.ok){SESSION_PWD=np;showMsg(msg,'✓ Password updated.','green');document.getElementById('new-pwd').value='';document.getElementById('confirm-pwd').value='';}
+    if(res.ok){SESSION_PWD=np;sessionStorage.setItem('bb_ap',np);showMsg(msg,'✓ Password updated.','green');document.getElementById('new-pwd').value='';document.getElementById('confirm-pwd').value='';}
     else{const d=await res.json();showMsg(msg,d.error||'Failed.','red');}
   }catch(e){showMsg(msg,'Connection error.','red');}
 }
