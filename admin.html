@@ -21,8 +21,9 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 .pwd-wrap{position:relative;margin-bottom:1rem;}
 .login-box .pwd-wrap input{margin-bottom:0;}
 .pwd-wrap input{padding-right:44px!important;}
-.eye-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:0;line-height:1;font-size:18px;}
-.eye-btn:hover{color:var(--text);}
+.eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;line-height:0;opacity:.5;}
+.eye-btn:hover{color:var(--text);opacity:1;}
+.eye-btn svg{display:block;}
 /* admin panel */
 #admin-panel{display:none;}
 .top-bar{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
@@ -76,7 +77,7 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
     <input id="user-input" placeholder="Username" type="text" autocomplete="username"/>
     <div class="pwd-wrap">
       <input id="pwd-input" placeholder="Password" type="password" autocomplete="current-password"/>
-      <button class="eye-btn" type="button" onclick="toggleEye('pwd-input',this)" title="Show/hide password">👁</button>
+      <button class="eye-btn" type="button" onclick="toggleEye('pwd-input',this)" title="Show/hide password"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
     </div>
     <button class="btn-gold" onclick="doLogin()" style="margin-top:.25rem;">Sign In</button>
     <div class="login-error" id="login-error"></div>
@@ -126,11 +127,11 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
       <div class="settings-box">
         <div class="field">
           <label>New Password</label>
-          <div class="pwd-wrap"><input id="new-pwd" placeholder="At least 8 characters" type="password"/><button class="eye-btn" type="button" onclick="toggleEye('new-pwd',this)">👁</button></div>
+          <div class="pwd-wrap"><input id="new-pwd" placeholder="At least 8 characters" type="password"/><button class="eye-btn" type="button" onclick="toggleEye('new-pwd',this)"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
         </div>
         <div class="field">
           <label>Confirm New Password</label>
-          <div class="pwd-wrap"><input id="confirm-pwd" placeholder="Repeat password" type="password"/><button class="eye-btn" type="button" onclick="toggleEye('confirm-pwd',this)">👁</button></div>
+          <div class="pwd-wrap"><input id="confirm-pwd" placeholder="Repeat password" type="password"/><button class="eye-btn" type="button" onclick="toggleEye('confirm-pwd',this)"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
         </div>
         <button class="btn-secondary" onclick="changePassword()">Update Password</button>
         <div class="msg" id="pwd-change-msg"></div>
@@ -144,11 +145,11 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
           <div class="field"><label>Username</label><input id="new-user-name" placeholder="e.g. marco" type="text" autocomplete="off"/></div>
           <div class="field">
             <label>Password</label>
-            <div class="pwd-wrap"><input id="new-user-pwd" placeholder="At least 8 characters" type="password" autocomplete="new-password"/><button class="eye-btn" type="button" onclick="toggleEye('new-user-pwd',this)">👁</button></div>
+            <div class="pwd-wrap"><input id="new-user-pwd" placeholder="At least 8 characters" type="password" autocomplete="new-password"/><button class="eye-btn" type="button" onclick="toggleEye('new-user-pwd',this)"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
           </div>
           <div class="field">
             <label>Confirm Password</label>
-            <div class="pwd-wrap"><input id="new-user-pwd2" placeholder="Repeat password" type="password" autocomplete="new-password"/><button class="eye-btn" type="button" onclick="toggleEye('new-user-pwd2',this)">👁</button></div>
+            <div class="pwd-wrap"><input id="new-user-pwd2" placeholder="Repeat password" type="password" autocomplete="new-password"/><button class="eye-btn" type="button" onclick="toggleEye('new-user-pwd2',this)"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
           </div>
           <div class="field">
             <label>Role</label>
@@ -160,7 +161,7 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
           <div class="confirm-block">
             <div class="field" style="margin-bottom:0;">
               <label>Your Password (confirmation)</label>
-              <div class="pwd-wrap"><input id="confirm-own-pwd" placeholder="Enter your password to confirm" type="password" autocomplete="current-password"/><button class="eye-btn" type="button" onclick="toggleEye('confirm-own-pwd',this)">👁</button></div>
+              <div class="pwd-wrap"><input id="confirm-own-pwd" placeholder="Enter your password to confirm" type="password" autocomplete="current-password"/><button class="eye-btn" type="button" onclick="toggleEye('confirm-own-pwd',this)"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
             </div>
           </div>
           <button class="btn-secondary" onclick="addUser()" style="margin-top:1rem;">Create Account</button>
@@ -204,11 +205,15 @@ function authHeaders() {
 }
 
 // ── Eye toggle ────────────────────────────────────────────────────────
+const EYE_OPEN = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+const EYE_OFF  = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
 function toggleEye(inputId, btn) {
   const inp = document.getElementById(inputId);
   if (!inp) return;
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.style.opacity = inp.type === 'text' ? '1' : '0.5';
+  const showing = inp.type === 'password';
+  inp.type       = showing ? 'text' : 'password';
+  btn.innerHTML  = showing ? EYE_OFF : EYE_OPEN;
+  btn.style.opacity = showing ? '1' : '0.5';
 }
 
 const PRODUCTS = [
@@ -239,7 +244,8 @@ async function doLogin() {
     SESSION_ROLE = me.role;
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-panel').style.display  = 'block';
-    document.getElementById('top-user').innerHTML = `${SESSION_USER}<span class="role-badge">${SESSION_ROLE}</span>`;
+    const roleLabel = SESSION_ROLE === 'admin' ? 'Admin Access' : 'User';
+    document.getElementById('top-user').innerHTML = `${SESSION_USER}<span class="role-badge">${roleLabel}</span>`;
     // Only admins see Add User section
     if (SESSION_ROLE === 'admin') document.getElementById('add-user-section').style.display = 'block';
     await loadContent();
