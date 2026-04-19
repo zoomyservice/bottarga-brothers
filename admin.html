@@ -5,9 +5,10 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>Bottarga Brothers — Admin</title>
 <style>
-:root{--dark:#0a0a0a;--card:#141414;--border:#2a2a2a;--gold:#c9a84c;--gold-dim:rgba(201,168,76,0.15);--text:#e8e0d0;--muted:#888;--green:#4ade80;--red:#f87171;}
+:root{--dark:#0a0a0a;--card:#141414;--border:#2a2a2a;--gold:#c9a84c;--gold-dim:rgba(201,168,76,0.12);--text:#e8e0d0;--muted:#888;--green:#4ade80;--red:#f87171;--blue:#60a5fa;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
+/* LOGIN */
 #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
 .login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:380px;text-align:center;}
 .login-box h1{font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:.4rem;}
@@ -17,54 +18,113 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 .btn-gold{background:var(--gold);color:#0a0a0a;font-weight:700;border:none;padding:13px 28px;border-radius:8px;font-size:.95rem;cursor:pointer;width:100%;transition:opacity .2s;}
 .btn-gold:hover{opacity:.85;}
 .login-error{color:var(--red);font-size:.85rem;margin-top:.75rem;display:none;}
-/* password wrapper with eye icon */
 .pwd-wrap{position:relative;margin-bottom:1rem;}
 .login-box .pwd-wrap input{margin-bottom:0;}
 .pwd-wrap input{padding-right:44px!important;}
 .eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;line-height:0;opacity:.5;}
 .eye-btn:hover{color:var(--text);opacity:1;}
 .eye-btn svg{display:block;}
-/* admin panel */
+/* TOP BAR */
 #admin-panel{display:none;}
-.top-bar{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.top-bar-logo{color:var(--gold);font-weight:700;font-size:1.1rem;}
-.top-bar-user{color:var(--muted);font-size:.8rem;}
-.top-bar-actions{display:flex;gap:.75rem;align-items:center;}
-.btn-save{background:var(--gold);color:#0a0a0a;font-weight:700;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:.9rem;transition:opacity .2s;}
+.top-bar{background:var(--card);border-bottom:1px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.top-bar-logo{color:var(--gold);font-weight:700;font-size:1rem;}
+.top-bar-user{color:var(--muted);font-size:.78rem;}
+.top-bar-actions{display:flex;gap:.6rem;align-items:center;}
+.btn-save{background:var(--gold);color:#0a0a0a;font-weight:700;border:none;padding:9px 20px;border-radius:7px;cursor:pointer;font-size:.875rem;transition:opacity .2s;}
 .btn-save:hover{opacity:.85;}
-.btn-save:disabled{opacity:.5;cursor:default;}
-.btn-logout{background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:8px;cursor:pointer;font-size:.875rem;}
+.btn-save:disabled{opacity:.4;cursor:default;}
+.btn-logout{background:transparent;border:1px solid var(--border);color:var(--muted);padding:8px 15px;border-radius:7px;cursor:pointer;font-size:.8rem;}
 .btn-logout:hover{border-color:var(--red);color:var(--red);}
-.save-status{font-size:.85rem;color:var(--green);display:none;}
-.admin-content{padding:2rem;max-width:960px;margin:0 auto;}
-.section-heading{font-size:1.1rem;font-weight:700;color:var(--gold);margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
-.section-heading:first-child{margin-top:0;}
-.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
-@media(max-width:640px){.product-grid{grid-template-columns:1fr;}}
-.product-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;}
-.product-card h3{font-size:.95rem;font-weight:600;color:var(--text);margin-bottom:1rem;}
-.field{margin-bottom:.75rem;}
-.field label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.35rem;}
-.field input,.field textarea,.field select{width:100%;background:#0f0f0f;border:1px solid var(--border);color:var(--text);padding:10px 13px;border-radius:7px;font-size:.875rem;outline:none;transition:border-color .2s;}
+.save-status{font-size:.82rem;color:var(--green);display:none;}
+.role-badge{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:var(--gold-dim);color:var(--gold);margin-left:.4rem;vertical-align:middle;}
+/* MAIN LAYOUT */
+.admin-body{display:flex;min-height:calc(100vh - 52px);}
+.sidebar{width:200px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:1.5rem 0;}
+.sidebar-item{display:block;padding:.65rem 1.5rem;color:var(--muted);font-size:.875rem;cursor:pointer;border:none;background:none;width:100%;text-align:left;border-left:3px solid transparent;transition:all .15s;}
+.sidebar-item:hover{color:var(--text);background:rgba(255,255,255,.04);}
+.sidebar-item.active{color:var(--gold);border-left-color:var(--gold);background:var(--gold-dim);}
+.sidebar-divider{height:1px;background:var(--border);margin:1rem 0;}
+.main-area{flex:1;overflow:auto;padding:2rem;max-width:1100px;}
+@media(max-width:700px){.sidebar{display:none;}.main-area{padding:1rem;}}
+/* PANELS */
+.panel{display:none;}
+.panel.active{display:block;}
+/* FIELDS */
+.field{margin-bottom:.85rem;}
+.field label{display:block;font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem;}
+.field input,.field textarea,.field select{width:100%;background:#0f0f0f;border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:7px;font-size:.875rem;outline:none;transition:border-color .2s;font-family:inherit;}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold);}
-.field textarea{resize:vertical;min-height:80px;font-family:inherit;}
+.field textarea{resize:vertical;min-height:75px;}
 .field select option{background:#1a1a1a;}
-.field .pwd-wrap{margin-bottom:0;}
-.img-preview{width:100%;height:100px;object-fit:cover;border-radius:6px;margin-top:.5rem;background:#1a1a1a;}
-.img-preview[src=""]{display:none;}
-.tabs{display:flex;gap:4px;margin-bottom:2rem;background:#0f0f0f;padding:4px;border-radius:10px;width:fit-content;}
-.tab{padding:8px 18px;border-radius:7px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:.875rem;font-weight:500;transition:all .2s;}
-.tab.active{background:var(--card);color:var(--text);}
-.tab-content{display:none;}
-.tab-content.active{display:block;}
+/* SECTION HEADING */
+.sh{font-size:1rem;font-weight:700;color:var(--gold);margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+.sh:first-child{margin-top:0;}
+/* PRODUCT GRID */
+.product-list{display:flex;flex-direction:column;gap:1.25rem;}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.product-card-head{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.25rem;cursor:pointer;user-select:none;}
+.product-card-head:hover{background:rgba(255,255,255,.03);}
+.product-card-title{font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:.6rem;}
+.product-card-origin{font-size:.75rem;color:var(--muted);}
+.product-card-chevron{color:var(--muted);transition:transform .2s;font-size:.8rem;}
+.product-card.open .product-card-chevron{transform:rotate(180deg);}
+.product-card-body{display:none;padding:1.25rem;border-top:1px solid var(--border);}
+.product-card.open .product-card-body{display:block;}
+.product-card-grid{display:grid;grid-template-columns:200px 1fr;gap:1.5rem;}
+@media(max-width:640px){.product-card-grid{grid-template-columns:1fr;}}
+/* IMAGE DROP */
+.img-drop{border:2px dashed var(--border);border-radius:8px;text-align:center;padding:1rem .5rem;cursor:pointer;transition:border-color .2s;position:relative;}
+.img-drop:hover,.img-drop.drag{border-color:var(--gold);}
+.img-drop img{width:100%;height:130px;object-fit:cover;border-radius:5px;margin-bottom:.5rem;}
+.img-drop-label{font-size:.72rem;color:var(--muted);}
+.img-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+/* SIZE TABLE */
+.size-table{width:100%;border-collapse:collapse;margin-top:.5rem;}
+.size-table th{font-size:.65rem;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;text-align:left;padding:.4rem .5rem;}
+.size-table td{padding:.3rem .4rem;}
+.size-table td input{background:#0f0f0f;border:1px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:.82rem;width:100%;outline:none;}
+.size-table td input:focus{border-color:var(--gold);}
+.size-table td.del-col{width:32px;}
+.btn-del-size{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 4px;line-height:1;}
+.btn-del-size:hover{color:var(--red);}
+.btn-add-size{background:none;border:1px dashed var(--border);color:var(--muted);cursor:pointer;padding:5px 12px;border-radius:6px;font-size:.78rem;margin-top:.5rem;width:100%;}
+.btn-add-size:hover{border-color:var(--gold);color:var(--gold);}
+/* BADGE SELECT */
+.badge-row{display:flex;gap:.5rem;margin-top:.25rem;}
+.badge-opt{flex:1;text-align:center;padding:5px 4px;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:600;color:var(--muted);transition:all .2s;}
+.badge-opt:hover{border-color:var(--gold);}
+.badge-opt.selected{border-color:var(--gold);background:var(--gold-dim);color:var(--gold);}
+/* PAGE TEXT */
+.pagetext-layout{display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start;}
+@media(max-width:900px){.pagetext-layout{grid-template-columns:1fr;}}
+.preview-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;position:sticky;top:70px;}
+.preview-panel h3{font-size:.8rem;font-weight:700;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:1rem;}
+.preview-row{margin-bottom:.85rem;}
+.preview-label{font-size:.65rem;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.3rem;}
+.preview-before{font-size:.8rem;color:var(--muted);text-decoration:line-through;padding:6px 10px;background:#0a0a0a;border-radius:4px;margin-bottom:.25rem;line-height:1.4;max-height:60px;overflow:hidden;}
+.preview-after{font-size:.8rem;color:var(--green);padding:6px 10px;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2);border-radius:4px;line-height:1.4;}
+/* COLORS */
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+.color-swatch{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.color-swatch label{display:block;font-size:.72rem;color:var(--muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em;}
+.color-swatch-row{display:flex;align-items:center;gap:.75rem;}
+.color-swatch input[type=color]{width:40px;height:40px;border:none;border-radius:6px;cursor:pointer;background:none;padding:0;}
+.color-hex{background:#0f0f0f;border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:6px;font-size:.82rem;font-family:monospace;width:100px;outline:none;}
+.color-hex:focus{border-color:var(--gold);}
+.site-preview-box{background:#181410;border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-top:1.5rem;}
+.site-preview-box .spb-nav{height:36px;background:#0e0c09;border-radius:6px;margin-bottom:.75rem;display:flex;align-items:center;padding:0 1rem;font-size:.72rem;color:#c9a84c;}
+.site-preview-box .spb-hero{border-radius:6px;height:80px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;margin-bottom:.75rem;}
+.site-preview-box .spb-hero h3{font-size:.95rem;font-weight:700;}
+.site-preview-box .spb-hero p{font-size:.7rem;}
+.site-preview-box .spb-card{background:#231f18;border-radius:6px;padding:.75rem 1rem;font-size:.78rem;}
+/* SETTINGS */
 .settings-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;max-width:420px;margin-bottom:1.5rem;}
-.confirm-block{background:#0f0f0f;border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:.5rem;}
+.confirm-block{background:#0f0f0f;border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:.75rem;}
+.confirm-block .field{margin-bottom:0;}
 .confirm-block label{color:var(--gold)!important;}
-.confirm-block input{border:none;background:transparent;padding:8px 0 0;}
-.btn-secondary{background:transparent;border:1px solid var(--gold);color:var(--gold);font-weight:600;padding:10px 22px;border-radius:8px;cursor:pointer;font-size:.875rem;transition:all .2s;}
+.btn-secondary{background:transparent;border:1px solid var(--gold);color:var(--gold);font-weight:600;padding:9px 20px;border-radius:7px;cursor:pointer;font-size:.875rem;transition:all .2s;margin-top:.75rem;}
 .btn-secondary:hover{background:var(--gold-dim);}
-.msg{margin-top:.75rem;font-size:.85rem;display:none;}
-.role-badge{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px;background:var(--gold-dim);color:var(--gold);margin-left:.5rem;vertical-align:middle;}
+.msg{margin-top:.75rem;font-size:.82rem;display:none;}
 </style>
 </head>
 <body>
@@ -77,7 +137,7 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
     <input id="user-input" placeholder="Username" type="text" autocomplete="username"/>
     <div class="pwd-wrap">
       <input id="pwd-input" placeholder="Password" type="password" autocomplete="current-password"/>
-      <button class="eye-btn" type="button" onclick="toggleEye('pwd-input',this)" title="Show/hide password"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      <button class="eye-btn" type="button" onclick="toggleEye('pwd-input',this)">EYE</button>
     </div>
     <button class="btn-gold" onclick="doLogin()" style="margin-top:.25rem;">Sign In</button>
     <div class="login-error" id="login-error"></div>
@@ -87,7 +147,7 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 <!-- ADMIN PANEL -->
 <div id="admin-panel">
   <div class="top-bar">
-    <div class="top-bar-logo">⚙ Admin Panel</div>
+    <div class="top-bar-logo">⚙ Bottarga Admin</div>
     <div class="top-bar-actions">
       <span class="top-bar-user" id="top-user"></span>
       <span class="save-status" id="save-status">✓ Saved</span>
@@ -95,292 +155,529 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
       <button class="btn-logout" onclick="doLogout()">Log out</button>
     </div>
   </div>
-  <div class="admin-content">
-    <div class="tabs" id="main-tabs">
-      <button class="tab active" onclick="switchTab('products',this)">Products</button>
-      <button class="tab" onclick="switchTab('pages',this)">Page Text</button>
-      <button class="tab" onclick="switchTab('settings',this)">Settings</button>
-    </div>
+  <div class="admin-body">
+    <nav class="sidebar">
+      <button class="sidebar-item active" onclick="showPanel('products',this)">🛒 Products</button>
+      <button class="sidebar-item" onclick="showPanel('pagetext',this)">📝 Page Text</button>
+      <button class="sidebar-item" onclick="showPanel('colors',this)">🎨 Colors & Fonts</button>
+      <div class="sidebar-divider"></div>
+      <button class="sidebar-item" onclick="showPanel('settings',this)">⚙ Settings</button>
+    </nav>
+    <div class="main-area">
 
-    <!-- PRODUCTS TAB -->
-    <div class="tab-content active" id="tab-products">
-      <div class="section-heading">USA Shop — Products</div>
-      <div class="product-grid" id="product-grid"></div>
-    </div>
-
-    <!-- PAGE TEXT TAB -->
-    <div class="tab-content" id="tab-pages">
-      <div class="section-heading">Homepage</div>
-      <div class="field"><label>Hero Headline</label><input data-key="hero_headline" placeholder="The World's Finest Bottarga" type="text"/></div>
-      <div class="field"><label>Hero Subheadline</label><input data-key="hero_sub" placeholder="Wild-caught mullet roe..." type="text"/></div>
-      <div class="section-heading">About Page</div>
-      <div class="field"><label>About Intro Paragraph</label><textarea data-key="about_intro" placeholder="Our story..."></textarea></div>
-      <div class="section-heading">Contact Info</div>
-      <div class="field"><label>Email Address</label><input data-key="contact_email" placeholder="contact@bottargabrothers.com" type="text"/></div>
-      <div class="field"><label>Phone / WhatsApp</label><input data-key="contact_phone" placeholder="+1 (203) ..." type="text"/></div>
-    </div>
-
-    <!-- SETTINGS TAB -->
-    <div class="tab-content" id="tab-settings">
-
-      <div class="section-heading">Change Password</div>
-      <div class="settings-box">
-        <div class="field">
-          <label>New Password</label>
-          <div class="pwd-wrap"><input id="new-pwd" placeholder="At least 8 characters" type="password"/><button class="eye-btn" type="button" onclick="toggleEye('new-pwd',this)"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
-        </div>
-        <div class="field">
-          <label>Confirm New Password</label>
-          <div class="pwd-wrap"><input id="confirm-pwd" placeholder="Repeat password" type="password"/><button class="eye-btn" type="button" onclick="toggleEye('confirm-pwd',this)"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
-        </div>
-        <button class="btn-secondary" onclick="changePassword()">Update Password</button>
-        <div class="msg" id="pwd-change-msg"></div>
+      <!-- ── PRODUCTS ── -->
+      <div class="panel active" id="panel-products">
+        <div class="sh">All Products (USA Shop)</div>
+        <div class="product-list" id="product-list"></div>
       </div>
 
-      <!-- ADD USER — only shown to admins -->
-      <div id="add-user-section" style="display:none;">
-        <div class="section-heading">Add New User</div>
-        <div class="settings-box">
-          <p style="color:var(--muted);font-size:.85rem;margin-bottom:1.25rem;">Create a new account. Admins can add more users; Users cannot.</p>
-          <div class="field"><label>Username</label><input id="new-user-name" placeholder="e.g. marco" type="text" autocomplete="off"/></div>
-          <div class="field">
-            <label>Password</label>
-            <div class="pwd-wrap"><input id="new-user-pwd" placeholder="At least 8 characters" type="password" autocomplete="new-password"/><button class="eye-btn" type="button" onclick="toggleEye('new-user-pwd',this)"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+      <!-- ── PAGE TEXT ── -->
+      <div class="panel" id="panel-pagetext">
+        <div class="pagetext-layout">
+          <div>
+            <div class="sh">Homepage</div>
+            <div class="field"><label>Hero Eyebrow</label><input data-key="hero_eyebrow" data-label="Hero Eyebrow" placeholder="Supreme Bottarga™ — Est. North America" type="text"/></div>
+            <div class="field"><label>Hero Headline</label><input data-key="hero_headline" data-label="Hero Headline" placeholder="The World's Finest Bottarga" type="text"/></div>
+            <div class="field"><label>Hero Subtext</label><textarea data-key="hero_sub" data-label="Hero Subtext" placeholder="We source the rarest cured mullet roe..."></textarea></div>
+            <div class="field"><label>Shop CTA Button Text</label><input data-key="hero_cta" data-label="Shop CTA" placeholder="Shop Now" type="text"/></div>
+            <div class="sh">About Page</div>
+            <div class="field"><label>About Hero Headline</label><input data-key="about_headline" data-label="About Headline" placeholder="A Story That Begins in Safi, Morocco" type="text"/></div>
+            <div class="field"><label>About Intro Paragraph</label><textarea data-key="about_intro" data-label="About Intro" placeholder="Our story begins..."></textarea></div>
+            <div class="field"><label>Founder Name</label><input data-key="founder_name" data-label="Founder Name" placeholder="Roger Madar" type="text"/></div>
+            <div class="field"><label>Tagline (under logo)</label><input data-key="logo_tagline" data-label="Logo Tagline" placeholder="Supreme Bottarga™" type="text"/></div>
+            <div class="sh">Trust Strip</div>
+            <div class="field"><label>Stat 1 Label</label><input data-key="stat1_label" data-label="Stat 1" placeholder="100% Feedback" type="text"/></div>
+            <div class="field"><label>Stat 1 Subtext</label><input data-key="stat1_sub" data-label="Stat 1 Sub" placeholder="Amazon & eBay verified" type="text"/></div>
+            <div class="field"><label>Stat 2 Label</label><input data-key="stat2_label" data-label="Stat 2" placeholder="Free US Shipping" type="text"/></div>
+            <div class="field"><label>Stat 2 Subtext</label><input data-key="stat2_sub" data-label="Stat 2 Sub" placeholder="USPS on every US order" type="text"/></div>
+            <div class="sh">Contact & Footer</div>
+            <div class="field"><label>Email Address</label><input data-key="contact_email" data-label="Contact Email" placeholder="contact@bottargabrothers.com" type="email"/></div>
+            <div class="field"><label>Phone</label><input data-key="contact_phone" data-label="Phone" placeholder="1-844-MAD-BROS" type="text"/></div>
+            <div class="field"><label>US Address</label><input data-key="addr_us" data-label="US Address" placeholder="Stamford, CT — USA" type="text"/></div>
+            <div class="field"><label>Canada Address</label><input data-key="addr_ca" data-label="Canada Address" placeholder="Montreal, QC — Canada" type="text"/></div>
+            <div class="field"><label>Footer Tagline</label><input data-key="footer_tagline" data-label="Footer Tagline" placeholder="The only destination in North America dedicated exclusively to bottarga." type="text"/></div>
+            <div class="field"><label>Instagram URL</label><input data-key="social_ig" data-label="Instagram" placeholder="https://www.instagram.com/bottarga_brothers/" type="text"/></div>
+            <div class="field"><label>Facebook URL</label><input data-key="social_fb" data-label="Facebook" placeholder="https://www.facebook.com/bottargabrothers/" type="text"/></div>
+            <div class="field"><label>Newsletter Signup URL</label><input data-key="newsletter_url" data-label="Newsletter URL" placeholder="https://bottargabrothers.us18..." type="text"/></div>
           </div>
-          <div class="field">
-            <label>Confirm Password</label>
-            <div class="pwd-wrap"><input id="new-user-pwd2" placeholder="Repeat password" type="password" autocomplete="new-password"/><button class="eye-btn" type="button" onclick="toggleEye('new-user-pwd2',this)"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
-          </div>
-          <div class="field">
-            <label>Role</label>
-            <select id="new-user-role">
-              <option value="user">User — can use the panel, cannot add others</option>
-              <option value="admin">Admin — full access, can add more users</option>
-            </select>
-          </div>
-          <div class="confirm-block">
-            <div class="field" style="margin-bottom:0;">
-              <label>Your Password (confirmation)</label>
-              <div class="pwd-wrap"><input id="confirm-own-pwd" placeholder="Enter your password to confirm" type="password" autocomplete="current-password"/><button class="eye-btn" type="button" onclick="toggleEye('confirm-own-pwd',this)"<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+          <div>
+            <div class="preview-panel">
+              <h3>Live Preview</h3>
+              <p style="font-size:.75rem;color:var(--muted);margin-bottom:1rem;">Click any field on the left to see before/after.</p>
+              <div id="preview-content"></div>
             </div>
           </div>
-          <button class="btn-secondary" onclick="addUser()" style="margin-top:1rem;">Create Account</button>
-          <div class="msg" id="add-user-msg"></div>
+        </div>
+      </div>
+
+      <!-- ── COLORS & FONTS ── -->
+      <div class="panel" id="panel-colors">
+        <div class="sh">Brand Colors</div>
+        <div class="color-grid" id="color-grid"></div>
+        <div class="sh" style="margin-top:2rem;">Typography</div>
+        <div style="max-width:420px;">
+          <div class="field">
+            <label>Heading Font</label>
+            <select data-key="font_serif">
+              <option value="'Cormorant Garamond', Georgia, serif">Cormorant Garamond (current)</option>
+              <option value="'Playfair Display', Georgia, serif">Playfair Display</option>
+              <option value="'EB Garamond', Georgia, serif">EB Garamond</option>
+              <option value="Georgia, serif">Georgia</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Body Font</label>
+            <select data-key="font_sans">
+              <option value="'Inter', system-ui, sans-serif">Inter (current)</option>
+              <option value="system-ui, sans-serif">System UI</option>
+              <option value="'DM Sans', system-ui, sans-serif">DM Sans</option>
+            </select>
+          </div>
+        </div>
+        <div class="sh">Preview</div>
+        <div class="site-preview-box" id="site-preview-box">
+          <div class="spb-nav" id="spb-nav">Bottarga Brothers <span style="color:var(--muted);margin-left:auto;font-size:.65rem;">Supreme Bottarga™</span></div>
+          <div class="spb-hero" id="spb-hero">
+            <h3 id="spb-headline">The World's Finest Bottarga</h3>
+            <p id="spb-sub" style="color:#8a7e6e;">Wild-caught mullet roe from Sardinia, France & Greece</p>
+          </div>
+          <div class="spb-card" id="spb-card">
+            <span id="spb-product-name" style="font-weight:600;">Sardinian Gold</span>
+            &nbsp;·&nbsp; <span id="spb-price" style="color:#c9a84c;">From $38.99</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="panel" id="panel-settings">
+        <div class="sh">Change Password</div>
+        <div class="settings-box">
+          <div class="field"><label>New Password</label>
+            <div class="pwd-wrap"><input id="new-pwd" placeholder="At least 8 characters" type="password"/>
+            <button class="eye-btn" type="button" onclick="toggleEye('new-pwd',this)">EYE</button></div>
+          </div>
+          <div class="field"><label>Confirm New Password</label>
+            <div class="pwd-wrap"><input id="confirm-pwd" placeholder="Repeat password" type="password"/>
+            <button class="eye-btn" type="button" onclick="toggleEye('confirm-pwd',this)">EYE</button></div>
+          </div>
+          <button class="btn-secondary" onclick="changePassword()">Update Password</button>
+          <div class="msg" id="pwd-change-msg"></div>
+        </div>
+        <div id="add-user-section" style="display:none;">
+          <div class="sh">Add New User</div>
+          <div class="settings-box">
+            <p style="color:var(--muted);font-size:.82rem;margin-bottom:1rem;">Admins can add more users. Users can edit content but cannot add others.</p>
+            <div class="field"><label>Username</label><input id="new-user-name" placeholder="e.g. marco" type="text" autocomplete="off"/></div>
+            <div class="field"><label>Password</label>
+              <div class="pwd-wrap"><input id="new-user-pwd" placeholder="At least 8 characters" type="password" autocomplete="new-password"/>
+              <button class="eye-btn" type="button" onclick="toggleEye('new-user-pwd',this)">EYE</button></div>
+            </div>
+            <div class="field"><label>Confirm Password</label>
+              <div class="pwd-wrap"><input id="new-user-pwd2" placeholder="Repeat password" type="password" autocomplete="new-password"/>
+              <button class="eye-btn" type="button" onclick="toggleEye('new-user-pwd2',this)">EYE</button></div>
+            </div>
+            <div class="field"><label>Role</label>
+              <select id="new-user-role">
+                <option value="user">User — edit content, cannot add others</option>
+                <option value="admin">Admin — full access, can add users</option>
+              </select>
+            </div>
+            <div class="confirm-block">
+              <div class="field"><label>Your Password (confirmation)</label>
+                <div class="pwd-wrap"><input id="confirm-own-pwd" placeholder="Enter your password to confirm" type="password" autocomplete="current-password"/>
+                <button class="eye-btn" type="button" onclick="toggleEye('confirm-own-pwd',this)">EYE</button></div>
+              </div>
+            </div>
+            <button class="btn-secondary" onclick="addUser()">Create Account</button>
+            <div class="msg" id="add-user-msg"></div>
+          </div>
         </div>
       </div>
 
     </div>
   </div>
 </div>
-
 <script>
 const WORKER = 'https://bottarga-admin.zoozoomfast.workers.dev';
 
-// ── Session UUID — persists in localStorage forever ──────────────────
+// ── Session UUID ──────────────────────────────────────────────────────
 function getSessionId() {
-  let sid = localStorage.getItem('bb_session_id');
-  if (!sid) {
-    sid = typeof crypto.randomUUID === 'function'
-      ? crypto.randomUUID()
-      : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-          const r = crypto.getRandomValues(new Uint8Array(1))[0] % 16;
-          return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
-    localStorage.setItem('bb_session_id', sid);
-  }
-  return sid;
+  let s = localStorage.getItem('bb_session_id');
+  if (!s) { s = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2)+Date.now().toString(36); localStorage.setItem('bb_session_id',s); }
+  return s;
 }
 const SESSION_ID = getSessionId();
-let SESSION_USER = '';
-let SESSION_PWD  = '';
-let SESSION_ROLE = '';
+let SESSION_USER='', SESSION_PWD='', SESSION_ROLE='';
+let savedData = {}; // what's currently in KV
+let pendingImages = {}; // productId → base64 dataURL
 
-function authHeaders() {
-  return {
-    'Content-Type': 'application/json',
-    'X-Admin-User': SESSION_USER,
-    'X-Admin-Password': SESSION_PWD,
-    'X-Session-ID': SESSION_ID,
-  };
-}
+function authH() { return {'Content-Type':'application/json','X-Admin-User':SESSION_USER,'X-Admin-Password':SESSION_PWD,'X-Session-ID':SESSION_ID}; }
 
 // ── Eye toggle ────────────────────────────────────────────────────────
-const EYE_OPEN = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
-const EYE_OFF  = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
-function toggleEye(inputId, btn) {
-  const inp = document.getElementById(inputId);
-  if (!inp) return;
-  const showing = inp.type === 'password';
-  inp.type       = showing ? 'text' : 'password';
-  btn.innerHTML  = showing ? EYE_OFF : EYE_OPEN;
-  btn.style.opacity = showing ? '1' : '0.5';
+const EYE_ON  = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+const EYE_OFF = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+// Replace placeholder text with real SVGs
+document.querySelectorAll('.eye-btn').forEach(b => { b.innerHTML = EYE_ON; b.style.opacity='.5'; });
+function toggleEye(id, btn) {
+  const inp = document.getElementById(id); if(!inp) return;
+  const show = inp.type==='password'; inp.type = show?'text':'password';
+  btn.innerHTML = show ? EYE_OFF : EYE_ON; btn.style.opacity = show?'1':'.5';
 }
 
+// ── Products definition ───────────────────────────────────────────────
 const PRODUCTS = [
-  { id: 'sardinian-gold',      label: 'Sardinian Gold',      img_src: 'img/sardinian_40off.jpg' },
-  { id: 'boutargue-classique', label: 'Boutargue Classique', img_src: 'img/bout_class_square.jpg' },
-  { id: 'boutargue-imperiale', label: 'Boutargue Imperiale', img_src: 'img/imperiale_square.jpg' },
-  { id: 'greek-avgotaraho',    label: 'Greek Avgotaraho',    img_src: 'img/greek_avgotaraho.jpg' },
+  { id:'sardinian-gold', label:'Sardinian Gold', origin:'🇮🇹 Sardinia, Italy', defaultBadge:'On Sale',
+    sizes:[{l:'M — 4.9 oz (138g)',p:'$38.99'},{l:'L — 5.3 oz (150g)',p:'$41.99'},{l:'XL — 5.6 oz (160g)',p:'$42.99'}] },
+  { id:'boutargue-classique', label:'Boutargue Classique', origin:'🇫🇷 France — Traditional Waxed', defaultBadge:'',
+    sizes:[{l:'S — 3.7 oz',p:'$33.99'},{l:'M — 4.4 oz',p:'$45.99'},{l:'L — 6.0 oz',p:'$47.99'},{l:'XL — 6.2 oz',p:'$49.99'},{l:'Jumbo — 7.7 oz',p:'$58.99'},{l:'Mega — 8.5 oz',p:'$62.99'},{l:'Giant — 13.0 oz',p:'$91.99'}] },
+  { id:'boutargue-imperiale', label:'Boutargue Impériale', origin:'🇫🇷 France — Premium Grade', defaultBadge:'',
+    sizes:[{l:'XS — ~3.2 oz',p:'$30.99'},{l:'S — ~3.5 oz',p:'$32.99'},{l:'M — ~6.1 oz',p:'$49.99'},{l:'L — ~6.4 oz',p:'$51.99'}] },
+  { id:'boutargue-imperiale-aged', label:'Boutargue Impériale Aged', origin:'🇫🇷 France — Aged Reserve', defaultBadge:'Limited',
+    sizes:[{l:'From',p:'$30.99'}] },
+  { id:'greek-avgotaraho', label:'Greek Avgotaraho', origin:'🇬🇷 Greece — Athens', defaultBadge:'',
+    sizes:[{l:'S — ~5.6 oz',p:'$44.99'},{l:'M — ~5.8 oz',p:'$45.99'},{l:'L — ~6.3 oz',p:'$48.99'},{l:'XL — ~6.6 oz',p:'$50.99'},{l:'Mega — ~7.4 oz',p:'$55.99'}] },
+  { id:'ouro-do-brasil', label:'Ouro do Brasil', origin:'🇧🇷 Brazil — Santa Catarina', defaultBadge:'',
+    sizes:[{l:'Standard',p:'$22.99'}] },
+  { id:'aged-ouro-do-brasil', label:'Aged Ouro do Brasil', origin:'🇧🇷 Brazil — Aged Reserve', defaultBadge:'Limited',
+    sizes:[{l:'From',p:'$22.99'}] },
+  { id:'egyptian-royale', label:'Egyptian Royale', origin:'🇪🇬 Egypt — Port Said', defaultBadge:'Sold Out',
+    sizes:[{l:'Small',p:'$24.00'},{l:'Large',p:'$39.99'}] },
+  { id:'grated-gold', label:'Grated Gold', origin:'🇮🇹 Sardinia — Grated', defaultBadge:'',
+    sizes:[{l:'1 jar — 40g',p:'$19.99'},{l:'2 jars — 80g',p:'$35.99'},{l:'3 jars — 120g',p:'$50.99'}] },
+  { id:'grated-pouch', label:'Grated Bottarga Pouch', origin:'🇮🇹 Sardinia — 50g Pouch', defaultBadge:'',
+    sizes:[{l:'50g Pouch',p:'$18.99'}] },
+];
+
+// ── Colors definition ─────────────────────────────────────────────────
+const COLORS = [
+  {key:'css_gold',      label:'Gold (accent)',      default:'#c9a84c'},
+  {key:'css_dark',      label:'Background (dark)',  default:'#0e0c09'},
+  {key:'css_dark_mid',  label:'Card Background',    default:'#231f18'},
+  {key:'css_cream',     label:'Text (light)',        default:'#f0e8d8'},
+  {key:'css_muted',     label:'Text (muted)',        default:'#8a7e6e'},
+  {key:'css_gold_light',label:'Gold Light',         default:'#e0c270'},
 ];
 
 // ── LOGIN ─────────────────────────────────────────────────────────────
 async function doLogin() {
-  const user = document.getElementById('user-input').value.trim();
-  const pwd  = document.getElementById('pwd-input').value;
-  const err  = document.getElementById('login-error');
-  err.style.display = 'none';
-  if (!user || !pwd) { err.textContent = 'Enter both username and password.'; err.style.display = 'block'; return; }
+  const user=document.getElementById('user-input').value.trim();
+  const pwd=document.getElementById('pwd-input').value;
+  const err=document.getElementById('login-error');
+  err.style.display='none';
+  if(!user||!pwd){err.textContent='Enter both username and password.';err.style.display='block';return;}
   try {
-    const res = await fetch(WORKER + '/me', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Admin-User': user, 'X-Admin-Password': pwd, 'X-Session-ID': SESSION_ID },
-      body: '{}',
-    });
-    if (res.status === 429) { const d = await res.json(); err.textContent = d.error; err.style.display = 'block'; return; }
-    if (!res.ok) { err.textContent = 'Incorrect username or password.'; err.style.display = 'block'; return; }
-    const me = await res.json();
-    SESSION_USER = user;
-    SESSION_PWD  = pwd;
-    SESSION_ROLE = me.role;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-panel').style.display  = 'block';
-    const roleLabel = SESSION_ROLE === 'admin' ? 'Admin Access' : 'User';
-    document.getElementById('top-user').innerHTML = `${SESSION_USER}<span class="role-badge">${roleLabel}</span>`;
-    // Only admins see Add User section
-    if (SESSION_ROLE === 'admin') document.getElementById('add-user-section').style.display = 'block';
+    const res=await fetch(WORKER+'/me',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-User':user,'X-Admin-Password':pwd,'X-Session-ID':SESSION_ID},body:'{}'});
+    if(res.status===429){const d=await res.json();err.textContent=d.error;err.style.display='block';return;}
+    if(!res.ok){err.textContent='Incorrect username or password.';err.style.display='block';return;}
+    const me=await res.json();
+    SESSION_USER=user; SESSION_PWD=pwd; SESSION_ROLE=me.role;
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    const roleLabel=SESSION_ROLE==='admin'?'Admin Access':'User';
+    document.getElementById('top-user').innerHTML=`${SESSION_USER}<span class="role-badge">${roleLabel}</span>`;
+    if(SESSION_ROLE==='admin') document.getElementById('add-user-section').style.display='block';
     await loadContent();
-  } catch(e) { err.textContent = 'Connection error. Please try again.'; err.style.display = 'block'; }
+  } catch(e){err.textContent='Connection error. Please try again.';err.style.display='block';}
+}
+document.getElementById('user-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('pwd-input').focus();});
+document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function doLogout(){
+  SESSION_USER='';SESSION_PWD='';SESSION_ROLE='';
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('add-user-section').style.display='none';
+  document.getElementById('user-input').value='';
+  document.getElementById('pwd-input').value='';
 }
 
-document.getElementById('user-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('pwd-input').focus(); });
-document.getElementById('pwd-input').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-
-function doLogout() {
-  SESSION_USER = ''; SESSION_PWD = ''; SESSION_ROLE = '';
-  document.getElementById('admin-panel').style.display  = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('add-user-section').style.display = 'none';
-  document.getElementById('user-input').value = '';
-  document.getElementById('pwd-input').value  = '';
-}
-
-// ── TABS ──────────────────────────────────────────────────────────────
-function switchTab(name, btn) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
+// ── NAVIGATION ────────────────────────────────────────────────────────
+function showPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
   btn.classList.add('active');
 }
 
-// ── PRODUCT GRID ──────────────────────────────────────────────────────
-function buildProductGrid() {
-  document.getElementById('product-grid').innerHTML = PRODUCTS.map(p => `
-    <div class="product-card">
-      <h3>${p.label}</h3>
-      <div class="field"><label>Product Name</label><input type="text" data-key="product_${p.id}_name" placeholder="${p.label}"/></div>
-      <div class="field"><label>Short Description</label><textarea data-key="product_${p.id}_desc" placeholder="Enter description..."></textarea></div>
-      <div class="field"><label>Starting Price (e.g. $38.99)</label><input type="text" data-key="product_${p.id}_price" placeholder="$38.99"/></div>
-      <div class="field">
-        <label>Product Image URL</label>
-        <input type="text" data-key="product_${p.id}_img" placeholder="${p.img_src}" oninput="updatePreview(this,'prev_${p.id}')"/>
-        <img id="prev_${p.id}" class="img-preview" src="" alt="preview"/>
+// ── PRODUCT LIST ──────────────────────────────────────────────────────
+function buildProducts() {
+  const list = document.getElementById('product-list');
+  list.innerHTML = PRODUCTS.map(p => {
+    const key = p.id.replace(/-/g,'_');
+    const savedSizes = savedData['product_'+key+'_sizes'] ? JSON.parse(savedData['product_'+key+'_sizes']) : p.sizes;
+    const savedBadge = savedData['product_'+key+'_badge'] || p.defaultBadge;
+    const savedImg   = savedData['product_'+key+'_img'] || '';
+    return `
+    <div class="product-card" id="pc_${key}">
+      <div class="product-card-head" onclick="toggleCard('${key}')">
+        <div>
+          <div class="product-card-title">${p.label}</div>
+          <div class="product-card-origin">${p.origin}</div>
+        </div>
+        <span class="product-card-chevron">▼</span>
       </div>
-    </div>`).join('');
+      <div class="product-card-body">
+        <div class="product-card-grid">
+          <!-- IMAGE -->
+          <div>
+            <div class="img-drop" id="drop_${key}" ondragover="ev.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'${key}')">
+              <img id="dropimg_${key}" src="${savedImg||'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='}" style="height:130px;width:100%;object-fit:cover;border-radius:5px;margin-bottom:.5rem;${savedImg?'':'display:none;'}"/>
+              <div class="img-drop-label" id="droplbl_${key}">${savedImg?'Click or drop to replace':'Drop image here or click to upload'}</div>
+              <input type="file" accept="image/*" onchange="handleFileInput(event,'${key}')"/>
+            </div>
+          </div>
+          <!-- FIELDS -->
+          <div>
+            <div class="field"><label>Product Name</label><input type="text" data-key="product_${key}_name" placeholder="${p.label}" value="${savedData['product_'+key+'_name']||''}"/></div>
+            <div class="field"><label>Description</label><textarea data-key="product_${key}_desc" placeholder="Enter description...">${savedData['product_'+key+'_desc']||''}</textarea></div>
+            <div class="field">
+              <label>Badge / Status</label>
+              <div class="badge-row">
+                ${['','On Sale','Limited','Sold Out','New'].map(b=>`<div class="badge-opt${savedBadge===b?' selected':''}" onclick="selectBadge('${key}','${b}',this)">${b||'None'}</div>`).join('')}
+              </div>
+              <input type="hidden" data-key="product_${key}_badge" value="${savedBadge}"/>
+            </div>
+            <div class="field">
+              <label>Sizes &amp; Prices</label>
+              <table class="size-table">
+                <thead><tr><th>Size / Weight</th><th>Price</th><th></th></tr></thead>
+                <tbody id="sizes_${key}">${savedSizes.map((s,i)=>sizeRow(key,s.l,s.p,i)).join('')}</tbody>
+              </table>
+              <button class="btn-add-size" onclick="addSizeRow('${key}')">+ Add Size</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function updatePreview(input, pid) {
-  const img = document.getElementById(pid);
-  if (img) { img.src = input.value || ''; img.style.display = input.value ? 'block' : 'none'; }
+function toggleCard(key) {
+  const card = document.getElementById('pc_'+key);
+  card.classList.toggle('open');
 }
 
-// ── LOAD CONTENT ──────────────────────────────────────────────────────
+function sizeRow(key, label, price, idx) {
+  return `<tr id="sr_${key}_${idx}">
+    <td><input type="text" value="${label}" placeholder="e.g. M — 5 oz" data-size-label="${key}"/></td>
+    <td><input type="text" value="${price}" placeholder="$0.00" data-size-price="${key}" style="width:90px;"/></td>
+    <td class="del-col"><button class="btn-del-size" onclick="this.closest('tr').remove()">×</button></td>
+  </tr>`;
+}
+
+function addSizeRow(key) {
+  const tbody = document.getElementById('sizes_'+key);
+  const idx = tbody.querySelectorAll('tr').length;
+  tbody.insertAdjacentHTML('beforeend', sizeRow(key,'','',idx));
+}
+
+function selectBadge(key, val, el) {
+  el.closest('.badge-row').querySelectorAll('.badge-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  el.closest('.field').querySelector('[type=hidden]').value = val;
+}
+
+// ── IMAGE HANDLING ────────────────────────────────────────────────────
+function handleDrop(ev, key) {
+  ev.preventDefault();
+  document.getElementById('drop_'+key).classList.remove('drag');
+  const file = ev.dataTransfer.files[0];
+  if(file && file.type.startsWith('image/')) processImage(file, key);
+}
+function handleFileInput(ev, key) {
+  const file = ev.target.files[0];
+  if(file) processImage(file, key);
+}
+function processImage(file, key) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const max = 900;
+      let w=img.width, h=img.height;
+      if(w>max){h=Math.round(h*max/w);w=max;}
+      if(h>max){w=Math.round(w*max/h);h=max;}
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      pendingImages[key] = dataUrl;
+      const el = document.getElementById('dropimg_'+key);
+      el.src = dataUrl; el.style.display='block';
+      document.getElementById('droplbl_'+key).textContent = '✓ Ready to save — click Save All Changes';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── COLOR GRID ────────────────────────────────────────────────────────
+function buildColors() {
+  document.getElementById('color-grid').innerHTML = COLORS.map(c => {
+    const val = savedData[c.key] || c.default;
+    return `<div class="color-swatch">
+      <label>${c.label}</label>
+      <div class="color-swatch-row">
+        <input type="color" value="${val}" data-key="${c.key}" oninput="syncColorHex(this)" onchange="updatePreviewColors()"/>
+        <input class="color-hex" type="text" value="${val}" data-hex-for="${c.key}" onchange="syncColorPicker(this)" onblur="syncColorPicker(this)"/>
+      </div>
+    </div>`;
+  }).join('');
+  updatePreviewColors();
+}
+function syncColorHex(picker) {
+  document.querySelector(`[data-hex-for="${picker.dataset.key}"]`).value = picker.value;
+  updatePreviewColors();
+}
+function syncColorPicker(hex) {
+  const v = hex.value; if(!/^#[0-9a-fA-F]{6}$/.test(v)) return;
+  document.querySelector(`[data-key="${hex.dataset.hexFor}"]`).value = v;
+  updatePreviewColors();
+}
+function updatePreviewColors() {
+  const gold  = document.querySelector('[data-key="css_gold"]')?.value   || '#c9a84c';
+  const dark  = document.querySelector('[data-key="css_dark"]')?.value   || '#0e0c09';
+  const dm    = document.querySelector('[data-key="css_dark_mid"]')?.value || '#231f18';
+  const cream = document.querySelector('[data-key="css_cream"]')?.value  || '#f0e8d8';
+  const muted = document.querySelector('[data-key="css_muted"]')?.value  || '#8a7e6e';
+  const box = document.getElementById('site-preview-box'); if(!box) return;
+  box.style.background = dark;
+  document.getElementById('spb-nav').style.background = dm;
+  document.getElementById('spb-nav').style.color = gold;
+  document.getElementById('spb-hero').style.background = `linear-gradient(135deg, ${dm} 0%, ${dark} 100%)`;
+  document.getElementById('spb-headline').style.color = cream;
+  document.getElementById('spb-sub').style.color = muted;
+  document.getElementById('spb-card').style.background = dm;
+  document.getElementById('spb-price').style.color = gold;
+  document.getElementById('spb-product-name').style.color = cream;
+}
+
+// ── PAGE TEXT PREVIEW ─────────────────────────────────────────────────
+document.addEventListener('focusin', function(e) {
+  const el = e.target;
+  if(!el.dataset.key && !el.dataset.label) return;
+  const key = el.dataset.key; const label = el.dataset.label || key;
+  const before = savedData[key] || '(not set)';
+  const pc = document.getElementById('preview-content');
+  pc.innerHTML = `
+    <div class="preview-row">
+      <div class="preview-label">${label} — Current</div>
+      <div class="preview-before">${escHtml(before)}</div>
+      <div class="preview-label" style="margin-top:.4rem;">After saving</div>
+      <div class="preview-after" id="preview-after-val">${escHtml(el.value||'(empty)')}</div>
+    </div>`;
+  el.addEventListener('input', function upd(){ document.getElementById('preview-after-val').textContent = el.value||'(empty)'; }, {once:false});
+});
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── LOAD / SAVE ───────────────────────────────────────────────────────
 async function loadContent() {
-  buildProductGrid();
   try {
-    const data = await fetch(WORKER + '/content').then(r => r.json());
-    if (!data || !Object.keys(data).length) return;
-    document.querySelectorAll('[data-key]').forEach(el => {
-      const v = data[el.dataset.key];
-      if (v !== undefined) {
-        el.value = v;
-        if (el.dataset.key.endsWith('_img') && v) {
-          const pid  = el.dataset.key.replace('product_','').replace('_img','');
-          const prev = document.getElementById('prev_' + pid);
-          if (prev) { prev.src = v; prev.style.display = 'block'; }
-        }
-      }
+    const data = await fetch(WORKER+'/content').then(r=>r.json());
+    savedData = data || {};
+    buildProducts();
+    buildColors();
+    // Populate text fields
+    document.querySelectorAll('[data-key]').forEach(el=>{
+      if(el.closest('#product-list')) return; // products built separately
+      const v = savedData[el.dataset.key];
+      if(v!==undefined) el.value = v;
     });
-  } catch(e) { console.warn('Could not load content:', e); }
+    // Font selects
+    ['font_serif','font_sans'].forEach(k=>{
+      const sel=document.querySelector(`[data-key="${k}"]`);
+      if(sel && savedData[k]) sel.value=savedData[k];
+    });
+  } catch(e){console.warn('Load error:',e);}
 }
 
-// ── SAVE ──────────────────────────────────────────────────────────────
-async function saveAll() {
-  const btn = document.getElementById('save-btn');
-  btn.disabled = true; btn.textContent = 'Saving…';
+function collectData() {
   const data = {};
-  document.querySelectorAll('[data-key]').forEach(el => { if (el.value.trim()) data[el.dataset.key] = el.value.trim(); });
-  try {
-    const res = await fetch(WORKER + '/content', { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
-    if (res.ok) { const s = document.getElementById('save-status'); s.style.display = 'inline'; setTimeout(() => s.style.display = 'none', 3000); }
-    else if (res.status === 401) alert('Session expired. Please log out and sign in again.');
-    else alert('Save failed. Please try again.');
-  } catch(e) { alert('Connection error during save.'); }
-  btn.disabled = false; btn.textContent = 'Save All Changes';
+  // Text fields
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    if(el.closest('#product-list')) return;
+    if(el.value.trim()) data[el.dataset.key]=el.value.trim();
+  });
+  // Products
+  PRODUCTS.forEach(p=>{
+    const key = p.id.replace(/-/g,'_');
+    const card = document.getElementById('pc_'+key); if(!card) return;
+    const name = card.querySelector('[data-key="product_'+key+'_name"]')?.value.trim();
+    const desc = card.querySelector('[data-key="product_'+key+'_desc"]')?.value.trim();
+    const badge= card.querySelector('[data-key="product_'+key+'_badge"]')?.value;
+    const imgEl= document.getElementById('dropimg_'+key);
+    if(name)  data['product_'+key+'_name']  = name;
+    if(desc)  data['product_'+key+'_desc']  = desc;
+    if(badge!==undefined) data['product_'+key+'_badge'] = badge;
+    if(pendingImages[key]) data['product_'+key+'_img'] = pendingImages[key];
+    else if(savedData['product_'+key+'_img']) data['product_'+key+'_img'] = savedData['product_'+key+'_img'];
+    // Size table
+    const tbody = document.getElementById('sizes_'+key); if(!tbody) return;
+    const sizes = [];
+    tbody.querySelectorAll('tr').forEach(tr=>{
+      const l=tr.querySelector('[data-size-label]')?.value.trim();
+      const pr=tr.querySelector('[data-size-price]')?.value.trim();
+      if(l||pr) sizes.push({l:l||'',p:pr||''});
+    });
+    if(sizes.length) data['product_'+key+'_sizes'] = JSON.stringify(sizes);
+    // Colors
+    document.querySelectorAll('[data-key^="css_"]').forEach(el=>{
+      if(el.type==='color') data[el.dataset.key]=el.value;
+    });
+  });
+  return data;
 }
 
-// ── CHANGE PASSWORD ────────────────────────────────────────────────────
-async function changePassword() {
-  const newPwd  = document.getElementById('new-pwd').value;
-  const confirm = document.getElementById('confirm-pwd').value;
-  const msg     = document.getElementById('pwd-change-msg');
-  msg.style.display = 'none';
-  if (newPwd.length < 8) { showMsg(msg, 'Password must be at least 8 characters.', 'red'); return; }
-  if (newPwd !== confirm) { showMsg(msg, 'Passwords do not match.', 'red'); return; }
+async function saveAll() {
+  const btn=document.getElementById('save-btn');
+  btn.disabled=true; btn.textContent='Saving…';
   try {
-    const res = await fetch(WORKER + '/change-password', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ new_password: newPwd }) });
-    if (res.ok) {
-      SESSION_PWD = newPwd;
-      showMsg(msg, '✓ Password updated successfully.', 'green');
-      document.getElementById('new-pwd').value     = '';
-      document.getElementById('confirm-pwd').value = '';
-    } else { const d = await res.json(); showMsg(msg, d.error || 'Failed to update.', 'red'); }
-  } catch(e) { showMsg(msg, 'Connection error.', 'red'); }
+    const data = collectData();
+    const res=await fetch(WORKER+'/content',{method:'POST',headers:authH(),body:JSON.stringify(data)});
+    if(res.ok){
+      savedData={...savedData,...data};
+      pendingImages={};
+      const s=document.getElementById('save-status'); s.style.display='inline';
+      setTimeout(()=>s.style.display='none',3000);
+      // Update drop labels
+      PRODUCTS.forEach(p=>{ const k=p.id.replace(/-/g,'_'); const lbl=document.getElementById('droplbl_'+k); if(lbl&&lbl.textContent.includes('Ready')) lbl.textContent='Click or drop to replace'; });
+    } else if(res.status===401){ alert('Session expired. Please log out and sign in again.'); }
+    else { alert('Save failed. Please try again.'); }
+  } catch(e){ alert('Connection error.'); }
+  btn.disabled=false; btn.textContent='Save All Changes';
 }
 
-// ── ADD USER ───────────────────────────────────────────────────────────
-async function addUser() {
-  const newUser = document.getElementById('new-user-name').value.trim();
-  const newPwd  = document.getElementById('new-user-pwd').value;
-  const newPwd2 = document.getElementById('new-user-pwd2').value;
-  const role    = document.getElementById('new-user-role').value;
-  const ownPwd  = document.getElementById('confirm-own-pwd').value;
-  const msg     = document.getElementById('add-user-msg');
-  msg.style.display = 'none';
-  if (!newUser)             { showMsg(msg, 'Enter a username.', 'red'); return; }
-  if (newUser.length < 3)   { showMsg(msg, 'Username must be at least 3 characters.', 'red'); return; }
-  if (newPwd.length < 8)    { showMsg(msg, 'Password must be at least 8 characters.', 'red'); return; }
-  if (newPwd !== newPwd2)   { showMsg(msg, 'Passwords do not match.', 'red'); return; }
-  if (!ownPwd)              { showMsg(msg, 'Enter your current password to confirm.', 'red'); return; }
-  if (ownPwd !== SESSION_PWD) { showMsg(msg, 'Your current password is incorrect.', 'red'); return; }
-  try {
-    const res = await fetch(WORKER + '/add-user', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ new_username: newUser, new_password: newPwd, role }) });
-    const d = await res.json();
-    if (res.ok) {
-      showMsg(msg, `✓ ${d.message}`, 'green');
-      document.getElementById('new-user-name').value   = '';
-      document.getElementById('new-user-pwd').value    = '';
-      document.getElementById('new-user-pwd2').value   = '';
-      document.getElementById('confirm-own-pwd').value = '';
-      document.getElementById('new-user-role').value   = 'user';
-    } else { showMsg(msg, d.error || 'Failed to create user.', 'red'); }
-  } catch(e) { showMsg(msg, 'Connection error.', 'red'); }
+// ── SETTINGS ─────────────────────────────────────────────────────────
+async function changePassword(){
+  const np=document.getElementById('new-pwd').value, cp=document.getElementById('confirm-pwd').value;
+  const msg=document.getElementById('pwd-change-msg'); msg.style.display='none';
+  if(np.length<8){showMsg(msg,'Password must be at least 8 characters.','red');return;}
+  if(np!==cp){showMsg(msg,'Passwords do not match.','red');return;}
+  try{const res=await fetch(WORKER+'/change-password',{method:'POST',headers:authH(),body:JSON.stringify({new_password:np})});
+    if(res.ok){SESSION_PWD=np;showMsg(msg,'✓ Password updated.','green');document.getElementById('new-pwd').value='';document.getElementById('confirm-pwd').value='';}
+    else{const d=await res.json();showMsg(msg,d.error||'Failed.','red');}
+  }catch(e){showMsg(msg,'Connection error.','red');}
 }
 
-function showMsg(el, text, color) {
-  el.textContent   = text;
-  el.style.color   = color === 'green' ? 'var(--green)' : 'var(--red)';
-  el.style.display = 'block';
+async function addUser(){
+  const un=document.getElementById('new-user-name').value.trim();
+  const np=document.getElementById('new-user-pwd').value;
+  const np2=document.getElementById('new-user-pwd2').value;
+  const role=document.getElementById('new-user-role').value;
+  const op=document.getElementById('confirm-own-pwd').value;
+  const msg=document.getElementById('add-user-msg'); msg.style.display='none';
+  if(!un||un.length<3){showMsg(msg,'Username must be at least 3 characters.','red');return;}
+  if(np.length<8){showMsg(msg,'Password must be at least 8 characters.','red');return;}
+  if(np!==np2){showMsg(msg,'Passwords do not match.','red');return;}
+  if(!op){showMsg(msg,'Enter your current password.','red');return;}
+  if(op!==SESSION_PWD){showMsg(msg,'Your current password is incorrect.','red');return;}
+  try{const res=await fetch(WORKER+'/add-user',{method:'POST',headers:authH(),body:JSON.stringify({new_username:un,new_password:np,role})});
+    const d=await res.json();
+    if(res.ok){showMsg(msg,'✓ '+d.message,'green');document.getElementById('new-user-name').value='';document.getElementById('new-user-pwd').value='';document.getElementById('new-user-pwd2').value='';document.getElementById('confirm-own-pwd').value='';document.getElementById('new-user-role').value='user';}
+    else{showMsg(msg,d.error||'Failed.','red');}
+  }catch(e){showMsg(msg,'Connection error.','red');}
 }
+
+function showMsg(el,text,color){el.textContent=text;el.style.color=color==='green'?'var(--green)':'var(--red)';el.style.display='block';}
 </script>
 </body>
 </html>
