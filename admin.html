@@ -24,16 +24,31 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 .eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;line-height:0;opacity:.5;}
 .eye-btn:hover{color:var(--text);opacity:1;}
 .eye-btn svg{display:block;}
-/* ADMIN LAYOUT */
-#admin-panel{display:none;height:100vh;flex-direction:column;overflow:hidden;}
-.top-bar{background:var(--card);border-bottom:1px solid var(--border);padding:.6rem .9rem;display:flex;align-items:center;gap:.6rem;flex-shrink:0;min-height:52px;}
-.top-bar-logo{color:var(--gold);font-weight:700;font-size:.88rem;white-space:nowrap;flex-shrink:0;margin-right:.25rem;}
-.page-tabs{display:flex;gap:.2rem;flex:1;overflow-x:auto;scrollbar-width:none;}
-.page-tabs::-webkit-scrollbar{display:none;}
-.ptab{background:none;border:1px solid transparent;color:var(--muted);font-size:.75rem;padding:.38rem .7rem;border-radius:6px;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:inherit;}
-.ptab:hover{color:var(--text);background:rgba(255,255,255,.05);}
-.ptab.active{color:var(--gold);background:var(--gold-dim);border-color:rgba(201,168,76,.3);}
-.ptab-settings{margin-left:.3rem;border-color:var(--border);}
+/* ADMIN LAYOUT — LEFT SIDEBAR */
+#admin-panel{display:none;height:100vh;flex-direction:row;overflow:hidden;}
+/* Left sidebar */
+.admin-sidebar{width:210px;flex-shrink:0;background:#0b0b0b;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;}
+.admin-sidebar-logo{padding:.95rem 1.1rem .85rem;color:var(--gold);font-weight:700;font-size:.9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.45rem;flex-shrink:0;letter-spacing:.01em;}
+.admin-sidebar-section{padding:.75rem 1.1rem .2rem;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#555;}
+.admin-sidebar-divider{height:1px;background:var(--border);margin:.6rem 0;}
+/* Pages dropdown group */
+.nav-group{margin-bottom:.2rem;}
+.nav-group-header{display:flex;align-items:center;justify-content:space-between;padding:.52rem 1.1rem;color:var(--text);font-size:.79rem;font-weight:600;cursor:pointer;user-select:none;border:none;background:none;width:100%;font-family:inherit;transition:color .15s;}
+.nav-group-header:hover{color:var(--gold);}
+.nav-group-arrow{font-size:.55rem;transition:transform .22s;color:var(--muted);margin-left:.3rem;}
+.nav-group-items{max-height:0;overflow:hidden;transition:max-height .28s ease;}
+.nav-group-items.open{max-height:500px;}
+/* Nav items */
+.admin-nav-item{display:flex;align-items:center;gap:.5rem;padding:.42rem .9rem .42rem 1.65rem;color:var(--muted);font-size:.77rem;cursor:pointer;border:none;background:none;width:100%;text-align:left;border-left:3px solid transparent;transition:all .13s;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.admin-nav-item:hover{color:var(--text);background:rgba(255,255,255,.045);}
+.admin-nav-item.active{color:var(--gold);border-left-color:var(--gold);background:var(--gold-dim);}
+.admin-nav-settings{padding-left:1.1rem;}
+/* Main content area */
+#admin-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+/* Top bar — slim, just save/user/logout */
+.top-bar{background:var(--card);border-bottom:1px solid var(--border);padding:.45rem .9rem;display:flex;align-items:center;gap:.6rem;flex-shrink:0;min-height:46px;}
+.top-bar-context{font-size:.78rem;color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.top-bar-context span{color:var(--text);}
 .top-bar-right{display:flex;align-items:center;gap:.45rem;flex-shrink:0;}
 .change-badge{font-size:.7rem;color:var(--gold);background:var(--gold-dim);padding:2px 8px;border-radius:20px;white-space:nowrap;}
 .save-status{font-size:.75rem;color:var(--green);white-space:nowrap;}
@@ -44,27 +59,28 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 .btn-logout:hover{border-color:var(--red);color:var(--red);}
 .top-bar-user{font-size:.7rem;color:var(--muted);white-space:nowrap;}
 .role-badge{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--gold-dim);color:var(--gold);margin-left:.3rem;vertical-align:middle;}
-/* EDIT TOOLBAR */
-.edit-toolbar{background:#0d0d0d;border-bottom:1px solid var(--border);padding:.45rem 1rem;display:flex;align-items:center;justify-content:space-between;font-size:.73rem;color:var(--muted);flex-shrink:0;}
+/* Edit toolbar */
+.edit-toolbar{background:#0d0d0d;border-bottom:1px solid var(--border);padding:.42rem 1rem;display:none;align-items:center;justify-content:space-between;font-size:.73rem;color:var(--muted);flex-shrink:0;}
 .edit-hint{display:flex;align-items:center;gap:.5rem;}
 .edit-hint-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-.device-btns{display:flex;gap:.3rem;}
+.device-btns{display:flex;align-items:center;gap:.3rem;}
 .device-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:3px 9px;border-radius:5px;font-size:.68rem;cursor:pointer;}
 .device-btn.active{border-color:var(--gold);color:var(--gold);}
-/* WYSIWYG IFRAME */
-#wysiwyg-wrap{flex:1;overflow:hidden;display:flex;align-items:stretch;background:#111;}
-#page-frame{border:none;width:100%;height:100%;display:block;transition:width .2s;}
-#page-frame.mobile-view{width:390px;margin:0 auto;box-shadow:0 0 0 1px var(--border);}
-/* SETTINGS AREA */
-#settings-area{display:none;flex:1;overflow:hidden;flex-direction:row;}
-.settings-body{display:flex;width:100%;height:100%;overflow:hidden;}
-.sidebar{width:185px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:1.25rem 0;overflow-y:auto;}
-.sidebar-item{display:block;padding:.58rem 1.25rem;color:var(--muted);font-size:.8rem;cursor:pointer;border:none;background:none;width:100%;text-align:left;border-left:3px solid transparent;transition:all .15s;font-family:inherit;}
-.sidebar-item:hover{color:var(--text);background:rgba(255,255,255,.04);}
-.sidebar-item.active{color:var(--gold);border-left-color:var(--gold);background:var(--gold-dim);}
-.sidebar-divider{height:1px;background:var(--border);margin:.7rem 0;}
-.settings-main{flex:1;overflow-y:auto;padding:1.6rem;max-width:980px;}
+/* WYSIWYG iframe */
+#wysiwyg-wrap{flex:1;overflow:hidden;display:none;flex-direction:column;background:#111;}
+.iframe-scroll-outer{flex:1;overflow:auto;display:flex;justify-content:center;background:#111;}
+#page-frame{border:none;width:100%;min-height:100%;display:block;flex-shrink:0;}
+#page-frame.tablet-view{width:768px;box-shadow:0 0 0 1px var(--border);}
+#page-frame.mobile-view{width:390px;box-shadow:0 0 0 1px var(--border);}
+/* Welcome screen */
+#welcome-screen{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.6rem;color:var(--muted);text-align:center;padding:2rem;}
+#welcome-screen .ws-icon{font-size:2.5rem;opacity:.4;}
+#welcome-screen .ws-text{font-size:.88rem;}
+#welcome-screen .ws-hint{font-size:.73rem;opacity:.6;}
+/* Settings area — no inner sidebar, full width */
+#settings-area{display:none;flex:1;overflow-y:auto;}
+.settings-main{padding:1.6rem;max-width:940px;}
 /* PANELS */
 .panel{display:none;}.panel.active{display:block;}
 /* FIELDS */
@@ -186,57 +202,82 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 <!-- ADMIN PANEL -->
 <div id="admin-panel">
 
-  <!-- TOP BAR -->
-  <div class="top-bar">
-    <span class="top-bar-logo">🐟 BB Admin</span>
-    <div class="page-tabs" id="page-tabs">
-      <button class="ptab active" data-page="index.html" onclick="switchPage(this)">Home</button>
-      <button class="ptab" data-page="about.html" onclick="switchPage(this)">About</button>
-      <button class="ptab" data-page="shop.html" onclick="switchPage(this)">Shop</button>
-      <button class="ptab" data-page="shop-usa.html" onclick="switchPage(this)">Shop USA</button>
-      <button class="ptab" data-page="shop-canada.html" onclick="switchPage(this)">Shop CA</button>
-      <button class="ptab" data-page="what-is.html" onclick="switchPage(this)">What Is</button>
-      <button class="ptab" data-page="kosher.html" onclick="switchPage(this)">Kosher</button>
-      <button class="ptab" data-page="recipes.html" onclick="switchPage(this)">Recipes</button>
-      <button class="ptab" data-page="contact.html" onclick="switchPage(this)">Contact</button>
-      <button class="ptab ptab-settings" data-page="__settings__" onclick="switchPage(this)">⚙ Settings</button>
-    </div>
-    <div class="top-bar-right">
-      <span id="save-status" class="save-status" style="display:none">✓ Saved</span>
-      <span id="change-badge" class="change-badge" style="display:none"></span>
-      <button id="btn-save" class="btn-save" disabled onclick="saveAll()">Save All</button>
-      <span id="top-user" class="top-bar-user"></span>
-      <button class="btn-logout" onclick="doLogout()">Logout</button>
-    </div>
-  </div>
+  <!-- LEFT SIDEBAR -->
+  <div class="admin-sidebar">
+    <div class="admin-sidebar-logo">🐟 Bottarga Admin</div>
 
-  <!-- EDIT TOOLBAR -->
-  <div class="edit-toolbar" id="edit-toolbar">
-    <div class="edit-hint">
-      <span class="edit-hint-dot"></span>
-      <span>Click any text to edit &bull; Click any image to replace &bull; Hover to see editable elements</span>
-    </div>
-    <div class="device-btns">
-      <button class="device-btn active" onclick="setDevice('desktop',this)">🖥 Desktop</button>
-      <button class="device-btn" onclick="setDevice('mobile',this)">📱 Mobile</button>
-    </div>
-  </div>
-
-  <!-- WYSIWYG IFRAME -->
-  <div id="wysiwyg-wrap">
-    <iframe id="page-frame" src="index.html" title="Page Editor"></iframe>
-  </div>
-
-  <!-- SETTINGS AREA -->
-  <div id="settings-area">
-    <div class="settings-body">
-      <div class="sidebar">
-        <button class="sidebar-item active" onclick="showSettingsPanel('products',this)">📦 Products</button>
-        <button class="sidebar-item" onclick="showSettingsPanel('colors',this)">🎨 Colors &amp; Fonts</button>
-        <div class="sidebar-divider"></div>
-        <button class="sidebar-item" onclick="showSettingsPanel('banner',this)">📢 Away Banner</button>
-        <button class="sidebar-item" onclick="showSettingsPanel('users',this)">🔑 Password &amp; Users</button>
+    <!-- Edit Site Pages (collapsible dropdown) -->
+    <div class="nav-group">
+      <button class="nav-group-header" onclick="togglePagesDropdown()">
+        <span>✏️ Edit Site Pages</span>
+        <span class="nav-group-arrow" id="pages-arrow">▼</span>
+      </button>
+      <div class="nav-group-items open" id="pages-dropdown">
+        <button class="admin-nav-item" data-page="index.html" onclick="switchPage(this)">🏠 Home</button>
+        <button class="admin-nav-item" data-page="about.html" onclick="switchPage(this)">📖 About</button>
+        <button class="admin-nav-item" data-page="shop.html" onclick="switchPage(this)">🛒 Shop</button>
+        <button class="admin-nav-item" data-page="shop-usa.html" onclick="switchPage(this)">🇺🇸 Shop USA</button>
+        <button class="admin-nav-item" data-page="shop-canada.html" onclick="switchPage(this)">🇨🇦 Shop Canada</button>
+        <button class="admin-nav-item" data-page="what-is.html" onclick="switchPage(this)">🐟 What Is Bottarga</button>
+        <button class="admin-nav-item" data-page="kosher.html" onclick="switchPage(this)">✡️ Kosher</button>
+        <button class="admin-nav-item" data-page="recipes.html" onclick="switchPage(this)">👨‍🍳 Recipes</button>
+        <button class="admin-nav-item" data-page="contact.html" onclick="switchPage(this)">✉️ Contact</button>
       </div>
+    </div>
+
+    <div class="admin-sidebar-divider"></div>
+    <div class="admin-sidebar-section">Settings</div>
+    <button class="admin-nav-item admin-nav-settings" onclick="openSettings('products',this)">📦 Products</button>
+    <button class="admin-nav-item admin-nav-settings" onclick="openSettings('colors',this)">🎨 Colors &amp; Fonts</button>
+    <button class="admin-nav-item admin-nav-settings" onclick="openSettings('banner',this)">📢 Away Banner</button>
+    <button class="admin-nav-item admin-nav-settings" onclick="openSettings('users',this)">🔑 Password &amp; Users</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="admin-main">
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <div class="top-bar-context" id="top-bar-context">← Select a page from the sidebar to start editing</div>
+      <div class="top-bar-right">
+        <span id="save-status" class="save-status" style="display:none">✓ Saved</span>
+        <span id="change-badge" class="change-badge" style="display:none"></span>
+        <button id="btn-save" class="btn-save" disabled onclick="saveAll()">Save All</button>
+        <span id="top-user" class="top-bar-user"></span>
+        <button class="btn-logout" onclick="doLogout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- EDIT TOOLBAR -->
+    <div class="edit-toolbar" id="edit-toolbar">
+      <div class="edit-hint">
+        <span class="edit-hint-dot"></span>
+        <span>Click any text or image to edit — changes apply to all screen sizes</span>
+      </div>
+      <div class="device-btns">
+        <span style="font-size:.62rem;color:var(--muted);margin-right:.3rem;">Preview as:</span>
+        <button class="device-btn active" onclick="setDevice('desktop',this)">🖥 Desktop</button>
+        <button class="device-btn" onclick="setDevice('tablet',this)">📟 Tablet</button>
+        <button class="device-btn" onclick="setDevice('mobile',this)">📱 Mobile</button>
+      </div>
+    </div>
+
+    <!-- WELCOME SCREEN (shown until a page is picked) -->
+    <div id="welcome-screen">
+      <div class="ws-icon">✏️</div>
+      <div class="ws-text">Choose a page from the sidebar to start editing</div>
+      <div class="ws-hint">Click any text or image on the page to change it</div>
+    </div>
+
+    <!-- WYSIWYG IFRAME -->
+    <div id="wysiwyg-wrap">
+      <div class="iframe-scroll-outer" id="iframe-scroll-outer">
+        <iframe id="page-frame" src="" title="Page Editor"></iframe>
+      </div>
+    </div>
+
+    <!-- SETTINGS AREA -->
+    <div id="settings-area">
       <div class="settings-main">
 
         <!-- PRODUCTS -->
@@ -347,8 +388,8 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
         </div>
 
       </div><!-- /settings-main -->
-    </div><!-- /settings-body -->
-  </div><!-- /settings-area -->
+    </div><!-- /settings-area -->
+  </div><!-- /admin-main -->
 
 </div><!-- /admin-panel -->
 
@@ -519,6 +560,11 @@ async function afterLogin(){
   document.getElementById('top-user').innerHTML=SESSION_USER+'<span class="role-badge">'+(SESSION_ROLE==='admin'?'Admin':'User')+'</span>';
   if(SESSION_ROLE==='admin')document.getElementById('add-user-section').style.display='block';
   document.querySelectorAll('.eye-btn').forEach(b=>b.innerHTML=EYE_ON);
+  // Show welcome state — user must pick a page from the sidebar
+  document.getElementById('welcome-screen').style.display='flex';
+  document.getElementById('wysiwyg-wrap').style.display='none';
+  document.getElementById('settings-area').style.display='none';
+  document.getElementById('edit-toolbar').style.display='none';
   await loadContent();
 }
 function doLogout(){
@@ -547,7 +593,6 @@ async function loadContent(){
   try{const r=await fetch(WORKER+'/content');kvContent=await r.json()||{};}catch(e){kvContent={};}
   if(kvContent.custom_products_json){try{CUSTOM_PRODUCTS=JSON.parse(kvContent.custom_products_json);}catch(e){CUSTOM_PRODUCTS=[];}}
   buildProducts();buildColors();populatePanelFields();
-  loadPage('index.html');
 }
 function populatePanelFields(){
   document.querySelectorAll('[data-key]').forEach(el=>{
@@ -555,40 +600,67 @@ function populatePanelFields(){
     el.value=kvContent[key];
   });
 }
-// NAVIGATION
+// SIDEBAR NAVIGATION
+function togglePagesDropdown(){
+  const dd=document.getElementById('pages-dropdown');
+  const arrow=document.getElementById('pages-arrow');
+  dd.classList.toggle('open');
+  arrow.style.transform=dd.classList.contains('open')?'':'rotate(-90deg)';
+}
+
 function switchPage(btn){
-  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
   const page=btn.dataset.page;
   closeEditPopover();
-  if(page==='__settings__'){
-    document.getElementById('wysiwyg-wrap').style.display='none';
-    document.getElementById('edit-toolbar').style.display='none';
-    document.getElementById('settings-area').style.display='flex';
-  }else{
-    document.getElementById('settings-area').style.display='none';
-    document.getElementById('edit-toolbar').style.display='flex';
-    document.getElementById('wysiwyg-wrap').style.display='flex';
-    loadPage(page);
-  }
-}
-function showSettingsPanel(name,btn){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('panel-'+name).classList.add('active');
+  // Deactivate all sidebar nav items, activate this one
+  document.querySelectorAll('.admin-nav-item').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  // Show WYSIWYG, hide welcome + settings
+  document.getElementById('welcome-screen').style.display='none';
+  document.getElementById('settings-area').style.display='none';
+  document.getElementById('wysiwyg-wrap').style.display='flex';
+  document.getElementById('edit-toolbar').style.display='flex';
+  // Update top-bar context
+  const label=btn.textContent.trim();
+  document.getElementById('top-bar-context').textContent='Editing: '+label;
+  loadPage(page);
+}
+
+function openSettings(name,btn){
+  closeEditPopover();
+  // Deactivate all sidebar nav items, activate this one
+  document.querySelectorAll('.admin-nav-item').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  // Show settings area, hide WYSIWYG + welcome
+  document.getElementById('welcome-screen').style.display='none';
+  document.getElementById('wysiwyg-wrap').style.display='none';
+  document.getElementById('edit-toolbar').style.display='none';
+  document.getElementById('settings-area').style.display='flex';
+  // Switch to correct panel
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const panel=document.getElementById('panel-'+name);
+  if(panel)panel.classList.add('active');
+  // Update top-bar context
+  const label=btn.textContent.trim();
+  document.getElementById('top-bar-context').textContent=label;
 }
 function loadPage(page){
   currentPage=page;closeEditPopover();
   const frame=document.getElementById('page-frame');
-  frame.src=page;
+  if(frame.src.endsWith('/'+page)||frame.src===page){
+    // Same page — force reload to re-inject edit mode
+    frame.contentWindow.location.reload();
+  }else{
+    frame.src=page;
+  }
 }
 function setDevice(mode,btn){
   document.querySelectorAll('.device-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const frame=document.getElementById('page-frame');
-  if(mode==='mobile'){frame.classList.add('mobile-view');frame.style.width='390px';}
-  else{frame.classList.remove('mobile-view');frame.style.width='100%';}
+  frame.classList.remove('mobile-view','tablet-view');
+  if(mode==='mobile'){frame.classList.add('mobile-view');}
+  else if(mode==='tablet'){frame.classList.add('tablet-view');}
+  // Desktop: no class, full width — no separate save needed, KV changes apply to all sizes
 }
 document.getElementById('page-frame').addEventListener('load',function(){
   setTimeout(()=>injectEditMode(this.contentDocument),400);
@@ -601,10 +673,11 @@ function injectEditMode(doc){
   const style=doc.createElement('style');
   style.id='bb-edit-style';
   style.textContent=`
-    [data-bb-edit]:hover{outline:2px solid rgba(201,168,76,0.75)!important;outline-offset:2px;cursor:pointer!important;background:rgba(201,168,76,0.04)!important;}
-    img[data-bb-img]:hover{outline:3px solid #c9a84c!important;outline-offset:2px;cursor:pointer!important;}
-    .bb-active{outline:2px solid #c9a84c!important;outline-offset:2px!important;background:rgba(201,168,76,0.07)!important;}
-    #bb-badge{position:fixed;top:0;left:50%;transform:translateX(-50%);background:rgba(201,168,76,.96);color:#0a0a08;font-size:10px;font-weight:800;letter-spacing:2px;padding:2px 12px;border-radius:0 0 8px 8px;z-index:999999;pointer-events:none;font-family:system-ui,sans-serif;}
+    nav.navbar,nav.navbar *{display:none!important;}
+    [data-bb-edit]:hover{outline:2px solid rgba(201,168,76,0.75)!important;outline-offset:3px;cursor:pointer!important;background:rgba(201,168,76,0.06)!important;border-radius:2px;}
+    img[data-bb-img]:hover{outline:3px solid #c9a84c!important;outline-offset:3px;cursor:pointer!important;}
+    .bb-active{outline:2px solid #c9a84c!important;outline-offset:3px!important;background:rgba(201,168,76,0.09)!important;border-radius:2px;}
+    #bb-badge{position:fixed;top:0;left:50%;transform:translateX(-50%);background:rgba(201,168,76,.97);color:#0a0a08;font-size:11px;font-weight:800;letter-spacing:1.5px;padding:4px 16px;border-radius:0 0 10px 10px;z-index:999999;pointer-events:none;font-family:system-ui,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.4);}
   `;
   doc.head.appendChild(style);
   if(!doc.getElementById('bb-badge')){const b=doc.createElement('div');b.id='bb-badge';b.textContent='✏ EDIT MODE — click any element to edit';doc.body.appendChild(b);}
@@ -680,13 +753,16 @@ function openEditPopover(el){
   document.getElementById('ep-label').textContent=kvKey?kvKey.replace(/_/g,' '):'Edit Content';
   document.getElementById('ep-hint').textContent=kvKey?'Key: '+kvKey:'sel: '+sel.substring(0,45);
   const frameRect=frame.getBoundingClientRect();
+  // elRect is in the iframe's viewport coords — translate to admin window coords
   const elRect=el.getBoundingClientRect();
-  let top=frameRect.top+elRect.top+elRect.height+8;
+  const scrollOuter=document.getElementById('iframe-scroll-outer');
+  const outerScrollTop=scrollOuter?scrollOuter.scrollTop:0;
+  let top=frameRect.top+elRect.top+elRect.height+8-outerScrollTop;
   let left=frameRect.left+elRect.left;
-  const pw=350,ph=175;
-  if(left+pw>window.innerWidth-10)left=window.innerWidth-pw-10;
+  const pw=360,ph=180;
+  if(left+pw>window.innerWidth-12)left=window.innerWidth-pw-12;
   left=Math.max(10,left);
-  if(top+ph>window.innerHeight-10)top=frameRect.top+elRect.top-ph-8;
+  if(top+ph>window.innerHeight-10)top=frameRect.top+elRect.top-ph-8-outerScrollTop;
   top=Math.max(58,top);
   const pop=document.getElementById('edit-popover');
   pop.style.top=top+'px';pop.style.left=left+'px';pop.style.display='block';
