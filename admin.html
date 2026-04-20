@@ -606,10 +606,22 @@ async function afterLogin(){
   document.getElementById('settings-area').style.display='none';
   document.getElementById('edit-toolbar').style.display='none';
   await loadContent();
+  // Restore last view after refresh
+  try{
+    const last=JSON.parse(sessionStorage.getItem('bb_last_view')||'null');
+    if(last&&last.type==='page'){
+      const btn=document.querySelector('.admin-nav-item[data-page="'+last.page+'"]');
+      if(btn)switchPage(btn);
+    }else if(last&&last.type==='settings'){
+      const btn=Array.from(document.querySelectorAll('.admin-nav-settings')).find(b=>b.getAttribute('onclick').includes("'"+last.name+"'"));
+      if(btn)openSettings(last.name,btn);
+    }
+  }catch(e){}
 }
 function doLogout(){
   SESSION_USER=SESSION_PWD=SESSION_ROLE='';
   sessionStorage.removeItem('bb_au');sessionStorage.removeItem('bb_ap');sessionStorage.removeItem('bb_ar');
+  sessionStorage.removeItem('bb_last_view');
   document.getElementById('admin-panel').style.display='none';
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('user-input').value='';document.getElementById('pwd-input').value='';
@@ -662,6 +674,8 @@ function switchPage(btn){
   // Update top-bar context
   const label=btn.textContent.trim();
   document.getElementById('top-bar-context').textContent='Editing: '+label;
+  // Persist so refresh lands back here
+  sessionStorage.setItem('bb_last_view',JSON.stringify({type:'page',page}));
   loadPage(page);
 }
 
@@ -682,6 +696,8 @@ function openSettings(name,btn){
   // Update top-bar context
   const label=btn.textContent.trim();
   document.getElementById('top-bar-context').textContent=label;
+  // Persist so refresh lands back here
+  sessionStorage.setItem('bb_last_view',JSON.stringify({type:'settings',name}));
 }
 function loadPage(page){
   currentPage=page;closeEditPopover();
