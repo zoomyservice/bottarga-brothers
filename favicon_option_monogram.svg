@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="4" fill="#0e0c09"/>
+  <!-- B letters -->
+  <text x="16" y="19" font-family="Georgia,serif" font-size="16" font-weight="700"
+        fill="#c9a84c" text-anchor="middle" letter-spacing="-1">BB</text>
+  <!-- Underline wave -->
+  <path d="M8 23 Q12 21 16 23 Q20 25 24 23" stroke="#c9a84c" stroke-width="1.2" 
+        fill="none" opacity="0.7"/>
+</svg>

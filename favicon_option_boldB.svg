@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="5" fill="#0e0c09"/>
+  <!-- Gold top bar accent -->
+  <rect x="9" y="7" width="14" height="1.5" rx="0.75" fill="#c9a84c" opacity="0.5"/>
+  <!-- B letter large and centered -->
+  <text x="16" y="23" font-family="Georgia,serif" font-size="20" font-weight="700"
+        fill="#c9a84c" text-anchor="middle">B</text>
+</svg>

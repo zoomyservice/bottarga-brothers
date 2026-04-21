@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="4" fill="#0e0c09"/>
+  <!-- Oval outline -->
+  <ellipse cx="16" cy="16" rx="11" ry="8" fill="none" stroke="#c9a84c" stroke-width="1.3"/>
+  <!-- Roe dots -->
+  <circle cx="11" cy="16" r="2" fill="#c9a84c"/>
+  <circle cx="16" cy="13.5" r="2" fill="#c9a84c"/>
+  <circle cx="21" cy="16" r="2" fill="#c9a84c"/>
+  <circle cx="16" cy="18.5" r="2" fill="#c9a84c"/>
+  <circle cx="13.5" cy="13.5" r="1.5" fill="#a8873a"/>
+  <circle cx="18.5" cy="13.5" r="1.5" fill="#a8873a"/>
+  <circle cx="13.5" cy="18.5" r="1.5" fill="#a8873a"/>
+  <circle cx="18.5" cy="18.5" r="1.5" fill="#a8873a"/>
+</svg>
