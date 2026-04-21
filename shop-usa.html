@@ -276,9 +276,26 @@
 <div class="product-origin">🇧🇷 Brazil — Santa Catarina</div>
 <div class="product-name">Ouro do Brasil</div>
 <p class="product-desc">Wild-caught Grey Mullet from the crystalline sea of Santa Catarina, Southern Brazil. Traditional salt-curing and dehydration — just two ingredients. Medium hard texture, ideal for grating, slicing, or shaving. HACCP certified, FDA approved, rich in Omega-3. The sweetest, mildest variety — the perfect introduction to bottarga.</p>
-<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
-<div class="product-price">$22.99</div>
-<button class="bb-atc-btn" data-atc-product="ouro-do-brasil" onclick="window._bbCart&amp;&amp;window._bbCart.add('ouro-do-brasil','price_1TNObWPnG7UtHDWewoPmKPpU')">Add to Cart</button>
+<div style="background:var(--dark); border:1px solid var(--border); padding:1rem; margin:1rem 0; border-radius:2px;">
+<div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem;">Select Size — USD</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; font-size:0.8rem;">
+<span style="color:var(--muted);">M — ~5.1 oz</span><span style="color:var(--cream); text-align:right;">$45.99</span>
+<span style="color:var(--muted);">L — ~5.5 oz</span><span style="color:var(--cream); text-align:right;">$48.99</span>
+<span style="color:var(--muted);">XL — ~6.9 oz</span><span style="color:var(--cream); text-align:right;">$58.99</span>
+<span style="color:var(--muted);">Jumbo — ~7.2 oz</span><span style="color:var(--cream); text-align:right;">$60.99</span>
+<span style="color:var(--muted);">Mega — ~8.1 oz</span><span style="color:var(--cream); text-align:right;">$66.99</span>
+</div>
+</div>
+<select class="bb-size-select" id="odb-size">
+<option value="price_1TOSiNPnG7UtHDWeFy6FXLWK">M — ~5.1 oz — $45.99</option>
+<option value="price_1TOSiQPnG7UtHDWeBfdlLwxR">L — ~5.5 oz — $48.99</option>
+<option value="price_1TOSiTPnG7UtHDWeHewoNs9K">XL — ~6.9 oz — $58.99</option>
+<option value="price_1TOSiWPnG7UtHDWeZfc8fJAS">Jumbo — ~7.2 oz — $60.99</option>
+<option value="price_1TOSiZPnG7UtHDWegRwyIkKR">Mega — ~8.1 oz — $66.99</option>
+</select>
+<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+<div class="product-price"><span class="from">From</span>$45.99</div>
+<button class="bb-atc-btn" data-atc-product="ouro-do-brasil" onclick="window._bbCart&&window._bbCart.add('ouro-do-brasil',document.getElementById('odb-size').value)">Add to Cart</button>
 </div>
 </div>
 </div>

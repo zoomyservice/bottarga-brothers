@@ -48,7 +48,11 @@
     'ouro-do-brasil': {
       name: 'Ouro do Brasil', flag: '\u{1f1e7}\u{1f1f7}',
       prices: [
-        { id: 'price_1TNObWPnG7UtHDWewoPmKPpU', size: 'Standard', amount: 2299 },
+        { id: 'price_1TOSiNPnG7UtHDWeFy6FXLWK', size: 'M \u2014 ~5.1 oz', amount: 4599 },
+        { id: 'price_1TOSiQPnG7UtHDWeBfdlLwxR', size: 'L \u2014 ~5.5 oz', amount: 4899 },
+        { id: 'price_1TOSiTPnG7UtHDWeHewoNs9K', size: 'XL \u2014 ~6.9 oz', amount: 5899 },
+        { id: 'price_1TOSiWPnG7UtHDWeZfc8fJAS', size: 'Jumbo \u2014 ~7.2 oz', amount: 6099 },
+        { id: 'price_1TOSiZPnG7UtHDWegRwyIkKR', size: 'Mega \u2014 ~8.1 oz', amount: 6699 },
       ]
     },
     'grated-gold': {
