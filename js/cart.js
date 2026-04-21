@@ -59,6 +59,58 @@
         { id: 'price_1TNObmPnG7UtHDWekiBG9rPF', size: '3 jars \u2014 120g', amount: 5099 },
       ]
     },
+    'boutargue-imperiale-aged': {
+      name: 'Boutargue Imp\u00e9riale Aged', flag: '\u{1f1eb}\u{1f1f7}',
+      prices: [
+        { id: 'price_1TOSMxPnG7UtHDWewExHTy4V', size: 'XS \u2014 ~3.2 oz', amount: 3099 },
+        { id: 'price_1TOSN0PnG7UtHDWefPxlLuKz', size: 'S \u2014 ~3.5 oz', amount: 3299 },
+        { id: 'price_1TOSN3PnG7UtHDWen1LoecT7', size: 'M \u2014 ~6.1 oz', amount: 4999 },
+        { id: 'price_1TOSN6PnG7UtHDWepYm5XwXs', size: 'L \u2014 ~6.4 oz', amount: 5199 },
+      ]
+    },
+    'aged-ouro-do-brasil': {
+      name: 'Aged Ouro do Brasil', flag: '\u{1f1e7}\u{1f1f7}',
+      prices: [
+        { id: 'price_1TOSN9PnG7UtHDWefStquhjb', size: 'Standard', amount: 2299 },
+      ]
+    },
+    'grated-bottarga-pouch': {
+      name: 'Grated Bottarga Pouch', flag: '\u{1f1ee}\u{1f1f9}',
+      prices: [
+        { id: 'price_1TOSSNPnG7UtHDWeWlLntCbn', size: '1 Pouch \u2014 50g', amount: 1499 },
+        { id: 'price_1TOSSQPnG7UtHDWePuOG9FIj', size: '2 Pouches \u2014 50g', amount: 2499 },
+        { id: 'price_1TOSSTPnG7UtHDWe2u5hmV4U', size: '6 Pouches \u2014 50g', amount: 7299 },
+      ]
+    },
+    'sardinian-gold-ca': {
+      name: 'Sardinian Gold', flag: '\u{1f1ee}\u{1f1f9}', currency: 'CAD',
+      prices: [
+        { id: 'price_1TOSNPPnG7UtHDWerTwMzQCz', size: 'S \u2014 ~97g', amount: 3399 },
+        { id: 'price_1TOSNSPnG7UtHDWezzZOuw21', size: 'L \u2014 ~145g', amount: 4599 },
+        { id: 'price_1TOSNVPnG7UtHDWeJkuXjIux', size: 'Jumbo \u2014 ~154g', amount: 4799 },
+      ]
+    },
+    'boutargue-imperiale-ca': {
+      name: 'Boutargue Imp\u00e9riale', flag: '\u{1f1eb}\u{1f1f7}', currency: 'CAD',
+      prices: [
+        { id: 'price_1TOSNYPnG7UtHDWe8nO9Wl8Z', size: 'S \u2014 ~100g', amount: 3799 },
+        { id: 'price_1TOSNbPnG7UtHDWeCPPS5cJy', size: 'L \u2014 ~175g', amount: 4999 },
+      ]
+    },
+    'ouro-do-brasil-ca': {
+      name: 'Ouro do Brasil', flag: '\u{1f1e7}\u{1f1f7}', currency: 'CAD',
+      prices: [
+        { id: 'price_1TOSNePnG7UtHDWeUvlv5Q4S', size: 'L \u2014 ~133g', amount: 4699 },
+      ]
+    },
+    'grated-gold-ca': {
+      name: 'Grated Gold', flag: '\u{1f1ee}\u{1f1f9}', currency: 'CAD',
+      prices: [
+        { id: 'price_1TOSNhPnG7UtHDWegxMgc7RX', size: '1 pouch \u2014 50g', amount: 1699 },
+        { id: 'price_1TOSNkPnG7UtHDWeQfHgUcgV', size: '2 pouches \u2014 100g', amount: 2999 },
+        { id: 'price_1TOSNnPnG7UtHDWeQBUZVkK1', size: '6 pouches \u2014 300g', amount: 9299 },
+      ]
+    },
   };
 
   // ── Cart state ──
@@ -76,7 +128,7 @@
     if (!priceObj) return;
     const existing = cart.find(i => i.priceId === priceId);
     if (existing) { existing.qty++; }
-    else { cart.push({ priceId, productId, name: product.name, flag: product.flag, size: priceObj.size, amount: priceObj.amount, qty: 1 }); }
+    else { cart.push({ priceId, productId, name: product.name, flag: product.flag, size: priceObj.size, amount: priceObj.amount, currency: product.currency || 'USD', qty: 1 }); }
     saveCart();
     // Button feedback
     const btns = document.querySelectorAll('[data-atc-product="' + productId + '"]');
@@ -125,7 +177,7 @@
         <div class="bb-ci-info">
           <div class="bb-ci-name">${item.flag} ${item.name}</div>
           <div class="bb-ci-size">${item.size}</div>
-          <div class="bb-ci-price">$${(item.amount / 100).toFixed(2)} each</div>
+          <div class="bb-ci-price">$${(item.amount / 100).toFixed(2)} ${item.currency || 'USD'} each</div>
         </div>
         <div class="bb-ci-controls">
           <button class="bb-qty-btn" onclick="window._bbCart.qty('${item.priceId}',-1)">\u2212</button>
@@ -256,13 +308,18 @@
       <div id="bb-cart-items" class="bb-cart-items"></div>
       <div id="bb-cart-footer" class="bb-cart-footer" style="display:none">
         <div class="bb-cart-subtotal"><span>Subtotal</span><span id="bb-cart-total">$0.00</span></div>
-        <div class="bb-cart-shipping">\ud83c\uddfa\ud83c\uddf8 Free USPS shipping on all US orders</div>
+        <div class="bb-cart-shipping" id="bb-cart-shipping-msg">\ud83c\uddfa\ud83c\uddf8 Free USPS shipping on all US orders</div>
         <button id="bb-checkout-btn" onclick="window._bbCart.checkout()">Proceed to Checkout</button>
       </div>
     `;
     document.body.appendChild(drawer);
 
     updateBadge();
+    // Set shipping message based on page
+    if (window.location.pathname.includes('canada')) {
+      const msg = document.getElementById('bb-cart-shipping-msg');
+      if (msg) msg.textContent = '\ud83c\udde8\ud83c\udde6 $12 CAD flat shipping via Canada Post';
+    }
   }
 
   render();

@@ -370,28 +370,7 @@
 
   // ─── Main router ──────────────────────────────────────────────────────────
   function getResponse(userInput) {
-    const n = norm(userInput);
-
-    // KB scan — first match wins (except fallback, which is always last)
-    for (const entry of KB) {
-      if (entry.id === 'fallback') continue;
-      if (anyKw(n, entry.kw)) {
-        return entry.r();
-      }
-    }
-
-    // Follow-up — topic-specific
-    if (ctx.lastEntry && FOLLOW_UP[ctx.lastEntry]) {
-      const fu = FOLLOW_UP[ctx.lastEntry](n);
-      if (fu) return fu;
-    }
-
-    // Follow-up — generic
-    if (isFollowUp(n) && ctx.lastEntry) {
-      return `To continue where we left off — could you tell me a bit more about what you're looking for? Or feel free to ask anything specific about our products, pricing, or ordering.\n\n📞 **${BIZ.phone}** · [Contact →](${BIZ.contact})`;
-    }
-
-    // KB missed — signal the UI to call Gemini via Cloudflare Worker
+    // All queries handled by Gemini via Cloudflare Worker
     return '__WORKER__';
   }
 

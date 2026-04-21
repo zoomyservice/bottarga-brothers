@@ -344,8 +344,23 @@
 <div class="product-name">Grated Bottarga Pouch</div>
 <p class="product-desc">The same premium grated Sardinian bottarga in a convenient 50-gram resealable pouch. Easy to store, always ready — keep it in the fridge and reach for it whenever pasta or eggs need the sea.</p>
 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem;">
-<div class="product-price">50g Pouch</div>
-<a class="btn btn-gold" href="contact.html" style="padding:0.5rem 1.2rem; font-size:0.65rem;">Order</a>
+<div style="background:var(--dark); border:1px solid var(--border); padding:1rem; margin:1rem 0; border-radius:2px;">
+<div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem;">50g Resealable Pouch — USD</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; font-size:0.8rem;">
+<span style="color:var(--muted);">1 pouch</span><span style="color:var(--cream); text-align:right;">$14.99</span>
+<span style="color:var(--muted);">2 pouches</span><span style="color:var(--cream); text-align:right;">$24.99</span>
+<span style="color:var(--muted);">6 pouches</span><span style="color:var(--cream); text-align:right;">$72.99</span>
+</div>
+</div>
+<select class="bb-size-select" id="gp-size">
+<option value="price_1TOSSNPnG7UtHDWeWlLntCbn">1 Pouch — 50g — $14.99</option>
+<option value="price_1TOSSQPnG7UtHDWePuOG9FIj">2 Pouches — 50g — $24.99</option>
+<option value="price_1TOSSTPnG7UtHDWe2u5hmV4U">6 Pouches — 50g — $72.99</option>
+</select>
+<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+<div class="product-price"><span class="from">From</span>$14.99</div>
+<button class="bb-atc-btn" data-atc-product="grated-bottarga-pouch" onclick="window._bbCart&&window._bbCart.add('grated-bottarga-pouch',document.getElementById('gp-size').value)">Add to Cart</button>
+</div>
 </div>
 </div>
 </div>

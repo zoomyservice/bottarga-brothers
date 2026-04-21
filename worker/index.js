@@ -34,18 +34,26 @@ CONTACT:
 - Website: bottargabrothers.com
 - Also on Amazon and eBay with 100% positive feedback
 
-PRODUCTS AND PRICES:
-1. Sardinian Gold (🇮🇹 Sardinia) — $24.99 — On sale. Wild Grey Mullet roe. Rich, complex, traditional. Shrink-wrapped. Can slice or grate.
-2. Boutargue Classique (🇫🇷 France) — $33.99–$91.99 — Paraffin-waxed. 7 sizes: S 3.7oz $33.99 / M 4.4oz $45.99 / L 6.0oz $47.99 / XL 6.2oz $49.99 / Jumbo 7.7oz $58.99 / Mega 8.5oz $62.99 / Giant 13oz $91.99. Kosher for Passover — certified by Grand-Rabbinat de Paris.
-3. Boutargue Impériale (🇫🇷 France, premium) — From $22.99 — Top selection from France's finest producers. Exceptional depth of flavor.
-4. Boutargue Impériale Aged (🇫🇷 France, aged reserve) — From $22.99 — Extended cure, sharper flavor, deeper color. Limited availability.
-5. Greek Avgotaraho (🇬🇷 Greece) — $28.50–$34.99 — "Caviar of the Mediterranean." Delicate, nutty, long oceanic finish.
-6. Ouro do Brasil (🇧🇷 Brazil, full lobe) — $22.99–$33.99 — Mild, slightly sweet. Best entry point for first-timers.
-7. Ouro do Brasil Half Lobe (🇧🇷 Brazil) — $22.99–$33.99 — Same as above, smaller format.
-8. Egyptian Royale (🇪🇬 Egypt) — $24.00–$39.99 — Currently SOLD OUT. Check back or contact for waitlist.
-9. Grated Gold (🇮🇹 Sardinia, grated) — $20.00–$54.00 — Ready to use. Sprinkle over pasta, eggs, toast.
-10. Grated Bottarga Pouch (🇮🇹 Sardinia) — 50g resealable pouch. Convenient kitchen format.
-11. Aged Ouro do Brasil (🇧🇷 Brazil, limited) — From $22.99 — Extended aging, more complex. Limited stock.
+PRODUCTS AND PRICES (USD — US shop):
+1. Sardinian Gold (🇮🇹 Sardinia) — Wild Grey Mullet roe. Rich, complex, traditional. Shrink-wrapped. Slice or grate. Sizes: M 4.9oz $38.99 / L 5.3oz $41.99 / XL 5.6oz $42.99. Kosher certified.
+2. Boutargue Classique (🇫🇷 France) — Paraffin-waxed French mullet roe. Kosher for Passover, certified Grand-Rabbinat de Paris. 7 sizes: S 3.7oz $33.99 / M 4.4oz $45.99 / L 6.0oz $47.99 / XL 6.2oz $49.99 / Jumbo 7.7oz $58.99 / Mega 8.5oz $62.99 / Giant 13oz $91.99.
+3. Boutargue Impériale (🇫🇷 France, premium) — No wax coating, honey-like colour, sharper flavour. Easier to grate. Kosher for Passover. Sizes: XS ~3.2oz $30.99 / S ~3.5oz $32.99 / M ~6.1oz $49.99 / L ~6.4oz $51.99.
+4. Boutargue Impériale Aged (🇫🇷 France, aged reserve) — Extended cure, deeper amber colour, far more intense flavour. Limited availability. Same sizes as Impériale: XS $30.99 / S $32.99 / M $49.99 / L $51.99.
+5. Greek Avgotaraho (🇬🇷 Greece) — "Caviar of the Mediterranean." Hand-dipped in natural beeswax. Wild-caught grey mullet roe. No preservatives. 5 sizes: S ~5.6oz $44.99 / M ~5.8oz $45.99 / L ~6.3oz $48.99 / XL ~6.6oz $50.99 / Mega ~7.4oz $55.99.
+6. Ouro do Brasil (🇧🇷 Brazil) — Wild-caught Grey Mullet, HACCP certified. Mildest, sweetest variety — ideal introduction to bottarga. Standard size $22.99.
+7. Egyptian Royale (🇪🇬 Egypt) — Batarekh from Port Said. Soft, moist texture. Currently SOLD OUT — contact us to be notified. Was $24.00–$39.99.
+8. Grated Gold (🇮🇹 Sardinia, grated) — Finely grated Sardinian bottarga, ready to use. 40g jar: 1 jar $19.99 / 2 jars $35.99 / 3 jars $50.99.
+9. Grated Bottarga Pouch (🇮🇹 Sardinia) — Same premium grated bottarga in a 50g resealable pouch. 1 pouch $14.99 / 2 pouches $24.99 / 6 pouches $72.99.
+10. Aged Ouro do Brasil (🇧🇷 Brazil, limited) — Extended aging, more pronounced and complex character than standard Ouro. Limited availability — contact us when interested.
+
+CANADA SHOP (CAD prices, ships from Montreal):
+- Sardinian Gold: S ~97g $33.99 / L ~145g $45.99 / Jumbo ~154g $47.99 CAD
+- Boutargue Impériale: S ~100g $37.99 / L ~175g $49.99 CAD
+- Ouro do Brasil: L ~133g $46.99 CAD
+- Grated Gold: 1 pouch 50g $16.99 / 2 pouches $29.99 / 6 pouches $92.99 CAD
+- Greek Avgotaraho: Currently sold out for Canada — contact for waitlist
+- Egyptian Royale: Contact for Canadian availability and pricing
+- Aged Ouro do Brasil: Currently sold out for Canada — contact to be notified
 
 SHIPPING:
 - USA: Free USPS on all orders
