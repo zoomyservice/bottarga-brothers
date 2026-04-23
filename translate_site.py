@@ -258,9 +258,9 @@ def translate_file(html_file, lang, lc, out_dir):
                 if stripped:  # any non-empty text node → restore to brand name
                     child.replace_with(NavigableString('\n      ' + BRAND_NAME + '\n      '))
                     break  # only restore the first text node
-        # Fix logo href — in subdirectory, must point to ../index.html not index.html
-        if logo.get('href') == 'index.html':
-            logo['href'] = '../index.html'
+        # Logo href stays as index.html — relative to fr/ this correctly resolves to fr/index.html
+        # Do NOT change to ../index.html — that would go to the English root
+        pass
 
     # Fix long "what is bottarga" nav item — split into two lines
     for nav in soup.find_all('nav'):
