@@ -102,7 +102,13 @@ export default {
           'shipping_address_collection[allowed_countries][1]': 'CA',
         });
         items.forEach((item, i) => {
-          params.set(`line_items[${i}][price]`, item.priceId);
+          if (item.priceId) {
+            params.set(`line_items[${i}][price]`, item.priceId);
+          } else if (item.priceData) {
+            params.set(`line_items[${i}][price_data][currency]`, item.priceData.currency || 'usd');
+            params.set(`line_items[${i}][price_data][unit_amount]`, String(item.priceData.unitAmount));
+            params.set(`line_items[${i}][price_data][product_data][name]`, item.priceData.productData.name);
+          }
           params.set(`line_items[${i}][quantity]`, String(item.quantity || 1));
         });
 
@@ -146,7 +152,7 @@ export default {
         }
 
         const geminiRes = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${apiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

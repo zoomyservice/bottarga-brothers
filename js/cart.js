@@ -4,6 +4,14 @@
   // ── Worker URL — fill in after deploying checkout-worker.js to Cloudflare ──
   const WORKER_URL = 'https://bottarga-brothers-chat.zoozoomfast.workers.dev/checkout';
 
+  // ── Shipping options (USA only — Canada uses flat $12 CAD) ──────────────
+  const SHIPPING_OPTIONS = [
+    { id: 'free',     label: 'Free Standard',     sub: 'USPS Ground Advantage · 2–5 days',    amount: 0    },
+    { id: 'priority', label: 'Priority Mail',      sub: 'USPS Priority Mail · 1–3 days',       amount: 1295 },
+    { id: 'express',  label: 'Priority Express',   sub: 'USPS Priority Express · Overnight',   amount: 2895 },
+  ];
+  let selectedShipping = 0; // index — default Free
+
   // ── Stripe price catalog ──
   const CATALOG = {
     'sardinian-gold': {
@@ -122,7 +130,7 @@
   try { cart = JSON.parse(localStorage.getItem('bb_cart') || '[]'); } catch(e) { cart = []; }
 
   function saveCart() { localStorage.setItem('bb_cart', JSON.stringify(cart)); updateBadge(); }
-  function cartTotal() { return cart.reduce((s, i) => s + i.amount * i.qty, 0); }
+  function cartTotal() { const isCA = window.location.pathname.includes('canada'); return cart.reduce((s, i) => s + i.amount * i.qty, 0) + (isCA ? 0 : SHIPPING_OPTIONS[selectedShipping].amount); }
   function cartCount() { return cart.reduce((s, i) => s + i.qty, 0); }
 
   function addToCart(productId, priceId) {
@@ -176,6 +184,24 @@
       return;
     }
     if (footer) footer.style.display = 'flex';
+    // Shipping selector (USA only)
+    const isCA = window.location.pathname.includes('canada');
+    const shipEl = document.getElementById('bb-cart-shipping-picker');
+    if (shipEl) {
+      if (!isCA) {
+        shipEl.style.display = 'block';
+        shipEl.innerHTML = SHIPPING_OPTIONS.map((opt, idx) => `
+          <label class="bb-ship-opt${idx === selectedShipping ? ' selected' : ''}" onclick="(function(){window._bbCart.setShipping(${idx});})()">
+            <span class="bb-ship-radio">${idx === selectedShipping ? '●' : '○'}</span>
+            <span class="bb-ship-info">
+              <span class="bb-ship-label">${opt.label}${opt.amount > 0 ? ' — <strong>$' + (opt.amount/100).toFixed(2) + '</strong>' : ' — <strong style=\"color:#4ade80\">FREE</strong>'}</span>
+              <span class="bb-ship-sub">${opt.sub}</span>
+            </span>
+          </label>`).join('');
+      } else {
+        shipEl.style.display = 'none';
+      }
+    }
     el.innerHTML = cart.map(item => `
       <div class="bb-cart-item">
         <div class="bb-ci-info">
@@ -191,6 +217,9 @@
         </div>
       </div>
     `).join('');
+    const subOnly = document.getElementById('bb-cart-subtotal-only');
+    const prodTotal = cart.reduce((s, i) => s + i.amount * i.qty, 0);
+    if (subOnly) subOnly.textContent = '$' + (prodTotal / 100).toFixed(2);
     const tot = document.getElementById('bb-cart-total');
     if (tot) tot.textContent = '$' + (cartTotal() / 100).toFixed(2);
   }
@@ -214,11 +243,17 @@
     if (btn) { btn.textContent = 'Redirecting\u2026'; btn.disabled = true; }
     try {
       const base = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
+      const isCAcheckout = window.location.pathname.includes('canada');
+      const lineItems = cart.map(i => ({ priceId: i.priceId, quantity: i.qty }));
+      if (!isCAcheckout && selectedShipping > 0) {
+        const ship = SHIPPING_OPTIONS[selectedShipping];
+        lineItems.push({ priceData: { currency: 'usd', unitAmount: ship.amount, productData: { name: ship.label + ' (' + ship.sub + ')' } }, quantity: 1 });
+      }
       const res = await fetch(WORKER_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: cart.map(i => ({ priceId: i.priceId, quantity: i.qty })),
+          items: lineItems,
           successUrl: base + 'success.html',
           cancelUrl: window.location.href,
         })
@@ -234,7 +269,8 @@
   }
 
   // ── Global namespace ──
-  window._bbCart = { add: addToCart, rm: removeFromCart, qty: updateQty, open: openDrawer, close: closeDrawer, checkout };
+  function setShipping(idx) { selectedShipping = idx; renderCartItems(); }
+  window._bbCart = { add: addToCart, rm: removeFromCart, qty: updateQty, open: openDrawer, close: closeDrawer, checkout, setShipping };
 
   // ── CSS ──
   const CSS = `
@@ -274,6 +310,13 @@
     .bb-atc-btn{display:inline-block;padding:0.5rem 1.2rem;background:var(--gold,#c9a84c);color:#0e0c09;border:none;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;font-weight:700;cursor:pointer;font-family:inherit;transition:background 0.2s,opacity 0.2s}
     .bb-atc-btn:hover{opacity:0.85}
     @media(max-width:480px){#bb-cart-drawer{width:100vw}}
+    .bb-ship-opt{display:flex;align-items:flex-start;gap:.7rem;padding:.65rem .8rem;border:1px solid #2a2520;border-radius:6px;cursor:pointer;margin-bottom:.4rem;transition:border-color .15s,background .15s}
+    .bb-ship-opt:hover{border-color:#4a4038;background:rgba(255,255,255,.02)}
+    .bb-ship-opt.selected{border-color:var(--gold,#c9a84c);background:rgba(201,168,76,.06)}
+    .bb-ship-radio{font-size:.85rem;color:var(--gold,#c9a84c);flex-shrink:0;margin-top:1px}
+    .bb-ship-info{display:flex;flex-direction:column;gap:.15rem}
+    .bb-ship-label{font-size:.8rem;color:#f5f0e8}
+    .bb-ship-sub{font-size:.7rem;color:#777}
   `;
 
   // ── Render ──
