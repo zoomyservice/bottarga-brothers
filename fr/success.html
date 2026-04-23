@@ -4,8 +4,8 @@
 <meta content="nosniff" http-equiv="X-Content-Type-Options"/>
 <meta content="SAMEORIGIN" http-equiv="X-Frame-Options"/>
 <meta content="strict-origin-when-cross-origin" http-equiv="Referrer-Policy"/>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Commande confirmée — Bottarga Brothers</title>
 <link href="../css/styles.css" rel="stylesheet"/>
 <style>
@@ -69,6 +69,7 @@
 <div class="success-icon">✅</div>
 <h1>Commande confirmée</h1>
 <div class="divider"></div>
+<div id="order-items" style="display:none;background:var(--dark);border:1px solid var(--border);border-radius:4px;padding:1rem;margin-bottom:1.2rem;line-height:2;text-align:left;"></div>
 <p>Merci pour votre commande ! Vous recevrez un e-mail de confirmation sous peu. Votre poutargue sera expédiée sous 1 jour ouvrable depuis Stamford, CT via USPS.</p>
 <p style="font-size:0.78rem; color:var(--muted);">Des questions ? Appeler <a href="tel:18446232767" style="color:var(--gold);">1-844-MAD-BROS</a> or <a href="contact.html" style="color:var(--gold);">contactez-nous</a>.</p>
 <a class="btn btn-gold" href="shop-usa.html">Continuer vos achats</a>
@@ -89,5 +90,50 @@
   });
 </script>
 <script src="../js/cart.js"></script>
+<script>
+(function(){
+  const WORKER = 'https://bottarga-brothers-chat.zoozoomfast.workers.dev';
+  const PRODUCT_NAMES = {
+    'sardinian-gold': 'Sardinian Gold',
+    'boutargue-classique': 'Boutargue Classique',
+    'boutargue-imperiale': 'Boutargue Impériale',
+    'boutargue-imperiale-aged': 'Boutargue Impériale Aged',
+    'greek-avgotaraho': 'Greek Avgotaraho',
+    'ouro-do-brasil': 'Ouro do Brasil',
+    'aged-ouro-do-brasil': 'Aged Ouro do Brasil',
+    'grated-gold': 'Grated Gold',
+    'grated-bottarga-pouch': 'Grated Bottarga Pouch',
+    'sardinian-gold-ca': 'Sardinian Gold (CA)',
+    'boutargue-imperiale-ca': 'Boutargue Impériale (CA)',
+    'ouro-do-brasil-ca': 'Ouro do Brasil (CA)',
+    'grated-gold-ca': 'Grated Gold (CA)',
+  };
+
+  const sessionId = new URLSearchParams(window.location.search).get('session_id');
+  if (!sessionId) return;
+
+  // Record the sale and get back what was purchased
+  fetch(WORKER + '/record-sale', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (!data.counted || !Object.keys(data.counted).length) return;
+    const lines = Object.entries(data.counted).map(([pid, qty]) => {
+      const name = PRODUCT_NAMES[pid] || pid;
+      return qty > 1 ? `${qty}× ${name}` : name;
+    });
+    const el = document.getElementById('order-items');
+    if (el) {
+      el.innerHTML = '<strong style="color:var(--gold);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;">Your Order</strong><br>' +
+        lines.map(l => `<span style="color:var(--cream);font-size:.9rem;">✓ ${l}</span>`).join('<br>');
+      el.style.display = 'block';
+    }
+  })
+  .catch(() => {}); // Never break the thank you page
+})();
+</script>
 </body>
 </html>

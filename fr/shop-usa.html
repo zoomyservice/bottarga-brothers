@@ -4,10 +4,10 @@
 <meta content="nosniff" http-equiv="X-Content-Type-Options"/>
 <meta content="SAMEORIGIN" http-equiv="X-Frame-Options"/>
 <meta content="strict-origin-when-cross-origin" http-equiv="Referrer-Policy"/>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Boutique poutargue — Commandes aux États-Unis | Livraison USPS gratuite | Frères poutargue</title>
-<meta content="Shop premium bottarga for US orders. Free USPS shipping on every order. Sardinian Gold, Greek Avgotaraho, French Boutargue, Brazilian Ouro do Brasil and more." name="description">
+<meta content="Shop premium bottarga for US orders. Free USPS shipping on every order. Sardinian Gold, Greek Avgotaraho, French Boutargue, Brazilian Ouro do Brasil and more." name="description"/>
 <link href="../css/styles.css" rel="stylesheet"/>
 <link href="../favicon.png" rel="icon" type="image/png"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="../favicon.png" rel="apple-touch-icon"/>
@@ -22,9 +22,9 @@
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-XXXXXXX');</script> -->
-<meta content="Shop Bottarga — USA Orders | Free USPS Shipping | Bottarga Brothers" property="og:title"/>
-<meta content="Shop premium bottarga for US orders. Free USPS shipping on every order. Sardinian Gold, Greek Avgotaraho, French Boutargue, Brazilian Ouro do Brasil and more." property="og:description"/>
-<meta content="https://bottargabrothers.com/shop-usa.html" property="og:url"/>
+<meta content="Shop Bottarga — USA Orders | Free USPS Shipping | Bottarga Brothers" property="og:title">
+<meta content="Shop premium bottarga for US orders. Free USPS shipping on every order. Sardinian Gold, Greek Avgotaraho, French Boutargue, Brazilian Ouro do Brasil and more." property="og:description">
+<meta content="https://bottargabrothers.com/shop-usa.html" property="og:url">
 <meta content="website" property="og:type"/>
 <meta content="Bottarga Brothers" property="og:site_name"/>
 <meta content="en_US" property="og:locale"/>
@@ -618,6 +618,28 @@
       if (imgEl) imgEl.addEventListener('click', () => openLightbox(imgEl.src));
     }
   });
+})();
+</script>
+<script>
+(function(){
+  fetch('https://bottarga-brothers-chat.zoozoomfast.workers.dev/units-sold')
+    .then(r => r.json())
+    .then(data => {
+      Object.entries(data).forEach(([pid, count]) => {
+        if (count < 1) return;
+        const card = document.querySelector('[data-product="' + pid + '"]');
+        if (!card) return;
+        // Add badge if not already there
+        if (card.querySelector('.bb-sold-badge')) return;
+        const badge = document.createElement('div');
+        badge.className = 'bb-sold-badge';
+        badge.textContent = count + ' sold';
+        badge.style.cssText = 'position:absolute;top:10px;left:10px;background:rgba(14,12,9,.82);border:1px solid rgba(201,168,76,.5);color:var(--gold,#c9a84c);font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px;z-index:3;';
+        card.style.position = 'relative';
+        card.appendChild(badge);
+      });
+    })
+    .catch(() => {});
 })();
 </script>
 </body>

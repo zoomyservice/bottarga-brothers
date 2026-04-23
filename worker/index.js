@@ -87,6 +87,129 @@ export default {
 
     const path = new URL(request.url).pathname;
 
+
+  // ── Stripe price_id → product_id reverse lookup ──────────────────────────
+  const PRICE_TO_PRODUCT = {
+    // Sardinian Gold
+    'price_1TNOZyPnG7UtHDWeAuJDmAZ3': 'sardinian-gold',
+    'price_1TNOa1PnG7UtHDWeHUYgHYKQ': 'sardinian-gold',
+    'price_1TNOaCPnG7UtHDWei9RS1166': 'sardinian-gold',
+    // Boutargue Classique
+    'price_1TNOaKPnG7UtHDWeV3VUEg9c': 'boutargue-classique',
+    'price_1TNOaNPnG7UtHDWeuwRK2Lht': 'boutargue-classique',
+    'price_1TNOaQPnG7UtHDWeQmTmyYG2': 'boutargue-classique',
+    'price_1TNOaUPnG7UtHDWePfhyYmtJ': 'boutargue-classique',
+    'price_1TNOaZPnG7UtHDWekdPixmu9': 'boutargue-classique',
+    'price_1TNOacPnG7UtHDWe9oHxRUA2': 'boutargue-classique',
+    'price_1TNOafPnG7UtHDWeYVx3dNrQ': 'boutargue-classique',
+    // Boutargue Impériale
+    'price_1TNOaoPnG7UtHDWeFmu9uCvf': 'boutargue-imperiale',
+    'price_1TNOauPnG7UtHDWeLGWVZ4Kq': 'boutargue-imperiale',
+    'price_1TNOaxPnG7UtHDWebqUDLzFj': 'boutargue-imperiale',
+    'price_1TNOb1PnG7UtHDWeHD8CY1rY': 'boutargue-imperiale',
+    // Boutargue Impériale Aged
+    'price_1TOSMxPnG7UtHDWewExHTy4V': 'boutargue-imperiale-aged',
+    'price_1TOSN0PnG7UtHDWefPxlLuKz': 'boutargue-imperiale-aged',
+    'price_1TOSN3PnG7UtHDWen1LoecT7': 'boutargue-imperiale-aged',
+    'price_1TOSN6PnG7UtHDWepYm5XwXs': 'boutargue-imperiale-aged',
+    // Greek Avgotaraho
+    'price_1TNOb8PnG7UtHDWeyv82gxhs': 'greek-avgotaraho',
+    'price_1TNObDPnG7UtHDWesuTGsqZM': 'greek-avgotaraho',
+    'price_1TNObGPnG7UtHDWeZuGYEjkG': 'greek-avgotaraho',
+    'price_1TNObJPnG7UtHDWeq5hsjZ2C': 'greek-avgotaraho',
+    'price_1TNObOPnG7UtHDWeVUiEXUbm': 'greek-avgotaraho',
+    // Ouro do Brasil
+    'price_1TOSiNPnG7UtHDWeFy6FXLWK': 'ouro-do-brasil',
+    'price_1TOSiQPnG7UtHDWeBfdlLwxR': 'ouro-do-brasil',
+    'price_1TOSiTPnG7UtHDWeHewoNs9K': 'ouro-do-brasil',
+    'price_1TOSiWPnG7UtHDWeZfc8fJAS': 'ouro-do-brasil',
+    'price_1TOSiZPnG7UtHDWegRwyIkKR': 'ouro-do-brasil',
+    // Aged Ouro do Brasil
+    'price_1TOSN9PnG7UtHDWefStquhjb': 'aged-ouro-do-brasil',
+    // Grated Gold
+    'price_1TNObfPnG7UtHDWeWcqHE9Tc': 'grated-gold',
+    'price_1TNObiPnG7UtHDWeF1wfWLdd': 'grated-gold',
+    'price_1TNObmPnG7UtHDWekiBG9rPF': 'grated-gold',
+    // Grated Bottarga Pouch
+    'price_1TOSSNPnG7UtHDWeWlLntCbn': 'grated-bottarga-pouch',
+    'price_1TOSSQPnG7UtHDWePuOG9FIj': 'grated-bottarga-pouch',
+    'price_1TOSSTPnG7UtHDWe2u5hmV4U': 'grated-bottarga-pouch',
+    // Canada products
+    'price_1TOSNPPnG7UtHDWerTwMzQCz': 'sardinian-gold-ca',
+    'price_1TOSNSPnG7UtHDWezzZOuw21': 'sardinian-gold-ca',
+    'price_1TOSNVPnG7UtHDWeJkuXjIux': 'sardinian-gold-ca',
+    'price_1TOSNYPnG7UtHDWe8nO9Wl8Z': 'boutargue-imperiale-ca',
+    'price_1TOSNbPnG7UtHDWeCPPS5cJy': 'boutargue-imperiale-ca',
+    'price_1TOSNePnG7UtHDWeUvlv5Q4S': 'ouro-do-brasil-ca',
+    'price_1TOSNhPnG7UtHDWegxMgc7RX': 'grated-gold-ca',
+    'price_1TOSNkPnG7UtHDWeQBUZVkK1': 'grated-gold-ca',
+    'price_1TOSNnPnG7UtHDWeQBUZVkK1': 'grated-gold-ca',
+  };
+
+
+    // ── Record sale (called from success.html) ────────────────────────────
+    if (request.method === 'POST' && path === '/record-sale') {
+      try {
+        const { sessionId } = await request.json();
+        if (!sessionId || !sessionId.startsWith('cs_')) {
+          return Response.json({ error: 'Invalid session' }, { status: 400, headers: CORS });
+        }
+
+        // Deduplicate — never count the same session twice
+        const dedupKey = 'sale_session_' + sessionId;
+        const already = await env.KV.get(dedupKey);
+        if (already) return Response.json({ ok: true, skipped: true }, { headers: CORS });
+
+        // Verify with Stripe that payment actually succeeded
+        const stripeRes = await fetch(
+          'https://api.stripe.com/v1/checkout/sessions/' + sessionId + '/line_items?limit=25',
+          { headers: { 'Authorization': 'Bearer ' + env.STRIPE_SECRET_KEY } }
+        );
+        if (!stripeRes.ok) return Response.json({ error: 'Stripe error' }, { status: 500, headers: CORS });
+
+        const sessionCheck = await fetch(
+          'https://api.stripe.com/v1/checkout/sessions/' + sessionId,
+          { headers: { 'Authorization': 'Bearer ' + env.STRIPE_SECRET_KEY } }
+        );
+        const sessionData = await sessionCheck.json();
+        if (sessionData.payment_status !== 'paid') {
+          return Response.json({ ok: false, reason: 'not_paid' }, { headers: CORS });
+        }
+
+        const lineData = await stripeRes.json();
+        const counts = {};
+        for (const item of (lineData.data || [])) {
+          const priceId = item.price?.id;
+          const productId = PRICE_TO_PRODUCT[priceId];
+          if (productId) {
+            counts[productId] = (counts[productId] || 0) + (item.quantity || 1);
+          }
+        }
+
+        // Update KV counters
+        const existing = await env.KV.get('units_sold', { type: 'json' }) || {};
+        for (const [pid, qty] of Object.entries(counts)) {
+          existing[pid] = (existing[pid] || 0) + qty;
+        }
+        await env.KV.put('units_sold', JSON.stringify(existing));
+
+        // Mark session as processed (TTL 30 days)
+        await env.KV.put(dedupKey, '1', { expirationTtl: 60 * 60 * 24 * 30 });
+
+        return Response.json({ ok: true, counted: counts }, { headers: CORS });
+      } catch (e) {
+        return Response.json({ error: String(e) }, { status: 500, headers: CORS });
+      }
+    }
+
+    // ── Units sold (public GET) ────────────────────────────────────────────
+    if (request.method === 'GET' && path === '/units-sold') {
+      const data = await env.KV.get('units_sold', { type: 'json' }) || {};
+      return new Response(JSON.stringify(data), {
+        headers: { ...CORS, 'Cache-Control': 'public, max-age=60' },
+      });
+    }
+
     // ── Stripe Checkout ──
     if (request.method === 'POST' && path === '/checkout') {
       try {

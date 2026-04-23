@@ -1,3 +1,7 @@
 name = "bottarga-brothers-chat"
 main = "index.js"
 compatibility_date = "2024-09-02"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "ac2774a4b9b349548bffacbc6cfa74c3"
