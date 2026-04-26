@@ -301,10 +301,15 @@
     grated_pouch:           '#grated-pouch',
   };
 
+  // Pre-hide product images to prevent flash of old image while override loads
+  const _$pImgs = document.querySelectorAll('.product-img');
+  _$pImgs.forEach(el => { el.style.opacity = '0'; el.style.transition = 'opacity 0.15s ease'; });
+  const _$showImgs = () => _$pImgs.forEach(el => { el.style.opacity = '1'; });
+
   fetch(WORKER)
     .then(r => r.json())
     .then(data => {
-      if (!data || Object.keys(data).length === 0) return;
+      if (!data || Object.keys(data).length === 0) { _$showImgs(); return; }
 
       // ── Text overrides ─────────────────────────────────────────────
       Object.entries(TEXT_MAP).forEach(([key, sel]) => {
@@ -498,7 +503,12 @@
         try {
           const imgOverrides = JSON.parse(data[wImgKey]);
           Object.entries(imgOverrides).forEach(([sel, src]) => {
-            try { document.querySelectorAll(sel).forEach(el => { el.src = src; }); } catch(e) {}
+            try { document.querySelectorAll(sel).forEach(el => {
+              el.style.opacity = '0';
+              el.style.transition = 'opacity 0.15s ease';
+              el.src = src;
+              el.addEventListener('load', () => { el.style.opacity = '1'; }, { once: true });
+            }); } catch(e) {}
           });
         } catch(e) {}
       }
@@ -560,6 +570,7 @@
           document.body.style.paddingTop = b.offsetHeight + 'px';
         });
       }
+      _$showImgs();
     })
-    .catch(() => {}); // never break the site
+    .catch(() => { _$showImgs(); }); // never break the site
 })();
