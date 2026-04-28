@@ -12,6 +12,8 @@ const CORS = {
   'Content-Type': 'application/json',
 };
 
+const ADMIN_WORKER_URL = 'https://bottarga-admin.zoozoomfast.workers.dev';
+
 const SYSTEM_PROMPT = `You are the expert assistant for Bottarga Brothers, the finest bottarga company in North America. You know everything about bottarga — its history, preparation, uses, and the Bottarga Brothers product range.
 
 STYLE RULES — MANDATORY:
@@ -193,6 +195,20 @@ export default {
         }
         await env.KV.put('units_sold', JSON.stringify(existing));
 
+        // Decrement stock per price ID
+        const stockData = await env.KV.get('product_stock', { type: 'json' }) || {};
+        let stockChanged = false;
+        for (const item of (lineData.data || [])) {
+          const pid = item.price?.id;
+          if (!pid) continue;
+          const current = stockData[pid];
+          if (current === null || current === undefined) continue; // null/missing = unlimited
+          const newQty = Math.max(0, current - (item.quantity || 1));
+          stockData[pid] = newQty;
+          stockChanged = true;
+        }
+        if (stockChanged) await env.KV.put('product_stock', JSON.stringify(stockData));
+
         // Mark session as processed (TTL 30 days)
         await env.KV.put(dedupKey, '1', { expirationTtl: 60 * 60 * 24 * 30 });
 
@@ -208,6 +224,54 @@ export default {
       return new Response(JSON.stringify(data), {
         headers: { ...CORS, 'Cache-Control': 'public, max-age=60' },
       });
+    }
+
+    // ── Stock — public GET ────────────────────────────────────────────────
+    if (request.method === 'GET' && path === '/stock') {
+      const data = await env.KV.get('product_stock', { type: 'json' }) || {};
+      return new Response(JSON.stringify(data), {
+        headers: { ...CORS, 'Cache-Control': 'public, max-age=30' },
+      });
+    }
+
+    // ── Stock — admin POST (set quantities) ──────────────────────────────
+    if (request.method === 'POST' && path === '/stock') {
+      try {
+        // Delegate auth to admin worker
+        const adminUser = request.headers.get('X-Admin-User');
+        const adminPwd  = request.headers.get('X-Admin-Password');
+        const adminSess = request.headers.get('X-Session-ID') || '';
+        if (!adminUser || !adminPwd) {
+          return Response.json({ error: 'Unauthorized' }, { status: 401, headers: CORS });
+        }
+        const authRes = await fetch(ADMIN_WORKER_URL + '/me', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-User': adminUser,
+            'X-Admin-Password': adminPwd,
+            'X-Session-ID': adminSess,
+          },
+          body: '{}',
+        });
+        if (!authRes.ok) {
+          return Response.json({ error: 'Unauthorized' }, { status: 401, headers: CORS });
+        }
+        const body = await request.json();
+        if (typeof body !== 'object' || Array.isArray(body)) {
+          return Response.json({ error: 'Invalid payload' }, { status: 400, headers: CORS });
+        }
+        // Sanitize: values must be null or non-negative integer
+        const clean = {};
+        for (const [k, v] of Object.entries(body)) {
+          if (v === null) { clean[k] = null; }
+          else if (typeof v === 'number' && v >= 0) { clean[k] = Math.floor(v); }
+        }
+        await env.KV.put('product_stock', JSON.stringify(clean));
+        return Response.json({ ok: true }, { headers: CORS });
+      } catch (e) {
+        return Response.json({ error: String(e) }, { status: 500, headers: CORS });
+      }
     }
 
     // ── Stripe Checkout ──

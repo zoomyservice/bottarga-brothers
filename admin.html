@@ -207,6 +207,13 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 .btn-cancel{background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:7px;font-size:.8rem;cursor:pointer;font-family:inherit;}
 .btn-cancel:hover{border-color:var(--red);color:var(--red);}
 @media(max-width:600px){.top-bar-logo{display:none;}.ptab{padding:.35rem .5rem;font-size:.68rem;}.edit-toolbar{font-size:.68rem;}}
+
+.stock-size-grid{display:flex;flex-direction:column;gap:.3rem;margin-top:.4rem;}
+.stock-row{display:flex;align-items:center;gap:.5rem;}
+.stock-size-label{flex:1;font-size:.75rem;color:var(--muted);}
+.stock-qty-input{width:72px;padding:.25rem .4rem;background:var(--dark);border:1px solid var(--border);border-radius:3px;color:var(--cream);font-size:.8rem;text-align:center;}
+.stock-qty-input:focus{outline:none;border-color:var(--gold);}
+.stock-unit{font-size:.7rem;color:var(--muted);}
 </style>
 </head>
 <body>
@@ -451,6 +458,7 @@ let currentPage='index.html';
 let currentEditSel=null,currentEditKey=null,currentEditEl=null;
 let imgPendingSel=null,imgPendingKey=null,imgPendingData=null;
 let CUSTOM_PRODUCTS=[],npSizeCount=0;
+let stockData={};
 
 function getSessionId(){let s=localStorage.getItem('bb_sid');if(!s){s=(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now().toString(36));localStorage.setItem('bb_sid',s);}return s;}
 const SESSION_ID=getSessionId();
@@ -552,6 +560,80 @@ const COLORS=[
   {key:'css_muted',label:'Text (muted)',def:'#8a7e6e'},
   {key:'css_gold_light',label:'Gold Light',def:'#e0c270'},
 ];
+
+const MAIN_WORKER='https://bottarga-brothers-chat.zoozoomfast.workers.dev';
+const PRODUCT_PRICE_IDS={
+  sardinian_gold:[
+    {id:'price_1TNOZyPnG7UtHDWeAuJDmAZ3',label:'M — 4.9 oz'},
+    {id:'price_1TNOa1PnG7UtHDWeHUYgHYKQ',label:'L — 5.3 oz'},
+    {id:'price_1TNOaCPnG7UtHDWei9RS1166', label:'XL — 5.6 oz'},
+  ],
+  boutargue_classique:[
+    {id:'price_1TNOaKPnG7UtHDWeV3VUEg9c',label:'S — 3.7 oz'},
+    {id:'price_1TNOaNPnG7UtHDWeuwRK2Lht',label:'M — 4.4 oz'},
+    {id:'price_1TNOaQPnG7UtHDWeQmTmyYG2',label:'L — 6.0 oz'},
+    {id:'price_1TNOaUPnG7UtHDWePfhyYmtJ',label:'XL — 6.2 oz'},
+    {id:'price_1TNOaZPnG7UtHDWekdPixmu9',label:'Jumbo — 7.7 oz'},
+    {id:'price_1TNOacPnG7UtHDWe9oHxRUA2',label:'Mega — 8.5 oz'},
+    {id:'price_1TNOafPnG7UtHDWeYVx3dNrQ',label:'Giant — 13.0 oz'},
+  ],
+  boutargue_imperiale:[
+    {id:'price_1TNOaoPnG7UtHDWeFmu9uCvf',label:'XS — ~3.2 oz'},
+    {id:'price_1TNOauPnG7UtHDWeLGWVZ4Kq',label:'S — ~3.5 oz'},
+    {id:'price_1TNOaxPnG7UtHDWebqUDLzFj',label:'M — ~6.1 oz'},
+    {id:'price_1TNOb1PnG7UtHDWeHD8CY1rY',label:'L — ~6.4 oz'},
+  ],
+  boutargue_imperiale_aged:[
+    {id:'price_1TOSMxPnG7UtHDWewExHTy4V',label:'XS — ~3.2 oz'},
+    {id:'price_1TOSN0PnG7UtHDWefPxlLuKz',label:'S — ~3.5 oz'},
+    {id:'price_1TOSN3PnG7UtHDWen1LoecT7',label:'M — ~6.1 oz'},
+    {id:'price_1TOSN6PnG7UtHDWepYm5XwXs',label:'L — ~6.4 oz'},
+  ],
+  greek_avgotaraho:[
+    {id:'price_1TNOb8PnG7UtHDWeyv82gxhs',label:'S — ~5.6 oz'},
+    {id:'price_1TNObDPnG7UtHDWesuTGsqZM',label:'M — ~5.8 oz'},
+    {id:'price_1TNObGPnG7UtHDWeZuGYEjkG',label:'L — ~6.3 oz'},
+    {id:'price_1TNObJPnG7UtHDWeq5hsjZ2C',label:'XL — ~6.6 oz'},
+    {id:'price_1TNObOPnG7UtHDWeVUiEXUbm',label:'Mega — ~7.4 oz'},
+  ],
+  ouro_do_brasil:[
+    {id:'price_1TOSiNPnG7UtHDWeFy6FXLWK',label:'M — ~5.1 oz'},
+    {id:'price_1TOSiQPnG7UtHDWeBfdlLwxR',label:'L — ~5.5 oz'},
+    {id:'price_1TOSiTPnG7UtHDWeHewoNs9K',label:'XL — ~6.9 oz'},
+    {id:'price_1TOSiWPnG7UtHDWeZfc8fJAS',label:'Jumbo — ~7.2 oz'},
+    {id:'price_1TOSiZPnG7UtHDWegRwyIkKR',label:'Mega — ~8.1 oz'},
+  ],
+  aged_ouro_do_brasil:[
+    {id:'price_1TOSN9PnG7UtHDWefStquhjb',label:'Standard'},
+  ],
+  grated_gold:[
+    {id:'price_1TNObfPnG7UtHDWeWcqHE9Tc',label:'1 jar — 40g'},
+    {id:'price_1TNObiPnG7UtHDWeF1wfWLdd',label:'2 jars — 80g'},
+    {id:'price_1TNObmPnG7UtHDWekiBG9rPF',label:'3 jars — 120g'},
+  ],
+  grated_pouch:[
+    {id:'price_1TOSSNPnG7UtHDWeWlLntCbn',label:'1 pouch — 50g'},
+    {id:'price_1TOSSQPnG7UtHDWePuOG9FIj',label:'2 pouches — 50g'},
+    {id:'price_1TOSSTPnG7UtHDWe2u5hmV4U',label:'6 pouches — 50g'},
+  ],
+  sardinian_gold_ca:[
+    {id:'price_1TOSNPPnG7UtHDWerTwMzQCz',label:'S (~97g) CAD'},
+    {id:'price_1TOSNSPnG7UtHDWezzZOuw21',label:'L (~145g) CAD'},
+    {id:'price_1TOSNVPnG7UtHDWeJkuXjIux',label:'Jumbo (~154g) CAD'},
+  ],
+  boutargue_imperiale_ca:[
+    {id:'price_1TOSNYPnG7UtHDWe8nO9Wl8Z',label:'S (~100g) CAD'},
+    {id:'price_1TOSNbPnG7UtHDWeCPPS5cJy',label:'L (~175g) CAD'},
+  ],
+  ouro_do_brasil_ca:[
+    {id:'price_1TOSNePnG7UtHDWeUvlv5Q4S',label:'L (~133g) CAD'},
+  ],
+  grated_gold_ca:[
+    {id:'price_1TOSNhPnG7UtHDWegxMgc7RX',label:'1 pouch — 50g CAD'},
+    {id:'price_1TOSNkPnG7UtHDWeQBUZVkK1',label:'2 pouches CAD'},
+    {id:'price_1TOSNnPnG7UtHDWeQBUZVkK1',label:'6 pouches CAD'},
+  ],
+};
 // LOGIN
 async function doLogin(){
   const user=document.getElementById('user-input').value.trim();
@@ -618,7 +700,33 @@ document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='
 async function loadContent(){
   try{const r=await fetch(WORKER+'/content');kvContent=await r.json()||{};}catch(e){kvContent={};}
   if(kvContent.custom_products_json){try{CUSTOM_PRODUCTS=JSON.parse(kvContent.custom_products_json);}catch(e){CUSTOM_PRODUCTS=[];}}
-  buildProducts();buildColors();populatePanelFields();
+  buildProducts();buildColors();populatePanelFields();await loadStock();
+}
+
+async function loadStock(){
+  try{const r=await fetch(MAIN_WORKER+'/stock');stockData=await r.json()||{};}catch(e){stockData={};}
+  document.querySelectorAll('.stock-qty-input').forEach(inp=>{
+    const pid=inp.dataset.priceId;
+    const val=stockData[pid];
+    inp.value=(val!==null&&val!==undefined)?val:'';
+  });
+}
+async function saveStock(){
+  const payload={};let hasAny=false;
+  document.querySelectorAll('.stock-qty-input').forEach(inp=>{
+    const pid=inp.dataset.priceId;
+    const raw=inp.value.trim();
+    payload[pid]=(raw==='')?null:Math.max(0,parseInt(raw,10)||0);
+    hasAny=true;
+  });
+  if(!hasAny)return;
+  try{
+    await fetch(MAIN_WORKER+'/stock',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Admin-User':SESSION_USER,'X-Admin-Password':SESSION_PWD,'X-Session-ID':SESSION_ID},
+      body:JSON.stringify(payload)
+    });
+  }catch(e){}
 }
 function populatePanelFields(){
   document.querySelectorAll('[data-key]').forEach(el=>{
@@ -1040,6 +1148,7 @@ if(CUSTOM_PRODUCTS.length)toSave.custom_products_json=JSON.stringify(CUSTOM_PROD
       document.getElementById('save-status').style.display='inline';
       setTimeout(()=>{document.getElementById('save-status').style.display='none';},3000);
       btn.disabled=true;
+      saveStock();
     }else{alert('Save failed. Please try again.');}
   }catch(e){alert('Network error. Check connection and try again.');}
   btn.textContent='Save All';
@@ -1195,6 +1304,11 @@ function buildProducts(){
               <textarea data-key="gallery_${p.id}" rows="3" placeholder="One image URL per line&#10;img/photo.jpg&#10;https://..." style="font-size:.73rem;font-family:monospace;min-height:56px;">${escH(sG)}</textarea>
               <div style="font-size:.63rem;color:var(--muted);margin-top:.2rem;">First URL = main image. One per line. Leave blank to keep defaults.</div>
             </div>
+            ${(PRODUCT_PRICE_IDS[p.id]||[]).length>0?`<div class="field">
+              <label>Stock / Inventory</label>
+              <div class="stock-size-grid">${(PRODUCT_PRICE_IDS[p.id]||[]).map(s=>`<div class="stock-row"><span class="stock-size-label">${s.label}</span><input type="number" min="0" step="1" class="stock-qty-input" data-price-id="${s.id}" placeholder="∞" value="${stockData[s.id]!==null&&stockData[s.id]!==undefined?stockData[s.id]:''}"/><span class="stock-unit">units</span></div>`).join('')}</div>
+              <div style="font-size:.63rem;color:var(--muted);margin-top:.3rem;">Blank&nbsp;=&nbsp;unlimited &nbsp;|&nbsp; 0&nbsp;=&nbsp;out&nbsp;of&nbsp;stock. Saved with&nbsp;<em>Save All</em>.</div>
+            </div>`:''}
           </div>
         </div>
         <div style="text-align:right;padding-top:.7rem;margin-top:.7rem;border-top:1px solid var(--border);">
