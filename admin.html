@@ -257,7 +257,6 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 <div class="admin-sidebar-divider"></div>
 <div class="admin-sidebar-section">Settings</div>
 <button class="admin-nav-item admin-nav-settings" onclick="openSettings('products',this)">📦 Products</button>
-<button class="admin-nav-item admin-nav-settings" onclick="openSettings('stock',this)">📊 Inventory</button>
 <button class="admin-nav-item admin-nav-settings" onclick="openSettings('colors',this)">🎨 Colors &amp; Fonts</button>
 <button class="admin-nav-item admin-nav-settings" onclick="openSettings('users',this)">🔑 Password &amp; Users</button>
 </div>
@@ -322,17 +321,20 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 <button class="btn-gold" onclick="addNewProduct()" style="width:auto;padding:8px 22px;margin-top:.4rem;">Add Product</button>
 <div class="msg" id="np-msg"></div>
 </div>
+<div id="inventory-section" style="margin-bottom:1.2rem;">
+  <button onclick="toggleInventory(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:var(--dark-mid);border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--cream);font-family:var(--serif);font-size:.95rem;">
+    <span>📊 Inventory / Stock</span><span id="inv-chevron" style="font-size:.7rem;transition:transform .2s">▼</span>
+  </button>
+  <div id="inventory-body" style="display:none;margin-top:.5rem;background:var(--dark-mid);border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+    <div style="padding:.8rem 1rem .4rem;font-size:.78rem;color:var(--muted);">Blank&nbsp;=&nbsp;unlimited &nbsp;·&nbsp; <strong style="color:var(--cream)">0</strong>&nbsp;=&nbsp;out of stock (customers cannot buy) &nbsp;·&nbsp; Saved with <em>Save All</em></div>
+    <div id="inv-list" style="padding:.4rem .6rem .8rem;"></div>
+    <div style="padding:.6rem 1rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:1rem;">
+      <button class="btn-gold" onclick="saveStockNow()" style="width:auto;padding:6px 18px;font-size:.8rem;">Save Stock</button>
+      <span id="inv-save-status" style="display:none;color:#6ee7b7;font-size:.78rem;">✓ Saved</span>
+    </div>
+  </div>
+</div>
 <div class="product-list" id="product-list"></div>
-</div>
-<!-- STOCK -->
-<div class="panel" id="panel-stock">
-<div class="sh">Stock / Inventory</div>
-<p style="font-size:.8rem;color:var(--muted);margin-bottom:1.2rem;">Set quantity available per size. <strong style="color:var(--cream)">Blank&nbsp;=&nbsp;unlimited</strong>. <strong style="color:var(--cream)">0&nbsp;=&nbsp;out&nbsp;of&nbsp;stock</strong> (customers cannot purchase). Updated when you click <em>Save Stock</em>.</p>
-<div id="stock-panel-list"></div>
-<div style="margin-top:1.5rem;display:flex;align-items:center;gap:1rem;">
-  <button class="btn-gold" id="btn-save-stock" onclick="saveStockPanel()">Save Stock</button>
-  <span id="stock-save-status" style="display:none;color:#6ee7b7;font-size:.8rem;">✓ Saved</span>
-</div>
 </div>
 <!-- COLORS -->
 <div class="panel" id="panel-colors">
@@ -786,7 +788,6 @@ function openSettings(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   const panel=document.getElementById('panel-'+name);
   if(panel)panel.classList.add('active');
-  if(name==='stock')buildStockPanel();
   // Update top-bar context
   const label=btn.textContent.trim();
   document.getElementById('top-bar-context').textContent=label;
@@ -1385,48 +1386,44 @@ function buildProducts(){
 }
 // COLORS
 
-function buildStockPanel(){
-  const list=document.getElementById('stock-panel-list');
-  if(!list)return;
+function toggleInventory(btn){
+  const body=document.getElementById('inventory-body');
+  const chev=document.getElementById('inv-chevron');
+  const open=body.style.display==='none';
+  body.style.display=open?'block':'none';
+  chev.style.transform=open?'rotate(180deg)':'';
+  if(open)buildInventorySection();
+}
+function buildInventorySection(){
+  const list=document.getElementById('inv-list');if(!list)return;
   const rows=[];
   PRODUCTS.forEach(p=>{
     const prices=PRODUCT_PRICE_IDS[p.id]||[];
     if(!prices.length)return;
     const isRemoved=kvContent['product_'+p.id+'_removed']==='true';
-    rows.push(`<div style="margin-bottom:1.2rem;background:var(--dark-mid);border:1px solid var(--border);border-radius:6px;overflow:hidden;">
-      <div style="padding:.6rem 1rem;background:var(--dark);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-family:var(--serif);font-size:.95rem;color:${isRemoved?'var(--muted)':'var(--cream)'}">${p.label}${isRemoved?' <span style="font-size:.65rem;color:var(--muted)">(paused)</span>':''}</span>
-        <span style="font-size:.7rem;color:var(--muted)">${p.origin}</span>
-      </div>
-      <div style="padding:.7rem 1rem;display:flex;flex-wrap:wrap;gap:.6rem .4rem;">
-        ${prices.map(s=>{
-          const val=stockData[s.id];
-          const disp=(val!==null&&val!==undefined)?val:'';
-          const isOos=(val===0);
-          return`<div style="display:flex;align-items:center;gap:.4rem;background:var(--dark);border:1px solid ${isOos?'#ef4444':'var(--border)'};border-radius:4px;padding:.3rem .6rem;">
-            <span style="font-size:.72rem;color:var(--muted);white-space:nowrap;">${s.label}</span>
-            <input type="number" min="0" step="1" class="stock-qty-input" data-price-id="${s.id}" placeholder="∞" value="${disp}" style="width:58px;padding:.2rem .3rem;background:transparent;border:none;border-left:1px solid var(--border);color:${isOos?'#ef4444':'var(--cream)'};font-size:.82rem;text-align:center;" oninput="this.style.color=this.value==='0'?'#ef4444':'var(--cream)'"/>
-          </div>`;
-        }).join('')}
+    rows.push(`<div style="margin-bottom:.7rem;padding:.6rem .8rem;background:var(--dark);border:1px solid var(--border);border-radius:4px;">
+      <div style="font-size:.8rem;color:${isRemoved?'var(--muted)':'var(--cream)'};margin-bottom:.45rem;font-family:var(--serif);">${p.label}${isRemoved?' <span style="font-size:.65rem;color:var(--muted)">(paused)</span>':''}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem;">
+        ${prices.map(s=>{const val=stockData[s.id];const disp=(val!==null&&val!==undefined)?val:'';const isOos=(val===0);
+        return`<div style="display:flex;align-items:center;gap:.3rem;background:var(--dark-mid);border:1px solid ${isOos?'#ef4444':'var(--border)'};border-radius:3px;padding:.2rem .5rem;">
+          <span style="font-size:.7rem;color:var(--muted);white-space:nowrap;">${s.label}</span>
+          <input type="number" min="0" step="1" class="stock-qty-input" data-price-id="${s.id}" placeholder="∞" value="${disp}" style="width:52px;padding:.15rem .25rem;background:transparent;border:none;border-left:1px solid var(--border);color:${isOos?'#ef4444':'var(--cream)'};font-size:.8rem;text-align:center;margin-left:.2rem;" oninput="this.style.color=this.value==='0'?'#ef4444':'var(--cream)'"/>
+        </div>`}).join('')}
       </div>
     </div>`);
   });
-  list.innerHTML=rows.join('');
+  list.innerHTML=rows.join('')||'<p style="color:var(--muted);font-size:.8rem;padding:.5rem;">No trackable products found.</p>';
 }
-
-async function saveStockPanel(){
-  const btn=document.getElementById('btn-save-stock');
-  btn.textContent='Saving…';btn.disabled=true;
+async function saveStockNow(){
+  const btn=event.target;btn.textContent='Saving…';btn.disabled=true;
   await saveStock();
-  // Also refresh stockData from inputs so in-memory state stays current
   document.querySelectorAll('.stock-qty-input').forEach(inp=>{
-    const pid=inp.dataset.priceId;
-    const raw=inp.value.trim();
+    const pid=inp.dataset.priceId;const raw=inp.value.trim();
     stockData[pid]=(raw==='')?null:Math.max(0,parseInt(raw,10)||0);
   });
   btn.textContent='Save Stock';btn.disabled=false;
-  const s=document.getElementById('stock-save-status');
-  if(s){s.style.display='inline';setTimeout(()=>{s.style.display='none';},3000);}
+  const s=document.getElementById('inv-save-status');
+  if(s){s.style.display='inline';setTimeout(()=>{s.style.display='none';},2500);}
 }
 function buildColors(){
   const grid=document.getElementById('color-grid');if(!grid)return;

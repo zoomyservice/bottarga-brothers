@@ -1,76 +1,99 @@
 /**
  * Bottarga Brothers — Stock Enforcement
- * Fetches /stock from the main worker and disables out-of-stock size options.
- * Called on shop-usa.html and shop-canada.html.
+ * - Disables OOS size options + Add to Cart buttons (stock = 0)
+ * - Shows "Only X left!" in red when stock ≤ 10 and > 0
  */
 (function () {
-  const WORKER = 'https://bottarga-brothers-chat.zoozoomfast.workers.dev';
-  const CACHE_KEY = 'bb_stock_v1';
-  const CACHE_TTL = 60 * 1000; // 1 minute
+  var WORKER = 'https://bottarga-brothers-chat.zoozoomfast.workers.dev';
+  var CACHE_KEY = 'bb_stock_v1';
+  var CACHE_TTL = 60 * 1000; // 1 minute
+  var LOW_STOCK_THRESHOLD = 10;
 
-  function applyStock(stock) {
-    if (!stock || typeof stock !== 'object') return;
+  function getStockLabel(qty) {
+    if (qty === null || qty === undefined) return null; // unlimited
+    if (qty <= 0) return null; // handled separately (OOS)
+    if (qty <= LOW_STOCK_THRESHOLD) return 'Only ' + qty + ' left!';
+    return null;
+  }
 
-    // For every size <select> on the page, check each <option>
-    document.querySelectorAll('select.bb-size-select').forEach(function (sel) {
-      var anyEnabled = false;
-      sel.querySelectorAll('option').forEach(function (opt) {
-        var pid = opt.value;
-        if (!pid) return;
-        var qty = stock[pid];
-        // null/undefined = unlimited; 0 = out of stock
-        if (qty !== null && qty !== undefined && qty <= 0) {
-          opt.disabled = true;
-          // Append OOS label if not already there
-          if (opt.textContent.indexOf('— Out of Stock') === -1) {
-            opt.textContent = opt.textContent + ' — Out of Stock';
-          }
-          opt.style.color = '#666';
-        } else {
-          opt.disabled = false;
-          // Remove OOS label if it was previously added
-          opt.textContent = opt.textContent.replace(' — Out of Stock', '');
-          opt.style.color = '';
-          anyEnabled = true;
+  function updateStockUI(sel, stock) {
+    // Find or create the stock-notice element near this select
+    var card = sel.closest('.product-info') || sel.parentElement;
+    var notice = sel.parentElement.querySelector('.bb-stock-notice');
+    if (!notice) {
+      notice = document.createElement('div');
+      notice.className = 'bb-stock-notice';
+      notice.style.cssText = 'font-size:.78rem;font-weight:600;color:#ef4444;margin-top:.3rem;min-height:1.1em;';
+      sel.parentNode.insertBefore(notice, sel.nextSibling);
+    }
+
+    // Update each option
+    var anyEnabled = false;
+    Array.from(sel.options).forEach(function (opt) {
+      var pid = opt.value;
+      var qty = stock[pid];
+      if (qty !== null && qty !== undefined && qty <= 0) {
+        opt.disabled = true;
+        if (opt.textContent.indexOf('— Out of Stock') === -1) {
+          opt.textContent = opt.textContent.replace(' — Out of Stock', '') + ' — Out of Stock';
         }
-      });
-
-      // After patching options, if the currently selected option is disabled,
-      // move selection to the first enabled option (or leave as-is if all OOS).
-      if (sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].disabled) {
-        var firstEnabled = Array.from(sel.options).find(function (o) { return !o.disabled; });
-        if (firstEnabled) sel.value = firstEnabled.value;
+        opt.style.color = '#555';
+      } else {
+        opt.disabled = false;
+        opt.textContent = opt.textContent.replace(' — Out of Stock', '');
+        opt.style.color = '';
+        anyEnabled = true;
       }
+    });
 
-      // Find the Add to Cart button associated with this select
-      // They live in the same .product-info container
-      var card = sel.closest('.product-info') || sel.parentElement;
-      var atcBtn = card ? card.querySelector('.bb-atc-btn') : null;
-      if (!atcBtn) return;
+    // Move selection off a disabled option
+    if (sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].disabled) {
+      var first = Array.from(sel.options).find(function (o) { return !o.disabled; });
+      if (first) sel.value = first.value;
+    }
 
-      // All sizes OOS?
-      var allOos = Array.from(sel.options).every(function (o) { return o.disabled; });
-      if (allOos) {
+    // Show low-stock notice for currently selected option
+    var chosen = sel.options[sel.selectedIndex];
+    var chosenQty = chosen ? stock[chosen.value] : null;
+    notice.textContent = getStockLabel(chosenQty) || '';
+
+    // ATC button
+    var atcBtn = card ? card.querySelector('.bb-atc-btn') : null;
+    if (atcBtn) {
+      if (!anyEnabled) {
         atcBtn.disabled = true;
         atcBtn.textContent = 'Out of Stock';
         atcBtn.style.opacity = '0.45';
         atcBtn.style.cursor = 'not-allowed';
       } else {
-        // Re-check on change too
         atcBtn.disabled = false;
         if (atcBtn.textContent === 'Out of Stock') atcBtn.textContent = 'Add to Cart';
         atcBtn.style.opacity = '';
         atcBtn.style.cursor = '';
       }
+    }
+  }
+
+  function applyStock(stock) {
+    if (!stock || typeof stock !== 'object') return;
+
+    // Handle selects (multi-size products)
+    document.querySelectorAll('select.bb-size-select').forEach(function (sel) {
+      updateStockUI(sel, stock);
+
+      // Re-check on size change
+      if (!sel._stockWired) {
+        sel._stockWired = true;
+        sel.addEventListener('change', function () {
+          updateStockUI(sel, stock);
+        });
+      }
     });
 
-    // Handle products with a hardcoded priceId on the ATC button (no select — single SKU)
+    // Handle single-SKU ATC buttons (no select)
     document.querySelectorAll('.bb-atc-btn[onclick]').forEach(function (btn) {
-      // Skip buttons already handled via a select
       var card = btn.closest('.product-info') || btn.parentElement;
       if (card && card.querySelector('select.bb-size-select')) return;
-
-      // Extract priceId from onclick attr: _bbCart.add('...','{priceId}')
       var match = btn.getAttribute('onclick').match(/'(price_[^']+)'/);
       if (!match) return;
       var pid = match[1];
@@ -85,33 +108,22 @@
         if (btn.textContent === 'Out of Stock') btn.textContent = 'Add to Cart';
         btn.style.opacity = '';
         btn.style.cursor = '';
-      }
-    });
-
-    // Re-wire select change events to keep ATC button in sync
-    document.querySelectorAll('select.bb-size-select').forEach(function (sel) {
-      if (sel._stockListenerAttached) return;
-      sel._stockListenerAttached = true;
-      sel.addEventListener('change', function () {
-        var card = sel.closest('.product-info') || sel.parentElement;
-        var atcBtn = card ? card.querySelector('.bb-atc-btn') : null;
-        if (!atcBtn) return;
-        var chosen = sel.options[sel.selectedIndex];
-        var pid = chosen ? chosen.value : null;
-        if (!pid) return;
-        var qty = stock[pid];
-        if (qty !== null && qty !== undefined && qty <= 0) {
-          atcBtn.disabled = true;
-          atcBtn.textContent = 'Out of Stock';
-          atcBtn.style.opacity = '0.45';
-          atcBtn.style.cursor = 'not-allowed';
-        } else {
-          atcBtn.disabled = false;
-          atcBtn.textContent = 'Add to Cart';
-          atcBtn.style.opacity = '';
-          atcBtn.style.cursor = '';
+        // Low-stock notice for single-SKU
+        var parent = btn.parentElement;
+        var notice = parent.querySelector('.bb-stock-notice');
+        var label = getStockLabel(qty);
+        if (label) {
+          if (!notice) {
+            notice = document.createElement('div');
+            notice.className = 'bb-stock-notice';
+            notice.style.cssText = 'font-size:.78rem;font-weight:600;color:#ef4444;margin-top:.3rem;';
+            parent.appendChild(notice);
+          }
+          notice.textContent = label;
+        } else if (notice) {
+          notice.textContent = '';
         }
-      });
+      }
     });
   }
 
@@ -119,15 +131,13 @@
     fetch(WORKER + '/stock')
       .then(function (r) { return r.json(); })
       .then(function (data) {
-        try {
-          sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data }));
-        } catch (e) {}
+        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data })); } catch (e) {}
         applyStock(data);
       })
       .catch(function () {});
   }
 
-  // Apply from cache immediately (synchronous, no flash)
+  // Apply from cache first (instant)
   try {
     var cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
     if (cached && cached.data && (Date.now() - cached.ts) < CACHE_TTL) {
@@ -135,7 +145,7 @@
     }
   } catch (e) {}
 
-  // Always fetch fresh in background
+  // Always fetch fresh
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', fetchAndApply);
   } else {
