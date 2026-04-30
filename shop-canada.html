@@ -497,5 +497,24 @@
     .catch(() => {});
 })();
 </script>
+<script>
+// Dynamic badge loader — reads admin KV and applies badges to product cards
+(function(){
+  const ADMIN='https://bottarga-admin.zoozoomfast.workers.dev';
+  const ID_MAP={sardinian_gold_ca:'#sardinia-ca',boutargue_imperiale_ca:'#imperiale-ca',ouro_do_brasil_ca:'#brazil-ca',grated_gold_ca:'#grated-ca',greek_avgotaraho:'#greece-ca',egyptian_royale:'#egypt-ca'};
+  const STYLES={'On Sale':'background:var(--gold-dim);color:var(--cream)','Limited':'background:var(--dark-mid);border:1px solid var(--gold);color:var(--gold)','Sold Out':'background:var(--dark);border:1px solid var(--muted);color:var(--muted)','New':'background:var(--gold);color:var(--dark)'};
+  fetch(ADMIN+'/content').then(r=>r.json()).then(kv=>{
+    Object.entries(ID_MAP).forEach(([pid,sel])=>{
+      const badge=kv['product_'+pid+'_badge'];if(badge===undefined)return;
+      const card=document.querySelector(sel);if(!card)return;
+      const existing=card.querySelector('.product-badge');
+      if(!badge){if(existing)existing.remove();return;}
+      const style=STYLES[badge]||'background:var(--gold-dim);color:var(--cream)';
+      if(existing){existing.textContent=badge;existing.setAttribute('style',style);}
+      else{const b=document.createElement('div');b.className='product-badge';b.setAttribute('style',style);b.textContent=badge;card.insertBefore(b,card.firstChild);}
+    });
+  }).catch(()=>{});
+})();
+</script>
 </body>
 </html>
