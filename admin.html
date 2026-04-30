@@ -127,6 +127,17 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 .img-drop img{width:100%;height:115px;object-fit:cover;border-radius:5px;margin-bottom:.4rem;}
 .img-drop-label{font-size:.68rem;color:var(--muted);}
 .img-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+/* Gallery strip */
+.gallery-strip{display:flex;gap:.35rem;overflow-x:auto;padding:.4rem 0 .2rem;margin-top:.4rem;min-height:54px;}
+.gallery-thumb{position:relative;width:54px;height:54px;border-radius:5px;overflow:hidden;border:1px solid var(--border);flex-shrink:0;cursor:pointer;transition:border-color .15s;}
+.gallery-thumb:hover{border-color:var(--gold);}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.gallery-thumb-rm{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.8);border:none;color:#fff;font-size:.55rem;cursor:pointer;border-radius:3px;padding:1px 4px;line-height:1.5;opacity:0;transition:opacity .15s;}
+.gallery-thumb:hover .gallery-thumb-rm{opacity:1;}
+.gallery-thumb.active-preview{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,168,76,.4);}
+.gallery-add{display:flex;align-items:center;justify-content:center;width:54px;height:54px;border:1px dashed var(--border);border-radius:5px;cursor:pointer;color:var(--muted);font-size:1.4rem;flex-shrink:0;position:relative;transition:border-color .15s,color .15s;}
+.gallery-add:hover{border-color:var(--gold);color:var(--gold);}
+.gallery-add input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
 .size-table{width:100%;border-collapse:collapse;margin-top:.35rem;}
 .size-table th{font-size:.6rem;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;text-align:left;padding:.3rem .4rem;}
 .size-table td{padding:.22rem .35rem;}
@@ -1314,6 +1325,39 @@ function handleDrop(ev,pid){
     });
   };r.readAsDataURL(file);
 }
+// ── Gallery slot helpers ──────────────────────────────────────────────────
+function getGalleryArr(pid){
+  const raw=pendingChanges['gallery_'+pid]!==undefined?pendingChanges['gallery_'+pid]:(kvContent['gallery_'+pid]||'');
+  if(!raw)return[];try{const a=JSON.parse(raw);return Array.isArray(a)?a:[];}catch(e){return[];}
+}
+function setGalleryArr(pid,arr){pendingChanges['gallery_'+pid]=JSON.stringify(arr);updateDirty();}
+function buildGalleryItems(pid,arr){
+  const thumbs=arr.map((url,i)=>`<div class="gallery-thumb" id="gt_${pid}_${i}"><img src="${escH(url)}" alt="Slide ${i+1}" onclick="previewGalleryImg('${pid}',${i})"/><button class="gallery-thumb-rm" onclick="removeGallerySlot('${pid}',${i})" title="Remove slide">✕</button></div>`).join('');
+  return thumbs+`<label class="gallery-add" title="Add slide"><span>+</span><input type="file" accept="image/*" onchange="addGalleryFile('${pid}',event)"/></label>`;
+}
+function refreshGalleryStrip(pid){
+  const s=document.getElementById('gstrip_'+pid);if(!s)return;
+  s.innerHTML=buildGalleryItems(pid,getGalleryArr(pid));
+}
+function addGalleryFile(pid,e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{compressImage(ev.target.result,900,700,0.75,d=>{
+    const arr=getGalleryArr(pid);arr.push(d);setGalleryArr(pid,arr);refreshGalleryStrip(pid);
+  });};r.readAsDataURL(file);
+}
+function removeGallerySlot(pid,idx){
+  const arr=getGalleryArr(pid);arr.splice(idx,1);setGalleryArr(pid,arr);refreshGalleryStrip(pid);
+}
+function previewGalleryImg(pid,idx){
+  const arr=getGalleryArr(pid);if(!arr[idx])return;
+  // Swap main preview image temporarily (doesn't change the saved cover)
+  const img=document.getElementById('dropimg_'+pid);const lbl=document.getElementById('droplbl_'+pid);
+  if(img){img.src=arr[idx];img.style.display='';}
+  if(lbl)lbl.textContent='⬅ Slide '+(idx+1)+' preview — upload above to change cover';
+  // Highlight active thumb
+  document.querySelectorAll('#gstrip_'+pid+' .gallery-thumb').forEach((t,i)=>t.classList.toggle('active-preview',i===idx));
+}
 function pauseProduct(pid,label){
   if(!confirm('Pause "'+label+'"? It will be hidden from the store. You can unpause it anytime.'))return;
   kvContent['product_'+pid+'_removed']='true';
@@ -1412,8 +1456,11 @@ function buildProducts(){
     let ss=p.sizes;
     try{if(kvContent['product_'+p.id+'_sizes'])ss=JSON.parse(kvContent['product_'+p.id+'_sizes']);}catch(e){}
     const sB=kvContent['product_'+p.id+'_badge']!==undefined?kvContent['product_'+p.id+'_badge']:p.defaultBadge;
-    const sI=pendingChanges['product_'+p.id+'_img']||kvContent['product_'+p.id+'_img']||'';
-    const sN=kvContent['product_'+p.id+'_name']||'';const sD=kvContent['product_'+p.id+'_desc']||'';let sG=kvContent['gallery_'+p.id]||'';if(sG){try{sG=JSON.parse(sG).join('\n');}catch(e){}}
+    let sI=pendingChanges['product_'+p.id+'_img']||kvContent['product_'+p.id+'_img']||'';
+    if(!sI&&p.id.endsWith('_ca')){const uId=p.id.slice(0,-3);sI=pendingChanges['product_'+uId+'_img']||kvContent['product_'+uId+'_img']||'';}
+    const sN=kvContent['product_'+p.id+'_name']||'';const sD=kvContent['product_'+p.id+'_desc']||'';
+    const gRaw=pendingChanges['gallery_'+p.id]!==undefined?pendingChanges['gallery_'+p.id]:(kvContent['gallery_'+p.id]||'');
+    let galleryArr=[];try{if(gRaw){const a=JSON.parse(gRaw);if(Array.isArray(a))galleryArr=a;}}catch(e){}
     return`<div class="product-card open" id="pc_${p.id}">
       <div class="product-card-head" onclick="toggleCard('${p.id}')">
         <div><div class="product-card-title">${p.label}</div><div class="product-card-origin">${p.origin}</div></div>
@@ -1430,10 +1477,12 @@ function buildProducts(){
         <div class="product-card-grid">
           <div>
             <div class="img-drop" id="drop_${p.id}" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'${p.id}')">
-              <img id="dropimg_${p.id}" src="${sI||'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='}" style="height:115px;width:100%;object-fit:cover;border-radius:5px;margin-bottom:.35rem;${sI?'':'display:none'}"/>
-              <div class="img-drop-label" id="droplbl_${p.id}">${sI?'Click or drop to replace':'Drop image or click to upload'}</div>
+              <img alt="${p.label}" id="dropimg_${p.id}" src="${sI||'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='}" style="height:115px;width:100%;object-fit:cover;border-radius:5px;margin-bottom:.35rem;${sI?'':'display:none'}"/>
+              <div class="img-drop-label" id="droplbl_${p.id}">${sI?'Click or drop to replace main':'Drop image or click to upload'}</div>
               <input type="file" accept="image/*" onchange="handleFileInput(event,'${p.id}')"/>
             </div>
+            <div style="font-size:.6rem;color:var(--muted);margin:.3rem 0 .1rem;">Additional slides</div>
+            <div class="gallery-strip" id="gstrip_${p.id}">${buildGalleryItems(p.id,galleryArr)}</div>
           </div>
           <div>
             <div class="field"><label>Product Name</label><input type="text" data-key="product_${p.id}_name" placeholder="${p.label}" value="${escH(sN)}"/></div>
@@ -1446,10 +1495,6 @@ function buildProducts(){
               <table class="size-table"><thead><tr><th>Size / Weight</th><th>Price</th><th></th></tr></thead>
               <tbody id="sizes_${p.id}">${ss.map((s,i)=>sizeRow(p.id,s.l,s.p,i)).join('')}</tbody></table>
               <button class="btn-add-size" onclick="addSizeRow('${p.id}')">+ Add Size</button>
-            </div>
-            <div class="field"><label>Gallery Images</label>
-              <textarea data-key="gallery_${p.id}" rows="3" placeholder="One image URL per line&#10;img/photo.jpg&#10;https://..." style="font-size:.73rem;font-family:monospace;min-height:56px;">${escH(sG)}</textarea>
-              <div style="font-size:.63rem;color:var(--muted);margin-top:.2rem;">First URL = main image. One per line. Leave blank to keep defaults.</div>
             </div>
           </div>
         </div>
