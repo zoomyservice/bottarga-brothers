@@ -749,7 +749,7 @@ async function loadContent(){
 }
 
 async function loadStock(){
-  try{const r=await fetch(MAIN_WORKER+'/stock');stockData=await r.json()||{};}catch(e){stockData={};}
+  try{const r=await fetch(WORKER+'/stock');stockData=await r.json()||{};}catch(e){stockData={};}
   document.querySelectorAll('.stock-qty-input').forEach(inp=>{
     const pid=inp.dataset.priceId;
     const val=stockData[pid];
@@ -765,13 +765,12 @@ async function saveStock(){
     hasAny=true;
   });
   if(!hasAny)return;
-  try{
-    await fetch(MAIN_WORKER+'/stock',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','X-Admin-User':SESSION_USER,'X-Admin-Password':SESSION_PWD,'X-Session-ID':SESSION_ID},
-      body:JSON.stringify(payload)
-    });
-  }catch(e){}
+  const res=await fetch(WORKER+'/stock',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Admin-User':SESSION_USER,'X-Admin-Password':SESSION_PWD,'X-Session-ID':SESSION_ID},
+    body:JSON.stringify(payload)
+  });
+  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||'Stock save failed');}
 }
 function populatePanelFields(){
   document.querySelectorAll('[data-key]').forEach(el=>{
@@ -1233,7 +1232,7 @@ if(CUSTOM_PRODUCTS.length)toSave.custom_products_json=JSON.stringify(CUSTOM_PROD
       document.getElementById('save-status').style.display='inline';
       setTimeout(()=>{document.getElementById('save-status').style.display='none';},3000);
       btn.disabled=true;
-      saveStock();
+      try{await saveStock();}catch(e){alert('Content saved but stock update failed: '+e.message);}
     }else{alert('Save failed. Please try again.');}
   }catch(e){alert('Network error. Check connection and try again.');}
   btn.textContent='Save All';

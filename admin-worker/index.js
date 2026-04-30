@@ -96,6 +96,31 @@ export default {
       return json({ ok: true });
     }
 
+    // ── GET /stock — public ───────────────────────────────────────
+    if (request.method === 'GET' && url.pathname === '/stock') {
+      const data = await env.CONTENT.get('product_stock', { type: 'json' }) || {};
+      return new Response(JSON.stringify(data), {
+        headers: { ...CORS, 'Cache-Control': 'public, max-age=30' },
+      });
+    }
+
+    // ── POST /stock — save stock quantities ───────────────────────
+    if (request.method === 'POST' && url.pathname === '/stock') {
+      const auth = await validateAuth(request, env);
+      if (!auth.ok) return json({ error: 'Unauthorized' }, 401);
+      const body = await request.json();
+      if (typeof body !== 'object' || Array.isArray(body)) {
+        return json({ error: 'Invalid payload' }, 400);
+      }
+      const clean = {};
+      for (const [k, v] of Object.entries(body)) {
+        if (v === null) clean[k] = null;
+        else if (typeof v === 'number' && v >= 0) clean[k] = Math.floor(v);
+      }
+      await env.CONTENT.put('product_stock', JSON.stringify(clean));
+      return json({ ok: true });
+    }
+
     return json({ error: 'Not found' }, 404);
   },
 };
