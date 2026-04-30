@@ -214,6 +214,8 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 .stock-qty-input{width:72px;padding:.25rem .4rem;background:var(--dark);border:1px solid var(--border);border-radius:3px;color:var(--cream);font-size:.8rem;text-align:center;}
 .stock-qty-input:focus{outline:none;border-color:var(--gold);}
 .stock-unit{font-size:.7rem;color:var(--muted);}
+.stock-toggle-wrap.stock-open .stock-toggle-body{display:block!important;}
+.stock-toggle-wrap.stock-open .stock-toggle-chevron{transform:rotate(180deg);}
 </style>
 </head>
 <body>
@@ -551,6 +553,11 @@ const PRODUCTS=[
   {id:'egyptian_royale',label:'Egyptian Royale',origin:'🇪🇬 Egypt — Port Said',defaultBadge:'Sold Out',sizes:[{l:'Small',p:'$24.00'},{l:'Large',p:'$39.99'}]},
   {id:'grated_gold',label:'Grated Gold',origin:'🇮🇹 Sardinia — Grated',defaultBadge:'',sizes:[{l:'1 jar — 40g',p:'$19.99'},{l:'2 jars — 80g',p:'$35.99'},{l:'3 jars — 120g',p:'$50.99'}]},
   {id:'grated_pouch',label:'Grated Bottarga Pouch',origin:'🇮🇹 Sardinia — 50g Pouch',defaultBadge:'',sizes:[{l:'50g Pouch',p:'$18.99'}]},
+  // Canadian products
+  {id:'sardinian_gold_ca',label:'Sardinian Gold 🇨🇦',origin:'🇨🇦 Canada — CAD',defaultBadge:'',sizes:[{l:'S (~97g)',p:'$33.99 CAD'},{l:'L (~145g)',p:'$45.99 CAD'},{l:'Jumbo (~154g)',p:'$47.99 CAD'}]},
+  {id:'boutargue_imperiale_ca',label:'Boutargue Impériale 🇨🇦',origin:'🇨🇦 Canada — CAD',defaultBadge:'',sizes:[{l:'S (~100g)',p:'$37.99 CAD'},{l:'L (~175g)',p:'$49.99 CAD'}]},
+  {id:'ouro_do_brasil_ca',label:'Ouro do Brasil 🇨🇦',origin:'🇨🇦 Canada — CAD',defaultBadge:'',sizes:[{l:'L (~133g)',p:'CAD'}]},
+  {id:'grated_gold_ca',label:'Grated Gold 🇨🇦',origin:'🇨🇦 Canada — CAD',defaultBadge:'',sizes:[{l:'1 pouch — 50g',p:'$16.99 CAD'},{l:'2 pouches — 100g',p:'$29.99 CAD'},{l:'6 pouches — 300g',p:'$92.99 CAD'}]},
 ];
 const COLORS=[
   {key:'css_gold',label:'Gold (accent)',def:'#c9a84c'},
@@ -1350,10 +1357,15 @@ function buildProducts(){
         <span class="product-card-chevron">▼</span>
       </div>
       <div class="product-card-body">
-        ${(PRODUCT_PRICE_IDS[p.id]||[]).length>0?`<div class="field" style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
-          <label style="font-size:.8rem;font-weight:700;color:var(--gold);letter-spacing:.06em;">📦 STOCK / INVENTORY</label>
-          <div class="stock-size-grid">${(PRODUCT_PRICE_IDS[p.id]||[]).map(s=>`<div class="stock-row"><span class="stock-size-label">${s.label}</span><input type="number" min="0" step="1" class="stock-qty-input" data-price-id="${s.id}" placeholder="∞" value="${stockData[s.id]!==null&&stockData[s.id]!==undefined?stockData[s.id]:''}" oninput="updateDirty()"/><span class="stock-unit">units</span></div>`).join('')}</div>
-          <div style="font-size:.63rem;color:var(--muted);margin-top:.3rem;">Blank = unlimited &nbsp;|&nbsp; 0 = out of stock &nbsp;|&nbsp; ≤10 shows red warning on shop page. Saved with <em>Save All</em>.</div>
+        ${(PRODUCT_PRICE_IDS[p.id]||[]).length>0?`<div class="field stock-toggle-wrap" style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+          <div class="stock-toggle-head" onclick="this.closest('.stock-toggle-wrap').classList.toggle('stock-open')" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;">
+            <label style="font-size:.8rem;font-weight:700;color:var(--gold);letter-spacing:.06em;cursor:pointer;pointer-events:none;">📦 STOCK / INVENTORY</label>
+            <span class="stock-toggle-chevron" style="color:var(--muted);font-size:.7rem;transition:transform .2s;">▼</span>
+          </div>
+          <div class="stock-toggle-body" style="display:none;margin-top:.6rem;">
+            <div class="stock-size-grid">${(PRODUCT_PRICE_IDS[p.id]||[]).map(s=>`<div class="stock-row"><span class="stock-size-label">${s.label}</span><input type="number" min="0" step="1" class="stock-qty-input" data-price-id="${s.id}" placeholder="∞" value="${stockData[s.id]!==null&&stockData[s.id]!==undefined?stockData[s.id]:''}" oninput="updateDirty()"/><span class="stock-unit">units</span></div>`).join('')}</div>
+            <div style="font-size:.63rem;color:var(--muted);margin-top:.3rem;">Blank = unlimited &nbsp;|&nbsp; 0 = out of stock &nbsp;|&nbsp; ≤10 shows red warning on shop page. Saved with <em>Save All</em>.</div>
+          </div>
         </div>`:''}
         <div class="product-card-grid">
           <div>
