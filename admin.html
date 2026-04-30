@@ -321,7 +321,7 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 <div>
   <div class="field" style="margin-bottom:0"><label>Product Image</label></div>
   <div class="img-drop" id="drop_np" style="min-height:100px;" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'np')">
-    <img id="dropimg_np" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="height:90px;width:100%;object-fit:cover;border-radius:5px;margin-bottom:.35rem;display:none"/>
+    <img alt="Product preview" id="dropimg_np" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="height:90px;width:100%;object-fit:cover;border-radius:5px;margin-bottom:.35rem;display:none"/>
     <div class="img-drop-label" id="droplbl_np">Drop or click to upload</div>
     <input type="file" accept="image/*" onchange="handleFileInput(event,'np')"/>
   </div>
