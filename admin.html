@@ -108,7 +108,9 @@ body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMac
 .sh{font-size:.92rem;font-weight:700;color:var(--gold);margin:1.6rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid var(--border);}
 .sh:first-child{margin-top:0;}
 /* PRODUCTS */
-.product-list{display:flex;flex-direction:column;gap:.9rem;}
+.product-list{display:grid;grid-template-columns:1fr 1fr;gap:0 1.2rem;align-items:start;}
+.shop-col{display:flex;flex-direction:column;gap:.9rem;}
+@media(max-width:960px){.product-list{grid-template-columns:1fr;}}
 .product-card{background:var(--card);border:1px solid var(--border);border-radius:11px;overflow:hidden;}
 .product-card-head{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.1rem;cursor:pointer;user-select:none;}
 .product-card-head:hover{background:rgba(255,255,255,.03);}
@@ -869,6 +871,26 @@ function injectEditMode(doc){
   doc.addEventListener('mousedown',function bbImg(e){
     if(e.target&&e.target.tagName==='IMG'){e.preventDefault();openImgDialog(e.target);}
   },true);
+
+  // Recipe card clicks — fire onclick handlers that designMode swallows
+  // Also prevents the "whole page highlights" bug caused by clicking block containers
+  doc.querySelectorAll('[onclick]').forEach(el=>{
+    el.addEventListener('mousedown',function(e){
+      const attr=this.getAttribute('onclick')||'';
+      if(!attr)return;
+      e.preventDefault();e.stopPropagation();
+      try{doc.defaultView.eval(attr);}catch(err){}
+    },true);
+  });
+
+  // Selection safety net — collapse any runaway full-page selection immediately
+  doc.addEventListener('selectionchange',function(){
+    const sel=doc.getSelection();
+    if(!sel||sel.isCollapsed)return;
+    if(sel.toString().length>400){
+      try{sel.collapseToStart();}catch(err){}
+    }
+  });
   // Image hover highlights — gold outline on hover so every clickable image is obvious
   doc.querySelectorAll('img').forEach(img=>{
     img.style.cursor='pointer';
@@ -1407,10 +1429,11 @@ function buildProducts(){
     </div>`;
   };
   list.innerHTML=
-    (usaActive.length>0?'<div class="shop-section-hdr"><span>🇺🇸 USA Shop</span></div>'+usaActive.map(renderProd).join(''):'') +
-    (caActive.length>0?'<div class="shop-section-hdr"><span>🇨🇦 Canada Shop</span></div>'+caActive.map(renderProd).join(''):'');
+    '<div class="shop-col">'+(usaActive.length>0?'<div class="shop-section-hdr"><span>🇺🇸 USA Shop</span></div>'+usaActive.map(renderProd).join(''):'')+'</div>'+
+    '<div class="shop-col">'+(caActive.length>0?'<div class="shop-section-hdr"><span>🇨🇦 Canada Shop</span></div>'+caActive.map(renderProd).join(''):'')+'</div>';
   // Custom products
   if(CUSTOM_PRODUCTS.length>0){
+    list.insertAdjacentHTML('beforeend','<div class="shop-section-hdr" style="grid-column:1/-1"><span>✏️ Custom Products</span></div>');
     list.insertAdjacentHTML('beforeend',CUSTOM_PRODUCTS.map(cp=>{
       const id=cp.id;
       const sN=kvContent['custom_product_'+id+'_name']||cp.name;
@@ -1455,10 +1478,10 @@ function buildProducts(){
     }).join(''));
   }
   if(removed.length>0){
-    list.insertAdjacentHTML('beforeend',`<div class="removed-section"><button class="removed-section-toggle" onclick="const l=this.nextElementSibling;l.style.display=l.style.display==='none'?'flex':'none'">⏸ Paused products (${removed.length})</button><div class="removed-list" style="display:none">${removed.map(p=>`<div class="removed-card"><span class="removed-card-name">${p.label}</span><button class="btn-restore" onclick="restoreProduct('${p.id}','${p.label}')">▶ Unpause</button></div>`).join('')}</div></div>`);
+    list.insertAdjacentHTML('beforeend',`<div class="removed-section" style="grid-column:1/-1"><button class="removed-section-toggle" onclick="const l=this.nextElementSibling;l.style.display=l.style.display==='none'?'flex':'none'">⏸ Paused products (${removed.length})</button><div class="removed-list" style="display:none">${removed.map(p=>`<div class="removed-card"><span class="removed-card-name">${p.label}</span><button class="btn-restore" onclick="restoreProduct('${p.id}','${p.label}')">▶ Unpause</button></div>`).join('')}</div></div>`);
   }
   if(deleted.length>0){
-    list.insertAdjacentHTML('beforeend',`<div class="removed-section"><button class="removed-section-toggle" onclick="const l=this.nextElementSibling;l.style.display=l.style.display==='none'?'flex':'none'">🗑 Removed products (${deleted.length})</button><div class="removed-list" style="display:none">${deleted.map(p=>`<div class="removed-card"><span class="removed-card-name" style="color:var(--muted)">${p.label}</span><span style="font-size:.7rem;color:var(--muted);margin-left:.5rem;">Permanently removed</span></div>`).join('')}</div></div>`);
+    list.insertAdjacentHTML('beforeend',`<div class="removed-section" style="grid-column:1/-1"><button class="removed-section-toggle" onclick="const l=this.nextElementSibling;l.style.display=l.style.display==='none'?'flex':'none'">🗑 Removed products (${deleted.length})</button><div class="removed-list" style="display:none">${deleted.map(p=>`<div class="removed-card"><span class="removed-card-name" style="color:var(--muted)">${p.label}</span><span style="font-size:.7rem;color:var(--muted);margin-left:.5rem;">Permanently removed</span></div>`).join('')}</div></div>`);
   }
 }
 // COLORS
