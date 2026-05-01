@@ -765,6 +765,18 @@ document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='
 async function loadContent(){
   try{const r=await fetch(WORKER+'/content');kvContent=await r.json()||{};}catch(e){kvContent={};}
   if(kvContent.custom_products_json){try{CUSTOM_PRODUCTS=JSON.parse(kvContent.custom_products_json);}catch(e){CUSTOM_PRODUCTS=[];}}
+  // Heal any double-encoded gallery data from the legacy textarea-conversion bug
+  PRODUCTS.forEach(p=>{
+    const gk='gallery_'+p.id;
+    if(!kvContent[gk])return;
+    try{
+      let parsed=JSON.parse(kvContent[gk]);
+      while(Array.isArray(parsed)&&parsed.length===1&&typeof parsed[0]==='string'&&parsed[0].startsWith('[')){
+        try{parsed=JSON.parse(parsed[0]);}catch(e){break;}
+      }
+      if(Array.isArray(parsed))kvContent[gk]=JSON.stringify(parsed);
+    }catch(e){}
+  });
   buildProducts();buildColors();populatePanelFields();await loadStock();
 }
 
@@ -1236,13 +1248,18 @@ async function saveAll(){
       const v=el.type==='checkbox'?el.checked.toString():el.value;
       if(v!==''||k.endsWith('_badge'))toSave[k]=v;
     });
-        // Convert gallery textarea (newline-separated) to JSON array
+        // Ensure gallery values are valid JSON arrays — strip any double-encoding
     PRODUCTS.forEach(p=>{
       const gk='gallery_'+p.id;
-      if(toSave[gk]!==undefined&&toSave[gk]!==''){
-        const urls=toSave[gk].split('\n').map(s=>s.trim()).filter(s=>s.length>0);
-        toSave[gk]=urls.length?JSON.stringify(urls):'';
-      }
+      if(toSave[gk]===undefined||toSave[gk]==='')return;
+      try{
+        let parsed=JSON.parse(toSave[gk]);
+        // Unwrap legacy double-encoding: ["[\"img/a.jpg\"]"] → ["img/a.jpg"]
+        while(Array.isArray(parsed)&&parsed.length===1&&typeof parsed[0]==='string'&&parsed[0].startsWith('[')){
+          try{parsed=JSON.parse(parsed[0]);}catch(e){break;}
+        }
+        toSave[gk]=Array.isArray(parsed)?JSON.stringify(parsed):'';
+      }catch(e){toSave[gk]='';}
     });
 if(CUSTOM_PRODUCTS.length)toSave.custom_products_json=JSON.stringify(CUSTOM_PRODUCTS);
     const res=await fetch(WORKER+'/content',{method:'POST',headers:authH(),body:JSON.stringify(toSave)});
